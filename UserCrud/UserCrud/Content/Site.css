@@ -243,3 +243,16 @@ td, th {
     outline: none;
     color: #94a3b8 !important;
 }
+
+.form-row label {
+    color: rgb(233, 237, 255);
+}
+
+.form-row input {
+    background-color: transparent;
+    color: rgb(56, 189, 248);
+}
+
+    .form-row input::placeholder {
+        color: rgb(56, 189, 248);
+    }

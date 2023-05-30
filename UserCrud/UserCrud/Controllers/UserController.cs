@@ -36,10 +36,10 @@ namespace UserCrud.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult GetDetails(int pageNumber, int pageSize, string searchValue, int sortColumn, string sortDir)
+        public ActionResult GetDetails(UserFilter filterOptions)
         {
 
-            var userList = _repository.GetUserDetails(pageNumber , pageSize, searchValue, sortColumn, sortDir);
+            var userList = _repository.GetUserDetails(filterOptions);
             return Json(userList);
         }
 

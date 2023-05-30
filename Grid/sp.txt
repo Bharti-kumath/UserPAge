@@ -1,0 +1,81 @@
+ORDER BY
+            CASE WHEN @SortColumn = 'id' AND @SortOrder = 'ASC' THEN id END ASC,
+            CASE WHEN @SortColumn = 'id' AND @SortOrder = 'DESC' THEN id END DESC,
+            CASE WHEN @SortColumn = 'firstname' AND @SortOrder = 'ASC' THEN firstname END ASC,
+            CASE WHEN @SortColumn = 'firstname' AND @SortOrder = 'DESC' THEN firstname END DESC,
+            CASE WHEN @SortColumn = 'lastname' AND @SortOrder = 'ASC' THEN lastname END ASC,
+            CASE WHEN @SortColumn = 'lastname' AND @SortOrder = 'DESC' THEN lastname END DESC,
+            CASE WHEN @SortColumn = 'dob' AND @SortOrder = 'ASC' THEN dob END ASC,
+            CASE WHEN @SortColumn = 'dob' AND @SortOrder = 'DESC' THEN dob END DESC,
+            CASE WHEN @SortColumn = 'phonenumber' AND @SortOrder = 'ASC' THEN phonenumber END ASC,
+            CASE WHEN @SortColumn = 'phonenumber' AND @SortOrder = 'DESC' THEN phonenumber END DESC,
+            CASE WHEN @SortColumn = 'address' AND @SortOrder = 'ASC' THEN address END ASC,
+            CASE WHEN @SortColumn = 'address' AND @SortOrder = 'DESC' THEN address END DESC,
+            CASE WHEN @SortColumn = 'country' AND @SortOrder = 'ASC' THEN country END ASC,
+            CASE WHEN @SortColumn = 'country' AND @SortOrder = 'DESC' THEN country END DESC,
+            CASE WHEN @SortColumn = 'city' AND @SortOrder = 'ASC' THEN city END ASC,
+            CASE WHEN @SortColumn = 'city' AND @SortOrder = 'DESC' THEN city END DESC,
+            CASE WHEN @SortColumn = 'pincoden' AND @SortOrder = 'ASC' THEN pincoden END ASC,
+            CASE WHEN @SortColumn = 'pincoden' AND @SortOrder = 'DESC' THEN pincoden END DESC,
+            CASE WHEN @SortColumn = 'email' AND @SortOrder = 'ASC' THEN email END ASC,
+            CASE WHEN @SortColumn = 'email' AND @SortOrder = 'DESC' THEN email END DESC
+
+
+
+            CREATE PROCEDURE sp_UserPaginationSortingFiltering
+    @PageNumber INT,
+    @PageSize INT,
+    @SortColumn NVARCHAR(50),
+    @SortOrder NVARCHAR(4),
+    @FirstName NVARCHAR(50) = NULL,
+    @LastName NVARCHAR(50) = NULL,
+    @Country NVARCHAR(50) = NULL,
+    @City NVARCHAR(50) = NULL,
+    @FromDate DATE = NULL,
+    @ToDate DATE = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @StartIndex INT, @EndIndex INT;
+
+    SET @StartIndex = (@PageNumber - 1) * @PageSize;
+    SET @EndIndex = @StartIndex + @PageSize;
+
+    DECLARE @SortDirection NVARCHAR(5);
+    SET @SortDirection = CASE WHEN @SortOrder = 'DESC' THEN 'DESC' ELSE 'ASC' END;
+
+    SELECT *
+    FROM UserTable
+    WHERE (firstname LIKE '%' + @FirstName + '%' OR @FirstName IS NULL)
+    AND (lastname LIKE '%' + @LastName + '%' OR @LastName IS NULL)
+    AND (country LIKE '%' + @Country + '%' OR @Country IS NULL)
+    AND (city LIKE '%' + @City + '%' OR @City IS NULL)
+    AND (
+        (@FromDate IS NULL AND @ToDate IS NULL) 
+        OR (dob >= @FromDate AND (dob <= @ToDate OR @ToDate IS NULL))
+        OR (@FromDate IS NULL AND dob <= @ToDate) 
+    )
+
+    ORDER BY
+            CASE WHEN @SortColumn = 'firstname' AND @SortOrder = 'ASC' THEN firstname END ASC,
+            CASE WHEN @SortColumn = 'firstname' AND @SortOrder = 'DESC' THEN firstname END DESC,
+            CASE WHEN @SortColumn = 'lastname' AND @SortOrder = 'ASC' THEN lastname END ASC,
+            CASE WHEN @SortColumn = 'lastname' AND @SortOrder = 'DESC' THEN lastname END DESC,
+            CASE WHEN @SortColumn = 'dob' AND @SortOrder = 'ASC' THEN dob END ASC,
+            CASE WHEN @SortColumn = 'dob' AND @SortOrder = 'DESC' THEN dob END DESC,
+            CASE WHEN @SortColumn = 'phonenumber' AND @SortOrder = 'ASC' THEN phonenumber END ASC,
+            CASE WHEN @SortColumn = 'phonenumber' AND @SortOrder = 'DESC' THEN phonenumber END DESC,
+            CASE WHEN @SortColumn = 'address' AND @SortOrder = 'ASC' THEN address END ASC,
+            CASE WHEN @SortColumn = 'address' AND @SortOrder = 'DESC' THEN address END DESC,
+            CASE WHEN @SortColumn = 'country' AND @SortOrder = 'ASC' THEN country END ASC,
+            CASE WHEN @SortColumn = 'country' AND @SortOrder = 'DESC' THEN country END DESC,
+            CASE WHEN @SortColumn = 'city' AND @SortOrder = 'ASC' THEN city END ASC,
+            CASE WHEN @SortColumn = 'city' AND @SortOrder = 'DESC' THEN city END DESC,
+            CASE WHEN @SortColumn = 'pincoden' AND @SortOrder = 'ASC' THEN pincoden END ASC,
+            CASE WHEN @SortColumn = 'pincoden' AND @SortOrder = 'DESC' THEN pincoden END DESC,
+            CASE WHEN @SortColumn = 'email' AND @SortOrder = 'ASC' THEN email END ASC,
+            CASE WHEN @SortColumn = 'email' AND @SortOrder = 'DESC' THEN email END DESC
+
+    OFFSET @StartIndex ROWS FETCH NEXT @PageSize ROWS ONLY;
+END

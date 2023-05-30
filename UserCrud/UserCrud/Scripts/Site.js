@@ -27,19 +27,25 @@ function editDetails(userID) {
 }
 
 $(document).ready(function () {
-    $('#userTable').DataTable({
+    var dataTable = $('#userTable').DataTable({
         "processing": true,
         "ordering": true,
-        "searching": false,
+        "searching": false, // Disable DataTable's built-in searching
         "serverSide": true,
         "ajax": {
             "url": "/User/GetDetails",
-            "type": "Post",
+            "type": "POST",
             "data": function (d) {
-                d.pageNumber = d.start / d.length;
-                d.pageSize = d.length;
-                d.sortColumn = d.order[0].column;
-                d.sortDir = d.order[0].dir;
+                d.PageNumber = d.start / d.length;
+                d.PageSize = d.length;
+                d.SortColumn = getColumnName(d.order[0].column); 
+                d.SortDirection = d.order[0].dir;
+                d.FirstName = $('#firstNameFilter').val();
+                d.LastName = $('#lastNameFilter').val(); 
+                d.Country = $('#countryFilter').val(); 
+                d.City = $('#cityFilter').val(); 
+                d.FromDate = $('#fromDateFilter').val(); 
+                d.ToDate = $('#toDateFilter').val(); 
             },
             "dataSrc": function (response) {
                 console.log(response)
@@ -50,17 +56,30 @@ $(document).ready(function () {
             }
         },
         "columns": [
-            { "data": "id" },
-            { "data": "FirstName"},
-            { "data": "LastName" },
-            { "data": "email"  },
-            { "data": "dateOfBirth" },
-            { "data": "phoneNumber" },
-            { "data": "Country" },
-            { "data": "City" },
-            { "data": "Address" },
-            { "data": "pincode" }
+            { "data": "FirstName", "name": "First Name" },
+            { "data": "LastName", "name": "Last Name" },
+            { "data": "dateOfBirth", "name": "Date OF Birth" },
+            { "data": "email", "name": "Email" },
+            { "data": "phoneNumber", "name": "Mobile No." },
+            { "data": "Address", "name": "Address" },
+            { "data": "City", "name": "City" },
+            { "data": "Country", "name": "Country" },
+            { "data": "pincode", "name": "Pincode" },
+            //{
+            //    "data": "id", "render": function (data, type, row) {
+            //        return '<div style="overflow: hidden; position: relative; height: 35px;">' +
+            //            '<i class="bi bi-pen icon" data-toggle="modal" data-target="#exampleModalCenter" onclick="editDetails(' + data + ')"></i>' +
+            //            '<a href="/User/deleteUserDetail?userID=' + data + '" class="trash"></a>' +
+            //            '</div>';
+            //    }
+            //}
+
         ],
         "lengthMenu": [2, 3, 5, 7]
+    });
+
+    // Add an event listener to trigger searching when filter inputs change
+    $('#firstNameFilter, #lastNameFilter, #countryFilter, #cityFilter, #fromDateFilter, #toDateFilter').on('input', function () {
+        dataTable.ajax.reload();
     });
 });

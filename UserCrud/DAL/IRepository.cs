@@ -13,6 +13,6 @@ namespace DAL
         List<BAL.Models.UserViewModel> GetUSerDetails();
         void SaveUserDetails(UserViewModel model);
         void deleteUserDetails(long userID);
-        List<BAL.Models.UserViewModel> GetUserDetails(int pageNumber, int pageSize, string searchValue, int sortColumn, string sortDir);
+        List<BAL.Models.UserViewModel> GetUserDetails(filterOptions);
     }
 }
