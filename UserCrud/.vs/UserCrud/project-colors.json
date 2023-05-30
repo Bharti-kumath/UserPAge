@@ -1,0 +1,31 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "043a7165-454b-4893-92d1-77a810b105e5": {
+      "ProjectGuid": "043a7165-454b-4893-92d1-77a810b105e5",
+      "DisplayName": "UserCrud",
+      "ColorIndex": 0
+    },
+    "919fd655-f067-4ba2-b932-d926e85dd6b4": {
+      "ProjectGuid": "919fd655-f067-4ba2-b932-d926e85dd6b4",
+      "DisplayName": "Script Documents",
+      "ColorIndex": 1
+    },
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Miscellaneous Files",
+      "ColorIndex": -1
+    },
+    "0e570340-a2e2-453a-b236-257a97673655": {
+      "ProjectGuid": "0e570340-a2e2-453a-b236-257a97673655",
+      "DisplayName": "BAL",
+      "ColorIndex": 2
+    },
+    "96676f77-fb8e-4ce6-8f76-33026f767e3d": {
+      "ProjectGuid": "96676f77-fb8e-4ce6-8f76-33026f767e3d",
+      "DisplayName": "DAL",
+      "ColorIndex": 3
+    }
+  },
+  "NextColorIndex": 4
+}
