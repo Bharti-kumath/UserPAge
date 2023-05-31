@@ -232,6 +232,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\User\UserDetail.cshtml" />
     <Content Include="Views\User\index.cshtml" />
+    <Content Include="Views\User\UserPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

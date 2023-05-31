@@ -1,6 +1,15 @@
 ﻿@model List<BAL.Models.UserViewModel>
 
 <div class=" main-container">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success" id="successMessage">
+            <i class="bi bi-check2-circle fs-4"></i>  @TempData["SuccessMessage"]
+        </div>
+       
+    }
+
+    @Html.ActionLink("Export CSV", "ExportCSV", "User", null, new { @class = "addButton" })
 
     <div class="filter mb-3">
         <h4 style="color: #fff;">Filter</h4>
@@ -36,111 +45,11 @@
 
     <div class="d-flex flex-row justify-content-between mb-3">
         <h2 class="userHeading">User Details</h2>
-        <button class="addButton" data-toggle="modal" data-target="#exampleModalCenter">Add New</button>
 
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
-             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h2 class="userHeading fs-4">User Details</h2>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form class="form page__form" method="Post">
-
-                            <div class="form__linput">
-
-                                <i class="bi bi-circle-fill bullet"></i>
-                                <input class="form__input" type="text" name="firstname" id="fname" pattern="\w{1,}" required />
-                                <label class="form__label" for="fname">First name</label>
-                            </div>
-                            <div class="form__linput">
-                                <input class="form__input" type="text" name="lastname" id="lastname"
-                                       pattern="\w{1,}" required />
-                                <label class="form__label" for="lastname">Last Name</label>
-                            </div>
-
-                            <div class="form__linput">
-
-                                <i class="bi bi-circle-fill bullet"></i>
-                                <input class="form__input" type="text" name="email" id="email"
-                                       pattern="[a-zA-Z0-9._%+-]+@("@")[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" required />
-                                <label class="form__label" for="email">Email</label>
-                            </div>
-                            <div class="form__linput">
-
-                                <input class="form__input flatpickr" type="text" name="DateOfBirth" id="dob">
-                                <label class="form__label" for="DateOfBirth">Date of Birth</label>
-                                <script>
-                                    flatpickr("#dob", {
-                                        dateFormat: "Y-m-d",
-                                        placeholder: false,
-                                        validate: true
-                                    });
-                                </script>
-
-                            </div>
-
-
-                            <div class="form__linput">
-
-                                <i class="bi bi-circle-fill bullet"></i>
-                                <input class="form__input" type="text" name="PhoneNumber" id="Number" pattern="\w{1,}" required />
-                                <label class="form__label" for="Number">Mobile Number</label>
-                            </div>
-                            <div class="form__linput">
-                                <input class="form__input" type="text" name="PinCode" id="PinCode" pattern="\w{1,}"
-                                       required />
-                                <label class="form__label" for="PinCode">Pincode</label>
-                            </div>
-
-                            <div class="form__linput full_width">
-
-                                <i class="bi bi-circle-fill bullet"></i>
-                                <textarea class="form__input " type="text" name="Address" id="Address"
-                                          pattern="\w{1,}" required></textarea>
-                                <label class="form__label" for="Address">Address</label>
-                            </div>
-
-                            <div class="form__linput">
-
-                                <i class="bi bi-circle-fill bullet"></i>
-                                <select class="form-select " aria-label=".form-select example" name="Country">
-                                    <option value="">Country</option>
-                                    <option>India</option>
-                                    <option>Japan</option>
-                                    <option>Us</option>
-                                </select>
-                            </div>
-                            <div class="form__linput">
-                                <select class="form-select " aria-label=".form-select example" name="City">
-                                    <option value="">City</option>
-                                    <option>Banglore</option>
-                                    <option>Tokyo</option>
-                                    <option>New York</option>
-                                </select>
-                            </div>
-
-                            <div class="modal-footer full_width justify-content-end">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="submit" class="addButton">Save</button>
-                            </div>
-
-                            <input type="hidden" value="" id="userID" />
-
-                        </form>
-
-                    </div>
-
-                </div>
-            </div>
+        <div class="UserDetail">
+            @Html.Partial("UserPartial")
         </div>
-
-
+        <button class="addButton" data-toggle="modal" data-target="#exampleModalCenter" onclick="editDetails(0)">Add New</button>
 
     </div>
     <table class="table " id="userTable">
@@ -159,29 +68,6 @@
             </tr>
         </thead>
         <tbody>
-
-            <tr>
-
-                <td>FirstName</td>
-                <td>LastName</td>
-                <td>DAteOfBirth</td>
-                <td>Email</td>
-                <td>PhoneNUmber</td>
-                <td>Address</td>
-                <td>City</td>
-                <td>Country</td>
-                <td>PinCode</td>
-                <td>
-                    <div style="overflow: hidden; position: relative; height: 35px;">
-                        <i class="bi bi-pen icon" data-toggle="modal" data-target="#exampleModalCenter" onclick="editDetails(4)"></i><a href="@Url.Action("deleteUserDetail", "User", new { userID = 4 })" class="trash"></a>
-                    </div>
-                </td>
-
-            </tr>
-
-
-
-
         </tbody>
     </table>
 </div>

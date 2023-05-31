@@ -23,7 +23,7 @@ body {
 }
 
 .main-container {
-    padding: 5rem 8rem !important;
+    padding: 4rem 8rem !important;
 }
 
 h4 {
@@ -171,7 +171,7 @@ td, th {
     display: grid;
     margin-left: 0.5rem;
     position: relative;
-    border-bottom: 2px solid rgb(56 189 248);
+   
     margin-bottom: 0.8rem;
 }
 
@@ -183,13 +183,16 @@ td, th {
     font-size: 0.8rem;
     width: 100%;
     border: none !important;
-    border-radius: 0.8em;
+    border-radius: 0;
     font-weight: 500;
+    border-bottom: 2px solid rgb(56 189 248) !important;
 }
 
     .form__input:valid,
     .form__input:focus {
         border: 0px solid hsl(171, 76%, 45%) !important;
+        border-bottom: 2px solid rgb(56 189 248) !important;
+    
         outline: none;
     }
         .valid + .form__label,
@@ -213,7 +216,7 @@ td, th {
     background-color: transparent;
     position: absolute;
     left: 0.1em;
-    top: 50%;
+    top: 0;
     transform: translateY(-50%);
     padding-inline: 0.5em;
     user-select: none;
@@ -221,7 +224,7 @@ td, th {
     font-weight: 500;
     letter-spacing: 1px;
     font-size: 0.8rem;
-    color: #94a3b8;
+    color: rgb(56 189 248);
 }
 
     .form__label::before {
@@ -240,8 +243,13 @@ td, th {
 .form-select {
     background-color: transparent !important;
     border: none !important;
+    border-bottom: 2px solid rgb(56 189 248) !important;
     outline: none;
     color: #94a3b8 !important;
+}
+.text-danger {
+    font-size: 0.85rem;
+    color: rgb(244 114 182) !important;
 }
 
 .form-row label {
@@ -256,3 +264,17 @@ td, th {
     .form-row input::placeholder {
         color: rgb(56, 189, 248);
     }
+.dataTables_length label select option {
+    color: rgb(56, 189, 248);
+}
+.dataTables_length label select {
+    color: rgb(233, 237, 255);
+}
+
+.alert-success {
+    color: rgb(233, 237, 255);
+    border-color:transparent;
+    background-color: rgb(244 114 182) !important;
+    padding: 0.5rem !important;
+    vertical-align:middle;
+}

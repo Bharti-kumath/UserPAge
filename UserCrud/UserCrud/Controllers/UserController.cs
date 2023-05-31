@@ -31,33 +31,56 @@ namespace UserCrud.Controllers
         [HttpGet]
         public ActionResult UserDetail()
         {
-             
-            //var userList = _repository.GetUSerDetails();
+           
             return View();
         }
         [HttpPost]
-        public ActionResult GetDetails(UserFilter filterOptions)
+        public ActionResult GetDetails(FilterOptions filterOptions)
         {
-
+           
             var userList = _repository.GetUserDetails(filterOptions);
-            return Json(userList);
+            return Json(new
+            {
+                data = userList,
+                recordsTotal = userList.FirstOrDefault()?.TotalCount,
+                recordsFiltered = userList.FirstOrDefault()?.TotalCount
+            });
+           
         }
 
         [HttpPost]
         public ActionResult UserDetail(UserViewModel model)
         {
-             _repository.SaveUserDetails(model);
-            var userList = _repository.GetUSerDetails();
-            return View(userList);
+            if (ModelState.IsValid)
+            {
+                _repository.SaveUserDetails(model);
+                TempData["SuccessMessage"] = "User added successfully.";
+                return RedirectToAction("UserDetail", "User");
+            }
+            else
+            {
+                return View(model);
+            }
+            
         }
 
-
+        public ActionResult GetUserById(long id)
+        {
+            var userById = _repository.GetUserById(id);
+            return PartialView("UserPartial", userById);
+        }
         
         public ActionResult deleteUserDetail(long userID)
         {
             _repository.deleteUserDetails(userID);
 
-            return RedirectToAction("UserDetail" ,"User");
+            return Json(new {success = true} , JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult ExportCSV()
+        {
+            _repository.GeCSVFile();
+
+            return Content("CSV Exported"); 
         }
 
     }

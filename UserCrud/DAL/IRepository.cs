@@ -13,6 +13,8 @@ namespace DAL
         List<BAL.Models.UserViewModel> GetUSerDetails();
         void SaveUserDetails(UserViewModel model);
         void deleteUserDetails(long userID);
-        List<BAL.Models.UserViewModel> GetUserDetails(filterOptions);
+        List<BAL.Models.UserViewModel> GetUserDetails(FilterOptions filterOptions);
+        UserViewModel GetUserById(long id);
+        void GeCSVFile();
     }
 }
