@@ -17,5 +17,6 @@ namespace BAL.Models
         public string City { get; set; }
         public DateTime? FromDate { get; set; }
         public DateTime? ToDate { get; set; }
+        public int export { get; set; }
     }
 }

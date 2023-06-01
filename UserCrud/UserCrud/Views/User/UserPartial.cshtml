@@ -22,48 +22,60 @@
                         <div class="form__linput">
 
                             <i class="bi bi-circle-fill bullet"></i>
-                            @*<input class="form__input" type="text" name="firstname" id="fname" pattern="\w{1,}" required />
-        <label class="form__label" for="fname">First name</label>*@
+
                             @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form__input" } })
 
                             @Html.LabelFor(model => model.FirstName, "First Name", htmlAttributes: new { @class = "form__label" })
                             @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
                         </div>
                         <div class="form__linput">
-                            @*<input class="form__input" type="text" name="lastname" id="lastname"
-                       pattern="\w{1,}" required />
-                <label class="form__label" for="lastname">Last Name</label>*@
+
                             @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form__input" } })
                             @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
                             @Html.LabelFor(model => model.LastName, "Last Name", htmlAttributes: new { @class = "form__label" })
                         </div>
 
+
+
+
+
                         <div class="form__linput">
 
                             <i class="bi bi-circle-fill bullet"></i>
-                            @*<input class="form__input" type="text" name="email" id="email"
-                       pattern="[a-zA-Z0-9._%+-]+@("@")[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" required />
-                <label class="form__label" for="email">Email</label>*@
+
                             @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form__input" } })
                             @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
                             @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "form__label" })
                         </div>
                         <div class="form__linput">
 
-                            @*<input class="form__input flatpickr" type="text" name="DateOfBirth" id="dob">
-                <label class="form__label" for="DateOfBirth">Date of Birth</label>*@
                             @Html.EditorFor(model => model.DAteOfBirth, new { htmlAttributes = new { @class = "form__input", @id = "dob" } })
                             @Html.ValidationMessageFor(model => model.DAteOfBirth, "", new { @class = "text-danger" })
+                            <span id="dob-validation-message" class="text-danger"></span>
                             @Html.LabelFor(model => model.DAteOfBirth, "Date of Birth", htmlAttributes: new { @class = "form__label" })
                             <script>
-                                
+
+
                                 flatpickr("#dob", {
                                     dateFormat: "Y-m-d",
                                     placeholder: false,
-                                    maxDate: (new Date().getFullYear()) - 21
+                                    onChange: function (selectedDates, dateStr, instance) {
+                                        const today = new Date();
+                                        const selectedDate = selectedDates[0];
 
+                                        const age = today.getFullYear() - selectedDate.getFullYear();
+
+                                        if (age < 21) {
+                                            const validationMessageElement = document.getElementById("dob-validation-message");
+                                            validationMessageElement.textContent = "Minimum age must be 21 years.";
+                                        } else {
+                                            const validationMessageElement = document.getElementById("dob-validation-message");
+                                            validationMessageElement.textContent = "";
+                                        }
+                                    }
                                 });
                             </script>
+
 
                         </div>
 
@@ -71,16 +83,13 @@
                         <div class="form__linput">
 
                             <i class="bi bi-circle-fill bullet"></i>
-                            @*<input class="form__input" type="text" name="PhoneNumber" id="Number" pattern="\w{1,}" required />
-                <label class="form__label" for="Number">Mobile Number</label>*@
+
                             @Html.EditorFor(model => model.PhoneNUmber, new { htmlAttributes = new { @class = "form__input", onkeypress = "return numberOnly(event)" } })
                             @Html.ValidationMessageFor(model => model.PhoneNUmber, "", new { @class = "text-danger" })
-                            @Html.LabelFor(model => model.PhoneNUmber, "Mobile Number", htmlAttributes: new { @class = "form__label"})
+                            @Html.LabelFor(model => model.PhoneNUmber, "Mobile Number", htmlAttributes: new { @class = "form__label" })
                         </div>
                         <div class="form__linput">
-                            @*<input class="form__input" type="text" name="PinCode" id="PinCode" pattern="\w{1,}"
-                       required />
-                <label class="form__label" for="PinCode">Pincode</label>*@
+
                             @Html.EditorFor(model => model.PinCode, new { htmlAttributes = new { @class = "form__input", onkeypress = "return numberOnly(event)" } })
                             @Html.ValidationMessageFor(model => model.PinCode, "", new { @class = "text-danger" })
                             @Html.LabelFor(model => model.PinCode, htmlAttributes: new { @class = "form__label" })
@@ -117,7 +126,21 @@
                             }, new { @class = "form-select", aria_label = ".form-select.example" })
                             @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
                         </div>
+                        <div class="form__linput" id="password">
+                            <i class="bi bi-circle-fill bullet"></i>
 
+                            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form__input", @type = "password" } })
+
+                            @Html.LabelFor(model => model.Password, "Password", htmlAttributes: new { @class = "form__label" })
+                        <span id="show-old" onclick="showPassword()"> <i class="bi bi-eye" id="eyeold"></i><i class="bi bi-eye-slash hideeye" id="eyeSlashold"></i></span>
+                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form__linput" id="Cpassword">
+
+                            @Html.EditorFor(model => model.ConfirmPassword, new { htmlAttributes = new { @class = "form__input", @type = "password" } })
+                            @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger"  })
+                            @Html.LabelFor(model => model.ConfirmPassword, "Confirm Password", htmlAttributes: new { @class = "form__label" })
+                        </div>
 
                         <div class="modal-footer full_width justify-content-end">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModel()">Close</button>
@@ -127,8 +150,8 @@
                         <input type="hidden" value="" id="userID" />
 
                     </form>
-                    @Scripts.Render("~/bundles/jqueryval")
-                </div>
+                @Scripts.Render("~/bundles/jqueryval")
+            </div>
 
             </div>
         </div>

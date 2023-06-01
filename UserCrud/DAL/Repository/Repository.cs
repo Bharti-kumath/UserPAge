@@ -8,6 +8,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 
@@ -16,17 +17,16 @@ namespace DAL.Repository
 {
     public class Repository : IRepository
     {
+        private static string connectionString = ConfigurationManager.ConnectionStrings["defaultConnection"].ConnectionString;
         public void deleteUserDetails(long userID)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["defaultConnection"].ConnectionString;
-            List<BAL.Models.UserViewModel> UserList = new List<BAL.Models.UserViewModel>();
-
+           
             using (IDbConnection connection = new SqlConnection(connectionString))
             {
                 var parameters = new DynamicParameters();
                 parameters.Add("ID", userID, DbType.Int64);
 
-                UserList = connection.Query<UserViewModel>("sp_UserDeleteOpertaion", parameters, commandType: CommandType.StoredProcedure).ToList();
+                 connection.Execute("sp_UserDeleteOpertaion", parameters, commandType: CommandType.StoredProcedure);
             }
 
         }
@@ -34,7 +34,7 @@ namespace DAL.Repository
         public List<UserViewModel> GetUSerDetails()
         {
 
-            string connectionString = ConfigurationManager.ConnectionStrings["defaultConnection"].ConnectionString;
+           
             List<BAL.Models.UserViewModel> UserList = new List<BAL.Models.UserViewModel>();
 
             using(IDbConnection connection = new SqlConnection(connectionString))
@@ -59,10 +59,26 @@ namespace DAL.Repository
             return UserList;
         }
 
+        public string encryption(String password)
+        {
+            MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
+            byte[] encrypt;
+            UTF8Encoding encode = new UTF8Encoding();
+            
+            encrypt = md5.ComputeHash(encode.GetBytes(password));
+            StringBuilder encryptdata = new StringBuilder();
+           
+            for (int i = 0; i < encrypt.Length; i++)
+            {
+                encryptdata.Append(encrypt[i].ToString());
+            }
+            return encryptdata.ToString();
+        }
         public void SaveUserDetails(UserViewModel model)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["defaultConnection"].ConnectionString;
-            
+
+
+            var passwordHash = encryption(model.Password);
 
             using (IDbConnection connection = new SqlConnection(connectionString))
             {
@@ -77,6 +93,8 @@ namespace DAL.Repository
                 parameters.Add("pincode", model.PinCode, DbType.Int32);
                 parameters.Add("dob", model.DAteOfBirth, DbType.String);
                 parameters.Add("address",model.Address , DbType.String);
+                parameters.Add("password", passwordHash, DbType.String);
+                parameters.Add("confirmPassword", model.ConfirmPassword, DbType.String);
 
                 connection.Execute("sp_UserInsertUpdate", parameters, commandType: CommandType.StoredProcedure);
             }
@@ -85,7 +103,7 @@ namespace DAL.Repository
 
         public List<UserViewModel> GetUserDetails(FilterOptions filterOptions)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["defaultConnection"].ConnectionString;
+           
             List<UserViewModel> userList = new List<UserViewModel>();
 
             using (IDbConnection connection = new SqlConnection(connectionString))
@@ -102,16 +120,19 @@ namespace DAL.Repository
                 parameters.Add("@SortOrder", filterOptions.SortDirection, DbType.String);
                 parameters.Add("@PageNumber", filterOptions.PageNumber, DbType.Int32);
                 parameters.Add("@PageSize", filterOptions.PageSize, DbType.Int32);
-                
+                parameters.Add("@export", filterOptions.export, DbType.Int32);
+
                 userList = connection.Query<UserViewModel>("sp_UserFiltering", parameters, commandType: CommandType.StoredProcedure).ToList();
             }
 
+           
+            
             return userList;
         }
 
         public UserViewModel GetUserById(long id)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["defaultConnection"].ConnectionString;
+            
             UserViewModel userByID = new UserViewModel();
 
             using (IDbConnection connection = new SqlConnection(connectionString))
@@ -124,27 +145,41 @@ namespace DAL.Repository
             return userByID;
         }
 
-        public void GeCSVFile()
+        public void GeCSVFile(FilterOptions filterOptions)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["defaultConnection"].ConnectionString;
-            List<UserViewModel> userList;
+            List<ExportViewModel> userList = new List<ExportViewModel>();
 
             using (IDbConnection connection = new SqlConnection(connectionString))
             {
-                userList = connection.Query<UserViewModel>("sp_getCSVData", commandType: CommandType.StoredProcedure).ToList();
+                var parameters = new DynamicParameters();
+                parameters.Add("@id", DBNull.Value, DbType.String);
+                parameters.Add("@FirstName", filterOptions.FirstName, DbType.String);
+                parameters.Add("@LastName", filterOptions.LastName, DbType.String);
+                parameters.Add("@Country", filterOptions.Country, DbType.String);
+                parameters.Add("@City", filterOptions.City, DbType.String);
+                parameters.Add("@FromDate", filterOptions.FromDate, DbType.DateTime);
+                parameters.Add("@ToDate", filterOptions.ToDate, DbType.DateTime);
+                parameters.Add("@SortColumn", filterOptions.SortColumn, DbType.String);
+                parameters.Add("@SortOrder", filterOptions.SortDirection, DbType.String);
+                parameters.Add("@PageNumber", filterOptions.PageNumber, DbType.Int32);
+                parameters.Add("@PageSize", filterOptions.PageSize, DbType.Int32);
+                parameters.Add("@export", filterOptions.export, DbType.Int32);
+
+                userList = connection.Query<ExportViewModel>("sp_UserFiltering", parameters, commandType: CommandType.StoredProcedure).ToList();
             }
 
             StringBuilder csvData = new StringBuilder();
             StringBuilder headers = new StringBuilder();
 
-            foreach (UserViewModel user in userList)
+            foreach (ExportViewModel user in userList)
             {
                 headers = new StringBuilder();
-                var type = typeof(UserViewModel);
+                var type = typeof(ExportViewModel);
                 var properties = type.GetProperties();
-                foreach (PropertyInfo prop in typeof(UserViewModel).GetProperties())
+                foreach (PropertyInfo prop in typeof(ExportViewModel).GetProperties())
                 {
                     var props = prop;
+                    var users = prop.GetValue(user)?.ToString();
                     csvData.Append(prop.GetValue(user)?.ToString() + ",");
                     headers.Append(prop.Name + ",");
                 }
@@ -165,6 +200,25 @@ namespace DAL.Repository
             HttpContext.Current.Response.Write(contentToExport);
             System.Web.HttpContext.Current.ApplicationInstance.CompleteRequest();
 
+        }
+
+        public bool checkUser(string email, string password)
+        {
+            UserViewModel userExist;
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+                var modelPassword = encryption(password);
+                var parameters = new DynamicParameters();
+                parameters.Add("@email", email, DbType.String);
+                parameters.Add("@password", modelPassword, DbType.String);
+                userExist = connection.QueryFirstOrDefault<UserViewModel>("sp_checkUser", parameters, commandType: CommandType.StoredProcedure);
+            }
+            if(userExist != null)
+            {
+                return false;
+            }
+           
+            return true;
         }
     }
 }

@@ -1,12 +1,22 @@
-﻿
+﻿var DataTable = "";
 
 function sendSms(toNumber) {
     $.ajax({
-     
+
         type: "GET",
         url: '/User/SendSMS',
-        data: {toNumber: toNumber} ,
-        success: function () { alert('Success'); },
+        data: { toNumber: toNumber },
+        success: function () {
+            alert('Success'); const link = document.createElement("a");
+            if (link.download !== undefined) {
+                const url = URL.createObjectURL(csvBlob);
+                link.setAttribute("href", url);
+                link.setAttribute("download", filename);
+                link.style.visibility = "hidden";
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } },
         error: function (error) { alert(error); console.log(error) }
     });
 }
@@ -17,16 +27,22 @@ const input = document.querySelector('#input');
 
 function editDetails(userID) {
     console.log(userID);
-    $("#userId");
+  
     $.ajax({
         type: "GET",
         url: '/User/GetUserById',
         data: { id: userID },
         success: function (response) {
-           
-            $(".UserDetail").html(response);
-            $("#exampleModalCenter").modal("show");
 
+            $(".UserDetail").html(response);
+
+            $("#exampleModalCenter").modal("show");
+            if (userID != 0) {
+
+
+                $("#password").addClass("hide");
+                $("#Cpassword").addClass("hide");
+            }
         },
 
         error: function (error) { alert(error); console.log(error) }
@@ -82,43 +98,76 @@ function deleteDetails(userID) {
 }
 
 $(document).ready(function () {
-   
+    getDataTable();
+    $('#firstNameFilter, #lastNameFilter, #countryFilter, #cityFilter, #DateFilter').on('input', function () {
+        dataTable.ajax.reload();
+    });
 
-    var dataTable = $('#userTable').DataTable({
+    setTimeout(function () {
+        $("#successMessage").fadeOut("slow");
+    }, 1500);
+    
+
+});
+
+
+function closeModel() {
+    $(".modal-backdrop").remove();
+    $("#myForm")[0].reset();
+    $('#exampleModalCenter').modal('hide');
+    $("#password").removeClass("hide");
+    $("#Cpassword").removeClass("hide");
+}
+
+function numberOnly(event) {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        return false;
+    }
+    return true;
+}
+
+
+
+function getDataTable() {
+   
+     dataTable = $('#userTable').DataTable({
         "processing": true,
         "ordering": true,
         "order": [[9, 'desc']],
-        "searching": false, // Disable DataTable's built-in searching
+        "searching": false,
         "serverSide": true,
         "ajax": {
             "url": "/User/GetDetails",
             "type": "POST",
             "data": function (d) {
-                
+
                 d.PageNumber = d.start / d.length;
                 d.PageSize = d.length;
                 d.SortColumn = d.order[0] ? d.columns[d.order[0].column].data : null;
                 d.SortDirection = d.order[0].dir;
                 d.FirstName = $('#firstNameFilter').val();
-                d.LastName = $('#lastNameFilter').val(); 
-                d.Country = $('#countryFilter').val(); 
-                d.City = $('#cityFilter').val(); 
-                d.FromDate = $('#fromDateFilter').val(); 
-                d.ToDate = $('#toDateFilter').val(); 
+                d.LastName = $('#lastNameFilter').val();
+                d.Country = $('#countryFilter').val();
+                d.City = $('#cityFilter').val();
+                d.FromDate = $('#DateFilter').val().slice(0, 10);
+                d.ToDate = $('#DateFilter').val().slice(13, 23);
+               
             },
             "dataSrc": function (response) {
                 
-                return response.data;
+                    return response.data;
+                
             },
             "error": function (error) {
-                console.log(error)
+              console.log(error)
             }
         },
         "columns": [
-           
+
             { "data": "FirstName", "name": "First Name", "visible": true, },
             { "data": "LastName", "name": "Last Name" },
-            
+
             {
                 "data": "DAteOfBirth",
                 "name": "DateOFBirth",
@@ -128,7 +177,7 @@ $(document).ready(function () {
             },
             { "data": "Email", "name": "Email" },
             { "data": "PhoneNUmber", "name": "Mobile No." },
-            { "data": "Address", "name": "Address" ,"orderable" : false},
+            { "data": "Address", "name": "Address", "orderable": false },
             { "data": "City", "name": "City" },
             { "data": "Country", "name": "Country" },
             { "data": "PinCode", "name": "Pincode" },
@@ -145,47 +194,35 @@ $(document).ready(function () {
         "lengthMenu": [2, 3, 5, 7]
     });
 
-    // Add an event listener to trigger searching when filter inputs change
-    $('#firstNameFilter, #lastNameFilter, #countryFilter, #cityFilter, #fromDateFilter, #toDateFilter').on('input', function () {
-        dataTable.ajax.reload();
-    });
-
-    setTimeout(function () {
-        $("#successMessage").fadeOut("slow");
-    }, 1500);
-
-    
-
-   
-});
-
-
-function closeModel() {
-    $(".modal-backdrop").remove();
-  $("#myForm")[0].reset();
-    $('#exampleModalCenter').modal('hide');
 }
 
-function numberOnly(event) {
-    const charCode = event.which ? event.which : event.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-        return false;
+function showPassword() {
+    var passwordInput = $('input[name="Password"]');
+    if (passwordInput.attr('type') === 'password') {
+        $("#eyeold").hide();
+        $("#eyeSlashold").show();
+        passwordInput.attr('type', 'text');
+    } else {
+        $("#eyeold").show();
+        $("#eyeSlashold").hide();
+        passwordInput.attr('type', 'password');
     }
-    return true;
-}
-
-function calulateage() {
-    var userDateinput = $("#dob").val;
-    console.log(userDateinput);
-
-    // convert user input value into date object
-    var birthDate = new Date(userDateinput);
-    console.log(" birthDate" + birthDate);
-
-    // get difference from current date;
-    var difference = Date.now() - birthDate.getTime();
-
-    var ageDate = new Date(difference);
-    var calculatedAge = Math.abs(ageDate.getUTCFullYear() - 1970);
-    alert(calculatedAge);
 };
+
+function exportToCSV() {
+    var firstName = $('#firstNameFilter').val();
+    var lastName = $('#lastNameFilter').val();
+    var country = $('#countryFilter').val();
+    var city = $('#cityFilter').val();
+    var fromDate = $('#DateFilter').val().slice(0, 10);
+    var toDate = $('#DateFilter').val().slice(13, 23);
+
+    var exportUrl = '/User/ExportCSV?FirstName=' + encodeURIComponent(firstName) +
+        '&LastName=' + encodeURIComponent(lastName) +
+        '&Country=' + encodeURIComponent(country) +
+        '&City=' + encodeURIComponent(city) +
+        '&FromDate=' + encodeURIComponent(fromDate) +
+        '&ToDate=' + encodeURIComponent(toDate);
+
+    $('#exportanchor').attr('href', exportUrl);
+}

@@ -6,36 +6,57 @@
         <div class="alert alert-success" id="successMessage">
             <i class="bi bi-check2-circle fs-4"></i>  @TempData["SuccessMessage"]
         </div>
-       
+
     }
+   
+    <a id ="exportanchor" class="addButton" href="javascript:void(0);" onclick="exportToCSV()">Export CSV</a>
 
-    @Html.ActionLink("Export CSV", "ExportCSV", "User", null, new { @class = "addButton" })
-
+   
+    <input type="hidden" value="0" id="export" />
     <div class="filter mb-3">
         <h4 style="color: #fff;">Filter</h4>
         <div class="form-row row">
-            <div class="col-md-2 mb-3">
+            <div class="col-auto mb-3">
                 <label for="firstNameFilter">First Name</label>
                 <input type="text" class="form-control" id="firstNameFilter" placeholder="Enter first name">
             </div>
-            <div class="col-md-2 mb-3">
+            <div class="col-auto mb-3">
                 <label for="lastNameFilter">Last Name</label>
                 <input type="text" class="form-control" id="lastNameFilter" placeholder="Enter last name">
             </div>
-            <div class="col-md-2 mb-3">
+            <div class="col-auto mb-3">
                 <label for="fromDateFilter">From Date</label>
-                <input type="date" class="form-control" id="fromDateFilter">
-            </div>
-            <div class="col-md-2 mb-3">
-                <label for="toDateFilter">To Date</label>
-                <input type="date" class="form-control" id="toDateFilter">
+                <input class="form-control" id="DateFilter">
+                <script>
+
+
+                    $('#DateFilter').daterangepicker({
+                        autoUpdateInput: false,
+                        locale: {
+                            cancelLabel: 'Clear'
+                        },
+                        onChange: function () { }
+                    });
+
+                    $('#DateFilter').on('apply.daterangepicker', function (ev, picker) {
+                        $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+
+                        dataTable.ajax.reload();
+                    });
+
+                    $('#DateFilter').on('cancel.daterangepicker', function (ev, picker) {
+                        $(this).val('');
+                    });
+
+
+                </script>
             </div>
 
-            <div class="col-md-2 mb-3">
+            <div class="col-auto mb-3">
                 <label for="countryFilter">Country</label>
                 <input type="text" class="form-control" id="countryFilter" placeholder="Enter country">
             </div>
-            <div class="col-md-2 mb-3">
+            <div class="col-auto mb-3">
                 <label for="cityFilter">City</label>
                 <input type="text" class="form-control" id="cityFilter" placeholder="Enter city">
             </div>

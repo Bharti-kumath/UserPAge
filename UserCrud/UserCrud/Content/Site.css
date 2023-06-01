@@ -5,7 +5,12 @@ body {
     background-size: 400% 400%;
     animation: gradient 15s ease infinite;
     height: 100vh;
-    color:#fff
+    color:#fff;
+   
+}
+.hide{
+    visibility:hidden !important;
+    position:absolute !important;
 }
 
 @keyframes gradient {
@@ -25,23 +30,39 @@ body {
 .main-container {
     padding: 4rem 8rem !important;
 }
+.hidee {
+    padding: 0.5rem !important;
+    display: none;
+}
+#show-old {
+    position: absolute;
+    right: 0.1em;
+    top: 1.5rem;
+    transform: translateY(-50%);
+    padding-inline: 0.5em;
+    cursor:pointer;
+}
+
+.hideeye {
+    display: none;
+}
 
 h4 {
     margin: 2rem 0rem 1rem;
 }
 
-td {
+#userTable td {
     font-size: 0.95rem;
     line-height: 1.5rem;
     color: rgb(233, 237, 255);
     border-bottom: 0.001px solid #e5e7eb !important;
 }
 
-th {
+#userTable th {
     color: rgb(56 189 248);
 }
 
-td, th {
+#userTable td, #userTable th {
     vertical-align: middle;
 }
 
@@ -171,7 +192,6 @@ td, th {
     display: grid;
     margin-left: 0.5rem;
     position: relative;
-   
     margin-bottom: 0.8rem;
 }
 
@@ -277,4 +297,64 @@ td, th {
     background-color: rgb(244 114 182) !important;
     padding: 0.5rem !important;
     vertical-align:middle;
+}
+
+
+.card {
+    border-radius: 10px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease-in-out;
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 50px;
+    background-color: #f8f8f8;
+}
+
+    .card:hover {
+        transform: scale(1.05);
+    }
+
+.card-header {
+    font-weight: bold;
+    font-size: 2rem;
+    text-align: center;
+    color:rgb(56, 189, 248);
+}
+
+.form-group label {
+    font-weight: bold;
+    color: rgb(56 189 248);
+}
+
+.form-control:focus {
+    box-shadow: none;
+}
+
+.btn-login {
+    background-color: rgb(14 165 233);
+    border-color: transparent;
+    border-radius: 0.375rem;
+    color: #fff;
+    transition: all 0.3s ease-in-out;
+}
+
+    .btn-login:hover {
+        background-color: #432c6f;
+        border-color: #432c6f;
+    }
+
+    .btn-login:focus {
+        box-shadow: none;
+    }
+
+.text-center {
+    margin-top: 20px;
+    font-size: 1.2rem;
+}
+
+@media screen and (max-width: 576px) {
+    .card {
+        margin: 10px;
+        padding: 30px;
+    }
 }
