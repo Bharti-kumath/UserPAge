@@ -3,6 +3,7 @@ using Microsoft.Owin.Security.Jwt;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -17,14 +18,21 @@ namespace UserCrud
     {
         protected void Application_Start()
         {
+            
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             Bootstrapper.Initialise();
 
-            
+
+          
 
         }
-    }
+           
+        
+
+
+    
+}
 }

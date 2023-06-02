@@ -1,58 +1,64 @@
 ﻿using Microsoft.IdentityModel.Tokens;
+using Microsoft.Owin.Security.Jwt;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 
 
 namespace UserCrud
 {
-    public class Authorization :AuthorizeAttribute
-    {
 
+    public class AuthorizationAttribute : AuthorizeAttribute
+    {
+       
         protected override bool AuthorizeCore(HttpContextBase httpContext)
         {
-            var token = httpContext.Request.Headers["Authorization"];
-            if (string.IsNullOrEmpty(token) || !token.StartsWith("Bearer "))
-                return false;
+            var token = httpContext.Session["Token"];
 
-            var jwtkey = ConfigurationManager.ConnectionStrings["JwtKey"].ConnectionString;
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtkey));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var issuer = ConfigurationManager.ConnectionStrings["JwtIssuer"].ConnectionString;
-            var expiry = ConfigurationManager.ConnectionStrings["JwtExpireDays"].ConnectionString;
-            var jwtToken = token.Replace("Bearer ", "");
-            var handler = new JwtSecurityTokenHandler();
-            var jwtTokenValidationParameters = new TokenValidationParameters
+            if (token != null)
             {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidIssuer = "issuer",
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("jwtkey")),
-               
-            };
+                var tokenString = token.ToString();
+                var validationResult = JWTAuthorization.ValidateToken(tokenString);
 
-            try
-            {
-                var principal = handler.ValidateToken(jwtToken, jwtTokenValidationParameters, out _);
-                httpContext.User = principal;
-                return true;
+                if (validationResult.IsValid)
+                {
+                    return true;
+                }
+                else if (validationResult.IsExpired)
+                {
+                    // Handle expired token case
+                    httpContext.Response.Redirect("~/Home/ExpiredToken"); // Redirect to an expired token view
+                    return false;
+                }
             }
-            catch
-            {
-                return false;
-            }
-        }
 
-        protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
-        {
-            filterContext.Result = new HttpUnauthorizedResult();
+            // Handle invalid token case
+            httpContext.Response.Redirect("~/Home/ExpiredToken"); // Redirect to an invalid token view
+            return false;
         }
     }
+
+
+
+
 }
+
+
+
+
+
+
+
+
+
+
 

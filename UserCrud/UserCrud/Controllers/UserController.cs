@@ -17,6 +17,7 @@ using System.Web.Mvc;
 
 namespace UserCrud.Controllers
 {
+   
     public class UserController : Controller
 
     {
@@ -27,42 +28,54 @@ namespace UserCrud.Controllers
             _repository = repository;
         }
 
-        // GET: User
+        
         public ActionResult Login()
         {
-        
+            HttpContext.Response.Cookies.Remove("AuthToken");
             return View();
         }
         [HttpPost]
-        public ActionResult Login(string Email , string Password)
+        public ActionResult Login(string Email, string Password)
         {
             bool isUserExist = _repository.checkUser(Email, Password);
             if (isUserExist)
             {
-                Claim claims =
-                        new Claim("Email", Email);
+                var claims = new[]
+            {
+                new Claim("Email", Email)
+            };
 
-       
-                var jwtkey = ConfigurationManager.ConnectionStrings["JwtKey"].ConnectionString;
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtkey));
+                var jwtKey = ConfigurationManager.AppSettings["JwtKey"];
+                var jwtIssuer = ConfigurationManager.AppSettings["JwtIssuer"];
+                var expiryMinutes = Convert.ToDouble(ConfigurationManager.AppSettings["JwtExpireMinutes"]);
+                var expirationTime = DateTime.UtcNow.AddMinutes(1);
+              
+
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-                var issuer = ConfigurationManager.ConnectionStrings["JwtIssuer"].ConnectionString;
-                var expiry = ConfigurationManager.ConnectionStrings["JwtExpireDays"].ConnectionString;
-                var expiryhour = Convert.ToDouble(expiry);
                 var token = new JwtSecurityToken(
-                   issuer,
-                    claims.ToString(),
-                   expires: DateTime.UtcNow.AddMinutes(expiryhour),
+                    issuer: jwtIssuer,
+                    audience: null,
+                    claims: claims,
+                    expires: expirationTime,
                     signingCredentials: creds
-                    );
+                );
 
-                return Content (new JwtSecurityTokenHandler().WriteToken(token));
+                var encodedToken = new JwtSecurityTokenHandler().WriteToken(token);
+                string expirationTimeString = token.ValidTo.ToString("yyyy-MM-dd HH:mm:ss");
+
+                Session["Token"] = encodedToken;
+
+                return RedirectToAction("UserDetail", "User"); // Redirect to a protected page
             }
+
             return View();
+        
         }
+
         [HttpGet]
-        [Authorize]
+        [Authorization]
         public ActionResult UserDetail()
         {
            

@@ -13,6 +13,10 @@ namespace UserCrud.Controllers
         {
             return View();
         }
+        public ActionResult ExpiredToken()
+        {
+            return View();
+        }
 
         public ActionResult About()
         {
