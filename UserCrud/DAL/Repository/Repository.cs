@@ -77,7 +77,6 @@ namespace DAL.Repository
         public void SaveUserDetails(UserViewModel model)
         {
 
-
             var passwordHash = encryption(model.Password);
 
             using (IDbConnection connection = new SqlConnection(connectionString))
@@ -94,7 +93,7 @@ namespace DAL.Repository
                 parameters.Add("dob", model.DAteOfBirth, DbType.String);
                 parameters.Add("address",model.Address , DbType.String);
                 parameters.Add("password", passwordHash, DbType.String);
-                parameters.Add("confirmPassword", model.ConfirmPassword, DbType.String);
+                parameters.Add("confirmPassword", passwordHash, DbType.String);
 
                 connection.Execute("sp_UserInsertUpdate", parameters, commandType: CommandType.StoredProcedure);
             }
@@ -202,7 +201,7 @@ namespace DAL.Repository
 
         }
 
-        public bool checkUser(string email, string password)
+        public UserViewModel checkUser(string email, string password)
         {
             UserViewModel userExist;
             using (IDbConnection connection = new SqlConnection(connectionString))
@@ -213,12 +212,26 @@ namespace DAL.Repository
                 parameters.Add("@password", modelPassword, DbType.String);
                 userExist = connection.QueryFirstOrDefault<UserViewModel>("sp_checkUser", parameters, commandType: CommandType.StoredProcedure);
             }
-            if(userExist != null)
-            {
-                return false;
-            }
+              return userExist;
+            
            
-            return true;
+           
+        }
+
+        public ProfileViewModel GetProfileById(long id)
+        {
+            ProfileViewModel profileByID = new ProfileViewModel();
+
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@ID", id, DbType.Int64);
+                var reader = connection.QueryMultiple("sp_getUserProfile", parameters, commandType: CommandType.StoredProcedure);
+                profileByID.UserDetail = reader.ReadFirst<UserViewModel>();
+                profileByID.Suggestions = reader.ReadFirst<Suggestion>();
+            }
+
+            return profileByID;
         }
     }
 }

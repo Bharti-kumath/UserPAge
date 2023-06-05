@@ -31,15 +31,23 @@ namespace UserCrud.Controllers
         
         public ActionResult Login()
         {
-            HttpContext.Response.Cookies.Remove("AuthToken");
+            
+            return View();
+        }
+        [Authorization]
+        public ActionResult Profile()
+        {
+            var userId = Convert.ToInt64(Session["id"].ToString());
+           ProfileViewModel profileData = _repository.GetProfileById(userId);
             return View();
         }
         [HttpPost]
         public ActionResult Login(string Email, string Password)
         {
-            bool isUserExist = _repository.checkUser(Email, Password);
-            if (isUserExist)
+            UserViewModel isUserExist = _repository.checkUser(Email, Password);
+            if (isUserExist != null)
             {
+                Session["id"] = isUserExist.ID;
                 var claims = new[]
             {
                 new Claim("Email", Email)
@@ -73,9 +81,9 @@ namespace UserCrud.Controllers
             return View();
         
         }
-
+   
         [HttpGet]
-        [Authorization]
+        
         public ActionResult UserDetail()
         {
            

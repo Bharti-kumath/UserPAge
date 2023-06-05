@@ -15,8 +15,10 @@ namespace DAL
         void deleteUserDetails(long userID);
         List<BAL.Models.UserViewModel> GetUserDetails(FilterOptions filterOptions);
         UserViewModel GetUserById(long id);
-       
-        bool checkUser(string email, string password);
+
+        UserViewModel checkUser(string email, string password);
         void GeCSVFile(FilterOptions filterOptions);
+
+        ProfileViewModel GetProfileById(long id);
     }
 }

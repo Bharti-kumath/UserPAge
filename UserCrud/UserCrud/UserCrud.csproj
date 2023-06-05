@@ -268,6 +268,7 @@
     <Content Include="Views\User\UserPartial.cshtml" />
     <Content Include="Views\User\Login.cshtml" />
     <Content Include="Views\Home\ExpiredToken.cshtml" />
+    <Content Include="Views\User\Profile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

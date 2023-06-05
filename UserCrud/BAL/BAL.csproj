@@ -72,6 +72,8 @@
   <ItemGroup>
     <Compile Include="Models\ExportViewModel.cs" />
     <Compile Include="Models\FilterOptions.cs" />
+    <Compile Include="Models\ProfileViewModel.cs" />
+    <Compile Include="Models\Suggestion.cs" />
     <Compile Include="Models\UserViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
