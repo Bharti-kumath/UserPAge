@@ -48,8 +48,9 @@ namespace BAL.Models
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$", ErrorMessage = "Password must be Minimum 8 characters, at least one uppercase letter, one lowercase letter, one number and one special character.")]
         public string Password { get; set; }
 
-        [Required]
+
         [Compare("Password", ErrorMessage = "Password and Confirm Password do not match.")]
+        [Required(AllowEmptyStrings = true)]
         public string ConfirmPassword { get; set; }
 
 

@@ -72,13 +72,14 @@ namespace DAL.Repository
             {
                 encryptdata.Append(encrypt[i].ToString());
             }
+           
             return encryptdata.ToString();
         }
         public void SaveUserDetails(UserViewModel model)
         {
 
             var passwordHash = encryption(model.Password);
-
+            var passwordHashed = passwordHash + "As@";
             using (IDbConnection connection = new SqlConnection(connectionString))
             {
                 var parameters = new DynamicParameters();
@@ -92,8 +93,8 @@ namespace DAL.Repository
                 parameters.Add("pincode", model.PinCode, DbType.Int32);
                 parameters.Add("dob", model.DAteOfBirth, DbType.String);
                 parameters.Add("address",model.Address , DbType.String);
-                parameters.Add("password", passwordHash, DbType.String);
-                parameters.Add("confirmPassword", passwordHash, DbType.String);
+                parameters.Add("password", passwordHashed, DbType.String);
+               
 
                 connection.Execute("sp_UserInsertUpdate", parameters, commandType: CommandType.StoredProcedure);
             }
@@ -139,8 +140,9 @@ namespace DAL.Repository
                 var parameters = new DynamicParameters();
                 parameters.Add("@ID", id, DbType.Int64);
                 userByID = connection.QueryFirstOrDefault<UserViewModel>("GetUserById", parameters, commandType: CommandType.StoredProcedure);
-            }
 
+            }
+            
             return userByID;
         }
 
@@ -207,6 +209,7 @@ namespace DAL.Repository
             using (IDbConnection connection = new SqlConnection(connectionString))
             {
                 var modelPassword = encryption(password);
+                modelPassword = modelPassword + "As@";
                 var parameters = new DynamicParameters();
                 parameters.Add("@email", email, DbType.String);
                 parameters.Add("@password", modelPassword, DbType.String);
@@ -228,7 +231,25 @@ namespace DAL.Repository
                 parameters.Add("@ID", id, DbType.Int64);
                 var reader = connection.QueryMultiple("sp_getUserProfile", parameters, commandType: CommandType.StoredProcedure);
                 profileByID.UserDetail = reader.ReadFirst<UserViewModel>();
-                profileByID.Suggestions = reader.ReadFirst<Suggestion>();
+                profileByID.Suggestions = reader.Read<Suggestion>().ToList();
+                profileByID.Friends = reader.Read<MutualFriendViewModel>().ToList();
+            }
+
+            return profileByID;
+        }
+
+        public ProfileViewModel GetFriendProfileById(long userId, long friendId)
+        {
+            ProfileViewModel profileByID = new ProfileViewModel();
+
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@ID", userId, DbType.Int64);
+                parameters.Add("@FriendID", friendId, DbType.Int64);
+                var reader = connection.QueryMultiple("sp_getFriendProfile", parameters, commandType: CommandType.StoredProcedure);
+                profileByID.UserDetail = reader.ReadFirst<UserViewModel>();
+                profileByID.MutualFriends = reader.Read<MutualFriendViewModel>().ToList();
             }
 
             return profileByID;

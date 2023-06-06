@@ -40,8 +40,8 @@ function editDetails(userID) {
             if (userID != 0) {
 
 
-                $("#password").addClass("hide");
-                $("#Cpassword").addClass("hide");
+                //$("#password").addClass("hide");
+                $("#Cpassword").remove();
             }
         },
 

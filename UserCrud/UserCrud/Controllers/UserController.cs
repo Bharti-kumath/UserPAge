@@ -39,7 +39,13 @@ namespace UserCrud.Controllers
         {
             var userId = Convert.ToInt64(Session["id"].ToString());
            ProfileViewModel profileData = _repository.GetProfileById(userId);
-            return View();
+            return View(profileData);
+        }
+        public ActionResult FriendProfile(long friendId)
+        {
+            var userId = Convert.ToInt64(Session["id"].ToString());
+            ProfileViewModel profileData = _repository.GetFriendProfileById(userId , friendId);
+            return View(profileData);
         }
         [HttpPost]
         public ActionResult Login(string Email, string Password)
@@ -56,7 +62,7 @@ namespace UserCrud.Controllers
                 var jwtKey = ConfigurationManager.AppSettings["JwtKey"];
                 var jwtIssuer = ConfigurationManager.AppSettings["JwtIssuer"];
                 var expiryMinutes = Convert.ToDouble(ConfigurationManager.AppSettings["JwtExpireMinutes"]);
-                var expirationTime = DateTime.UtcNow.AddMinutes(1);
+                var expirationTime = DateTime.UtcNow.AddMinutes(expiryMinutes);
               
 
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
@@ -78,7 +84,11 @@ namespace UserCrud.Controllers
                 return RedirectToAction("UserDetail", "User"); // Redirect to a protected page
             }
 
-            return View();
+            else
+            {
+                TempData["ErrorMessage"] = "Invalid Email OR Password";
+                return View();
+            }
         
         }
    
@@ -108,6 +118,11 @@ namespace UserCrud.Controllers
         [HttpPost]
         public ActionResult UserDetail(UserViewModel model)
         {
+            if(model.ID != 0)
+            {
+                model.ConfirmPassword = model.Password;
+                ModelState.Clear();
+            }
             if (ModelState.IsValid)
             {
                 _repository.SaveUserDetails(model);

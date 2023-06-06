@@ -8,7 +8,9 @@ namespace BAL.Models
     public class ProfileViewModel
     {
         public UserViewModel UserDetail { get; set; }
-        public Suggestion Suggestions { get; set; }
+        public List<Suggestion> Suggestions { get; set; }
+        public List<MutualFriendViewModel> Friends { get; set; }
+        public List<MutualFriendViewModel> MutualFriends { get; set; }
 
     }
 }

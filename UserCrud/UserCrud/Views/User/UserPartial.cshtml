@@ -132,13 +132,13 @@
                             @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form__input", @type = "password" } })
 
                             @Html.LabelFor(model => model.Password, "Password", htmlAttributes: new { @class = "form__label" })
-                        <span id="show-old" onclick="showPassword()"> <i class="bi bi-eye" id="eyeold"></i><i class="bi bi-eye-slash hideeye" id="eyeSlashold"></i></span>
+                            <span id="show-old" onclick="showPassword()"> <i class="bi bi-eye" id="eyeold"></i><i class="bi bi-eye-slash hideeye" id="eyeSlashold"></i></span>
                             @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
                         </div>
                         <div class="form__linput" id="Cpassword">
 
                             @Html.EditorFor(model => model.ConfirmPassword, new { htmlAttributes = new { @class = "form__input", @type = "password" } })
-                            @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger"  })
+                            @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
                             @Html.LabelFor(model => model.ConfirmPassword, "Confirm Password", htmlAttributes: new { @class = "form__label" })
                         </div>
 
@@ -146,7 +146,7 @@
                             <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModel()">Close</button>
                             <button type="submit" class="addButton">Save</button>
                         </div>
-
+                        
                         <input type="hidden" value="" id="userID" />
 
                     </form>

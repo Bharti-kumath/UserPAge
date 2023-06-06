@@ -20,5 +20,6 @@ namespace DAL
         void GeCSVFile(FilterOptions filterOptions);
 
         ProfileViewModel GetProfileById(long id);
+        ProfileViewModel GetFriendProfileById(long userId, long friendId);
     }
 }
