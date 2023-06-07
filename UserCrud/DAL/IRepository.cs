@@ -21,5 +21,8 @@ namespace DAL
 
         ProfileViewModel GetProfileById(long id);
         ProfileViewModel GetFriendProfileById(long userId, long friendId);
+        void SavePost(PostViewModel model,long userID);
+        void deletePost(long postID);
+        List<PostViewModel> GetAllPosts();
     }
 }

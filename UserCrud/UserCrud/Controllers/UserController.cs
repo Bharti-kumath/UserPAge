@@ -154,8 +154,21 @@ namespace UserCrud.Controllers
             filterOptions.export = 1;
             _repository.GeCSVFile(filterOptions);
            
-            return Content("exported");
+            return Json("exported");
+        }
+        [HttpPost]
+        public ActionResult SavePost(PostViewModel model)
+        {
+            var userID = Convert.ToInt64(Session["id"].ToString());
+            _repository.SavePost(model, userID);
+            return Json(new {success = true});
         }
 
+        public  ActionResult deletePost(long postID)
+        {
+            _repository.deletePost(postID);
+
+            return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+        }
     }
 }

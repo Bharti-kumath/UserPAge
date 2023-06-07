@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -233,6 +234,7 @@ namespace DAL.Repository
                 profileByID.UserDetail = reader.ReadFirst<UserViewModel>();
                 profileByID.Suggestions = reader.Read<Suggestion>().ToList();
                 profileByID.Friends = reader.Read<MutualFriendViewModel>().ToList();
+                profileByID.Posts = reader.Read<PostViewModel>().ToList();
             }
 
             return profileByID;
@@ -253,6 +255,54 @@ namespace DAL.Repository
             }
 
             return profileByID;
+        }
+
+        public void SavePost(PostViewModel model , long userID)
+        {
+        
+            string path = HttpContext.Current.Server.MapPath("~/Content/");
+            var filename = Guid.NewGuid().ToString()+model.ImagePath.FileName ;
+            var filePath = Path.Combine(path, "PostImages", filename);
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                model.ImagePath.InputStream.CopyTo(stream);
+            }
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("UserID", userID, DbType.Int32);
+                parameters.Add("Body", model.Body, DbType.String);
+                parameters.Add("Path", filename, DbType.String);
+                connection.Execute("sp_InsertPost", parameters, commandType: CommandType.StoredProcedure);
+            }
+        }
+
+        public void deletePost(long postID)
+        {
+
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("ID", postID, DbType.Int64);
+
+                connection.Execute("sp_PostDeleteOpertaion", parameters, commandType: CommandType.StoredProcedure);
+            }
+
+        }
+
+        public List<PostViewModel> GetAllPosts()
+        {
+
+            List<PostViewModel> posts;
+
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+                
+                posts = connection.Query<PostViewModel>("sp_GetAllPosts", commandType: CommandType.StoredProcedure).ToList();
+
+            }
+
+            return posts;
         }
     }
 }

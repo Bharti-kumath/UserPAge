@@ -21,9 +21,6 @@ function sendSms(toNumber) {
     });
 }
 
-const input = document.querySelector('#input');
-
-
 
 function editDetails(userID) {
     console.log(userID);
@@ -40,7 +37,7 @@ function editDetails(userID) {
             if (userID != 0) {
 
 
-                //$("#password").addClass("hide");
+                $("#password").addClass("hide");
                 $("#Cpassword").remove();
             }
         },
@@ -114,9 +111,15 @@ $(document).ready(function () {
 function closeModel() {
     $(".modal-backdrop").remove();
     $("#myForm")[0].reset();
+    $("#postForm")[0].reset();
     $('#exampleModalCenter').modal('hide');
     $("#password").removeClass("hide");
     $("#Cpassword").removeClass("hide");
+}
+function closeModel2() {
+    $("#postForm")[0].reset();
+    remove();
+    
 }
 
 function numberOnly(event) {
@@ -126,8 +129,6 @@ function numberOnly(event) {
     }
     return true;
 }
-
-
 
 function getDataTable() {
    
@@ -225,4 +226,102 @@ function exportToCSV() {
         '&ToDate=' + encodeURIComponent(toDate);
 
     $('#exportanchor').attr('href', exportUrl);
+}
+
+
+
+function remove() {
+    $("#preview").hide();
+    $('#imageUrl').attr('src', "");
+}
+function ClickInput() {
+    $("#fileinput").click();
+};
+
+function preview(uploader) {
+    if (uploader.files && uploader.files[0]) {
+        $("#preview").show();
+        $('#imageUrl').attr('src', window.URL.createObjectURL(uploader.files[0]));
+       
+    }
+}
+
+function previewImage(something) {
+    preview(something);
+};
+
+function createPost() {
+    var postForm= new FormData();
+    postForm.append('Body', $('#textarea').val());
+    postForm.append('ImagePath', $("#fileinput")[0].files[0]);
+    
+    console.log(postForm);
+
+    $.ajax({
+        type: 'POST',
+        url: "/User/SavePost",
+        data:postForm
+    ,
+        processData: false,
+        contentType: false,
+        success: function (message) {
+            $('#post').modal("hide");
+            $("#postForm")[0].reset();
+            remove();
+            location.reload(true)
+        },
+        error: function (error) {
+            console.log(error);
+            console.log("error in adding story");
+        }
+
+
+    });
+}
+
+function deletePost(postID) {
+    var confirmBox = `
+    <div class="modal fade" id="deletePost" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+    <div class="modal-header">
+    <h5 class="modal-title">Confirm Delete</h5>
+    <button type="button" class="closed btn" data-bs-dismiss="modal" aria-label="Close">
+   <span aria-hidden="true" class="fs-3">&times;</span>
+    </button>
+    </div>
+    <div class="modal-body">
+    <p>Are you sure you want to delete this User?</p>
+    </div>
+    <div class="modal-footer d-flex justify-content-center">
+    <button type="button" class="cancelbtn me-2 btn bg-light" data-bs-dismiss="modal" >Cancel</button>
+    <button type="button" class="m-0 confirmDelete btn bg-danger" id="apply-button">Delete</button>
+    </div>
+    </div></div></div>`;
+
+    $("body").append(confirmBox);
+
+    $("#deletePost").modal("show");
+
+    $(".confirmDelete").on("click", function () {
+
+
+        $("#userId");
+        $.ajax({
+            type: "GET",
+            url: '/User/deletePost',
+            data: { postID: postID },
+            success: function (response) {
+                window.location.href = "Profile";
+            },
+
+            error: function (error) { alert(error); console.log(error) }
+        });
+        $('#deletePost').modal("hide");
+
+    });
+
+    $('#deletePost').on('hidden.bs.modal', () => {
+        $('#deletePost').remove();
+    });
 }

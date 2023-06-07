@@ -12,5 +12,7 @@ namespace BAL.Models
         public List<MutualFriendViewModel> Friends { get; set; }
         public List<MutualFriendViewModel> MutualFriends { get; set; }
 
+        public PostViewModel Post { get; set; }
+        public List<PostViewModel> Posts { get; set; }
     }
 }

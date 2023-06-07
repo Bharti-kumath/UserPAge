@@ -428,3 +428,91 @@ h4 {
     -webkit-text-decoration: none;
     text-decoration: none;
 }
+
+
+#preview {
+    display: none;
+    position: relative;
+    margin: 1.5rem 0rem;
+}
+
+#cross {
+    position: absolute;
+    right: 1rem;
+    border-radius: 60%;
+    padding: 0.4rem 0.6rem;
+    margin-top: 0.3rem;
+    background-color: #1e293bcc;
+    box-shadow: inset 0 1px 0 0 #ffffff0d;
+    cursor: pointer;
+}
+
+#camera {
+    border-radius: 50%;
+    padding: 0.4rem 0.7rem;
+    margin-top: 0.6rem;
+    background-color: rgb(56, 189, 248);
+    ;
+    box-shadow: inset 0 1px 0 0 #ffffff0d;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+#fileinput {
+    display: none;
+}
+
+.postform {
+    padding: 1rem;
+}
+
+#textarea {
+    border: none !important;
+    outline: none !important;
+    background-color: transparent;
+    color: #fff;
+}
+
+    #textarea :focus {
+        border: none !important;
+        outline: none !important;
+        cursor: text;
+    }
+
+.post-Userimg {
+    width: 3rem;
+    height: 3rem;
+}
+
+.img-text {
+    vertical-align: middle;
+}
+#imageUrl{
+    max-height:20rem;
+    width:100%;
+    background-position:center;
+    background-size:cover;
+}
+.post-img {
+    max-height: 18rem;
+    width: 100%;
+    background-size: cover;
+}
+.Content {
+    position: absolute;
+    width:100%;
+    bottom: 0rem;
+    padding: 1rem;
+    background:linear-gradient(rgba(26,96,111,0) 0%, rgba(26,96,111,0) 1%, rgba(24,87,104,0.91) 31%, rgba(21,65,89,0.91) 100%);
+}
+#deletepost {
+    top: 13% !important;
+    right: 2% !important;
+    left: auto !important;
+    background: transparent !important;
+    border-color: #fff !important;
+}
+    #deletepost:before, #deletepost:after {
+        border-color: #fff !important;
+        background-color: #fff;
+    }
