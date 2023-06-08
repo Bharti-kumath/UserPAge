@@ -1,0 +1,96 @@
+﻿@{
+    Page.Title = "Title goes here";
+    //Layout = "Your Layout Page goes here";
+}
+
+
+    @model List<BAL.Models.PostViewModel>
+<div class="row  m-0 p-3 justify-content-center">
+
+    @foreach (var post in Model)
+    {
+        <div class="col-3"></div>
+
+        <div class="col-6">
+
+
+            <div class="view overlay hm-black-light posts">
+                <div class="postHeader row mb-2">
+
+                    <div class="col-md-1 col-3 ">
+                        <img src="https://mdbootstrap.com/images/avatars/img%20(4).jpg" alt="" class="img-circle img-fluid post-Userimg">
+                    </div>
+                    <div class="col-md-11 col-9">
+                        <h5 class="mb-0">@post.UserName</h5>
+
+
+                        @{
+                            var targetDate = @post.Created_At;
+                            TimeSpan timeDifference = DateTime.Now - targetDate;
+                            var date = TimeSpan.FromMinutes(1);
+                        }
+                        @if (timeDifference < date)
+                        {
+                            <p>Just Now</p>
+                        }
+                        else if (timeDifference < TimeSpan.FromHours(1))
+                        {
+                            int minutes = (int)timeDifference.TotalMinutes;
+
+                            <p>@minutes m ago</p>
+                        }
+                        else if (timeDifference < TimeSpan.FromDays(1))
+                        {
+                            int hours = (int)timeDifference.TotalHours;
+                            <p>@hours hr ago</p>
+                        }
+                        else if (timeDifference < TimeSpan.FromDays(7))
+                        {
+                            int days = (int)timeDifference.TotalDays;
+                            <p>@days d ago</p>
+                        }
+                        else
+                        {
+                            int weeks = (int)(timeDifference.TotalDays / 7);
+                            <p>@weeks w ago</p>
+                        }
+
+
+
+
+                    </div>
+
+                </div>
+                <img src="~/Content/PostImages/@post.Path" class="img-fluid post-img" alt="" />
+                <div class="postFooter">
+                    <p class="mb-1 fs-4">@post.Body</p>
+                    <div class="Like">
+                        @if (post.Liked == post.ID)
+                        {
+                            <i class="bi bi-heart-fill text-danger me-1 @post.ID" onclick="postLike(@post.ID)"></i>
+                        }
+                        else
+                        {
+                            <i class="bi bi-heart me-1 @post.ID" onclick="postLike(@post.ID)"></i>
+                        }
+                        <span class="like-@post.ID">@post.TotalLikes</span>
+                        <i class="bi bi-chat-left-quote ms-2 me-1" onclick="showComment(@post.ID)"></i> 
+                        <span id="comments-@post.ID">@post.TotalComments</span>
+                    </div>
+                </div>
+                <div class="commentBox mt-2 ">
+                    <input placeholder="Write your comment" class="comment-box" id="commentText-@post.ID" oninput="showPostButton(@post.ID)"/>
+                    
+                    <button class="submit-button btn commentbtn" id="postComment-@post.ID" onclick="saveComment(@post.ID)"  disabled>Post</button>
+                </div>
+                <div class="row comment-@post.ID">
+
+                </div>
+            </div>
+        </div>
+        <div class="col-3"></div>
+    }
+
+
+
+</div>

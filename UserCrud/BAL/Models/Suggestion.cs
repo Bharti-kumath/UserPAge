@@ -9,5 +9,6 @@ namespace BAL.Models
     {
         public int Id { get; set; }
         public string SuggestedName { get; set; }
+        
     }
 }

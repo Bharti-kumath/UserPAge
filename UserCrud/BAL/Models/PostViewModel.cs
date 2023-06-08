@@ -18,7 +18,7 @@ namespace BAL.Models
         public int TotalPost { get; set; }
         public int TotalLikes { get; set; }
         public int TotalComments { get; set; }
-
-        public DateTime CreatedAt { get; set; }
+        public int Liked { get; set; }
+        public DateTime Created_At { get; set; }
     }
 }

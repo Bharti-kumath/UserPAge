@@ -312,7 +312,7 @@ function deletePost(postID) {
             url: '/User/deletePost',
             data: { postID: postID },
             success: function (response) {
-                window.location.href = "Profile";
+                window.location.href = "UserProfile";
             },
 
             error: function (error) { alert(error); console.log(error) }
@@ -324,4 +324,133 @@ function deletePost(postID) {
     $('#deletePost').on('hidden.bs.modal', () => {
         $('#deletePost').remove();
     });
+}
+
+function postLike(postID) {
+
+    $.ajax({
+        type: "Post",
+        url: "/User/LikePost",
+        data: { postID: postID },
+        success: function (response) {
+
+            let likeicon = $("i." + postID)
+            if (likeicon.hasClass("bi-heart")) {
+                likeicon.removeClass("bi-heart")
+                likeicon.addClass("bi-heart-fill").addClass("text-danger");
+            }
+            else {
+                likeicon.removeClass("bi-heart-fill").removeClass("text-danger")
+                likeicon.addClass("bi-heart");
+            }
+            $(".like-" + postID).empty().text(response);
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    })
+
+}
+
+
+
+function showComment(postID) {
+    var commentSection = $(".CommentPartial");
+    var isVisible = commentSection.is(":visible");
+    
+    if (isVisible) {
+        commentSection.toggle();
+    }
+    else
+    {
+        callAjaxComment(postID);
+    }
+}
+
+function callAjaxComment(postID) {
+    $.ajax({
+        type: "Post",
+        url: "/User/GetCommentsByPostId",
+        data: { id: postID },
+        success: function (response) {
+
+            $(".comment-" + postID).empty().html(response);
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+}
+
+function saveComment(postID) {
+    var commentText = jQuery.trim($("#commentText-" + postID).val());
+    if (commentText.length < 1) {
+        alert("Bolana Comment likho Phele !!!")
+    } else {
+        $.ajax({
+            type: "Post",
+            url: "/User/SaveComment",
+            data: { postID: postID, commentText: commentText },
+            success: function (response) {
+                console.log("Comment submitted successfully!");
+                $("#comments-" + postID).empty().text(response);
+                $("#commentText-" + postID).val("");
+                callAjaxComment(postID);
+            },
+            error: function (error) {
+                console.log("Error submitting comment:", error);
+            }
+        });
+    }
+    
+}
+
+function deleteComment(commentID , postID){
+    
+        $.ajax({
+            type: "Post",
+            url: "/User/DeleteComment",
+            data: { commentID: commentID, postId: postID},
+            success: function (response) {
+                console.log("Comment deleted successfully!");
+                $("#comments-" + postID).empty().text(response);
+                callAjaxComment(postID);
+            },
+            error: function (error) {
+                console.log("Error submitting comment:", error);
+            }
+        });
+    
+
+}
+
+function showPostButton(postID) {
+    var inputlength = jQuery.trim($("#commentText-" + postID).val());
+    if (inputlength.length > 0) {
+        $("#postComment-" + postID).show();
+        $("#postComment-" + postID).prop("disabled", false);
+
+    }
+    else {
+        $("#postComment-" + postID).hide();
+        $("#postComment-" + postID).prop("disabled", true)
+    }
+
+}
+
+function followRequest(toUserID) {
+
+    $.ajax({
+        type: "Post",
+        url: "/User/FollowRequest",
+        data: { toUserID: toUserID },
+        success: function (response) {
+            console.log("folllowed");
+            $("#follow-" + toUserID).text("Requested").addClass("requested");
+        },
+        error: function (error) {
+            console.log("Error requesting:", error);
+        }
+    });
+
 }

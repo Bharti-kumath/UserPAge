@@ -60,7 +60,7 @@ namespace DAL.Repository
             return UserList;
         }
 
-        public string encryption(String password)
+        private string Encryption(String password)
         {
             MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
             byte[] encrypt;
@@ -79,7 +79,7 @@ namespace DAL.Repository
         public void SaveUserDetails(UserViewModel model)
         {
 
-            var passwordHash = encryption(model.Password);
+            var passwordHash = Encryption(model.Password);
             var passwordHashed = passwordHash + "As@";
             using (IDbConnection connection = new SqlConnection(connectionString))
             {
@@ -204,12 +204,12 @@ namespace DAL.Repository
 
         }
 
-        public UserViewModel checkUser(string email, string password)
+        public UserViewModel CheckUser(string email, string password)
         {
             UserViewModel userExist;
             using (IDbConnection connection = new SqlConnection(connectionString))
             {
-                var modelPassword = encryption(password);
+                var modelPassword = Encryption(password);
                 modelPassword = modelPassword + "As@";
                 var parameters = new DynamicParameters();
                 parameters.Add("@email", email, DbType.String);
@@ -277,7 +277,7 @@ namespace DAL.Repository
             }
         }
 
-        public void deletePost(long postID)
+        public void DeletePost(long postID)
         {
 
             using (IDbConnection connection = new SqlConnection(connectionString))
@@ -290,19 +290,85 @@ namespace DAL.Repository
 
         }
 
-        public List<PostViewModel> GetAllPosts()
+        public List<PostViewModel> GetAllPosts(long userID)
         {
 
             List<PostViewModel> posts;
 
             using (IDbConnection connection = new SqlConnection(connectionString))
             {
-                
-                posts = connection.Query<PostViewModel>("sp_GetAllPosts", commandType: CommandType.StoredProcedure).ToList();
+                var parameters = new DynamicParameters();
+                parameters.Add("userID", userID, DbType.Int64);
+                posts = connection.Query<PostViewModel>("sp_GetAllPosts", parameters, commandType: CommandType.StoredProcedure).ToList();
 
             }
 
             return posts;
+        }
+
+        public PostViewModel LikePost(long postID, long userID)
+        {
+            PostViewModel totallikes;
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("PostID", postID, DbType.Int64);
+                parameters.Add("UserID", userID, DbType.Int64);
+                totallikes = connection.QueryFirstOrDefault<PostViewModel>("sp_LikeUnlikePost", parameters, commandType: CommandType.StoredProcedure);
+            }
+            return totallikes;
+         }
+
+        public List<CommentViewModel> GetCommentsByPostId(long id)
+        {
+            List<CommentViewModel> totalComments;
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("PostID", id, DbType.Int64);
+                totalComments = connection.Query<CommentViewModel>("sp_GetCommentsByPost", parameters, commandType: CommandType.StoredProcedure).ToList();
+            }
+            return totalComments;
+        }
+
+        public CommentViewModel SaveComment(long userID, long postID, string commentText)
+        {
+            CommentViewModel comment;
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("PostID", postID, DbType.Int64);
+                parameters.Add("UserID", userID, DbType.Int64);
+                parameters.Add("comment", commentText, DbType.String);
+                comment = connection.QueryFirstOrDefault<CommentViewModel>("sp_SaveComment", parameters, commandType: CommandType.StoredProcedure);
+            }
+            return comment;
+        }
+
+        public CommentViewModel DeleteComment(long commentID , long postID)
+        {
+            CommentViewModel comment;
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("CommentID", commentID, DbType.Int64);
+                parameters.Add("PostID", postID, DbType.Int64);
+                comment = connection.QueryFirstOrDefault<CommentViewModel>("sp_DeleteComment", parameters, commandType: CommandType.StoredProcedure);
+            }
+            return comment;
+        }
+
+        public void FollowRequest(long userID, long toUserId)
+        {
+           
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("FollowerID", userID, DbType.Int64);
+                parameters.Add("FollowingID", toUserId, DbType.Int64);
+                connection.Execute("sp_FollowRequest", parameters, commandType: CommandType.StoredProcedure);
+            }
+           
         }
     }
 }

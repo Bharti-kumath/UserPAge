@@ -1,16 +1,39 @@
 ﻿
 
-body {
+/*body {
     background: linear-gradient(-45deg, rgb(36, 60, 117), #07455b,rgb(15,23,42 ), #021f19);
     background-size: 400% 400%;
     animation: gradient 15s ease infinite;
-    height: 100vh;
-    color:#fff;
-   
+    height: 100%;
+    color: #fff;
+    will-change: background-position;
 }
-.hide{
-    visibility:hidden !important;
-    position:absolute !important;
+
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}*/
+
+.main-body {
+    background: linear-gradient(-45deg, rgb(36, 60, 117), #07455b, rgb(15, 23, 42), #021f19);
+    background-size: 400% 400%;
+    animation: gradient 5s linear infinite;
+    min-height: 100vh;
+    color: #fff;
+    will-change: background-position;
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
 @keyframes gradient {
@@ -27,8 +50,17 @@ body {
     }
 }
 
+.hide {
+    visibility: hidden !important;
+    position: absolute !important;
+}
+
 .main-container {
+    -webkit-transform: translate3d(0,0,0);
     padding: 4rem 8rem !important;
+}
+.containers {
+    -webkit-transform: translate3d(0,0,0);
 }
 .hidee {
     padding: 0.5rem !important;
@@ -516,3 +548,62 @@ h4 {
         border-color: #fff !important;
         background-color: #fff;
     }
+
+.posts {
+    -webkit-backface-visibility: hidden;
+    background-color: #1e293bcc;
+    box-shadow: inset 0 1px 0 0 #ffffff0d;
+    padding: 1.5rem;
+    border-radius: 1.5rem;
+    opacity: 1;
+    z-index: 100;
+    padding: 2rem;
+    margin: 1rem;
+}
+.CommentPartial{
+    margin:1rem 0;
+    padding:1rem;
+  
+    
+}
+.commentBox{
+    position:relative;
+    padding:1.5rem;
+    width:100%;
+    color:rgb(233, 237, 255);
+}
+    .commentBox input {
+        position: absolute;
+        top: 0.2rem;
+        left: 0.2rem;
+        border: 1px solid rgb(56 189 248) !important;
+        border-radius: 15px;
+        outline: none;
+        width:100%;
+        color: #fff;
+        padding:0.5rem;
+        background-color:transparent !important;
+    }
+
+    .commentBox button {
+        position: absolute;
+        top: 0.2rem;
+        right: 0.2rem;
+        border: none !important;
+        color: #fff;
+    }
+.commentbtn {
+    display: none;
+}
+    .commentbtn:hover {
+        color: #fff !important;
+    }
+.deleteComment{
+    left:auto !important;
+    right:0;
+}
+.requested{
+    background-color:transparent !important;
+    border:1px solid rgb(56 189 248) !important;
+
+}

@@ -268,9 +268,11 @@
     <Content Include="Views\User\UserPartial.cshtml" />
     <Content Include="Views\User\Login.cshtml" />
     <Content Include="Views\Home\ExpiredToken.cshtml" />
-    <Content Include="Views\User\Profile.cshtml" />
+    <Content Include="Views\User\UserProfile.cshtml" />
     <Content Include="Views\User\FriendProfile.cshtml" />
     <Content Include="Views\User\_UserPosts.cshtml" />
+    <Content Include="Views\User\Landing.cshtml" />
+    <Content Include="Views\User\Comment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\PostImage\" />
