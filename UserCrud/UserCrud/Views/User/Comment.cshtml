@@ -1,62 +1,63 @@
 ﻿
-@{ 
+@{
     var userID = ViewBag.userID;
 }
 
 @model List<BAL.Models.CommentViewModel>
-<div class="CommentPartial">
-    <h5>Comments</h5>
-   
-    @foreach (var comment in Model)
-    {
-<div class="d-flex flex-row align-items-center my-3 position-relative">
-    <img src="https://mdbootstrap.com/images/avatars/img%20(4).jpg" alt="" class="img-circle mx-2 img-fluid post-Userimg">
-    <div class="d-flex flex-column">
-        <div>
-            <span class="me-2 mb-0">@comment.UserName</span>
+
+<h5>Comments</h5>
+
+@foreach (var comment in Model)
+{
+    <div class="CommentPartial-@comment.Post_id">
+        <div class="d-flex flex-row align-items-center my-3 position-relative">
+            <img src="https://mdbootstrap.com/images/avatars/img%20(4).jpg" alt="" class="img-circle mx-2 img-fluid post-Userimg">
+            <div class="d-flex flex-column">
+                <div>
+                    <span class="me-2 mb-0">@comment.UserName</span>
 
 
 
-            @{
-                var targetDate = @comment.Created_At;
-                TimeSpan timeDifference = DateTime.Now - targetDate;
-                var date = TimeSpan.FromMinutes(1);
-            }
-            @if (timeDifference < date)
-            {
-                <span class="mb-0">Just Now</span>
-            }
-            else if (timeDifference < TimeSpan.FromHours(1))
-            {
-                int minutes = (int)timeDifference.TotalMinutes;
+                    @{
+                        var targetDate = @comment.Created_At;
+                        TimeSpan timeDifference = DateTime.Now - targetDate;
+                        var date = TimeSpan.FromMinutes(1);
+                    }
+                    @if (timeDifference < date)
+                    {
+                        <span class="mb-0">Just Now</span>
+                    }
+                    else if (timeDifference < TimeSpan.FromHours(1))
+                    {
+                        int minutes = (int)timeDifference.TotalMinutes;
 
-                <span class="mb-0">@minutes m ago</span>
-            }
-            else if (timeDifference < TimeSpan.FromDays(1))
+                        <span class="mb-0">@minutes m ago</span>
+                    }
+                    else if (timeDifference < TimeSpan.FromDays(1))
+                    {
+                        int hours = (int)timeDifference.TotalHours;
+                        <span class="mb-0">@hours hr ago</span>
+                    }
+                    else if (timeDifference < TimeSpan.FromDays(7))
+                    {
+                        int days = (int)timeDifference.TotalDays;
+                        <span class="mb-0">@days d ago</span>
+                    }
+                    else
+                    {
+                        int weeks = (int)(timeDifference.TotalDays / 7);
+                        <span class="mb-0">@weeks w ago</span>
+                    }
+                </div>
+                <p class="m-0">@comment.Comment_Text</p>
+            </div>
+
+            @if (userID == comment.User_id)
             {
-                int hours = (int)timeDifference.TotalHours;
-                <span class="mb-0">@hours hr ago</span>
-            }
-            else if (timeDifference < TimeSpan.FromDays(7))
-            {
-                int days = (int)timeDifference.TotalDays;
-                <span class="mb-0">@days d ago</span>
-            }
-            else
-            {
-                int weeks = (int)(timeDifference.TotalDays / 7);
-                <span class="mb-0">@weeks w ago</span>
+                <button onclick="deleteComment(@comment.Id,@comment.Post_id)" class="trash" id="deleteComment"></button>
             }
         </div>
-        <p class="m-0">@comment.Comment_Text</p>
-    </div>
+        </div>
 
-    @if (userID == comment.User_id)
-    {
-        <button onclick="deleteComment(@comment.Id,@comment.Post_id)" class="trash" id="deleteComment"></button>
-    }
-
-</div>
-        
-    }
-</div>
+        }
+   

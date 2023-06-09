@@ -306,7 +306,7 @@ namespace DAL.Repository
             return posts;
         }
 
-        public PostViewModel LikePost(long postID, long userID)
+        public PostViewModel LikePost(long postID, long userID,long postUserID)
         {
             PostViewModel totallikes;
             using (IDbConnection connection = new SqlConnection(connectionString))
@@ -314,6 +314,7 @@ namespace DAL.Repository
                 var parameters = new DynamicParameters();
                 parameters.Add("PostID", postID, DbType.Int64);
                 parameters.Add("UserID", userID, DbType.Int64);
+                parameters.Add("postUserID", postUserID, DbType.Int64);
                 totallikes = connection.QueryFirstOrDefault<PostViewModel>("sp_LikeUnlikePost", parameters, commandType: CommandType.StoredProcedure);
             }
             return totallikes;
@@ -331,7 +332,7 @@ namespace DAL.Repository
             return totalComments;
         }
 
-        public CommentViewModel SaveComment(long userID, long postID, string commentText)
+        public CommentViewModel SaveComment(long userID, long postID, string commentText,long postUserID)
         {
             CommentViewModel comment;
             using (IDbConnection connection = new SqlConnection(connectionString))
@@ -340,6 +341,7 @@ namespace DAL.Repository
                 parameters.Add("PostID", postID, DbType.Int64);
                 parameters.Add("UserID", userID, DbType.Int64);
                 parameters.Add("comment", commentText, DbType.String);
+                parameters.Add("postUserID", postUserID, DbType.Int64);
                 comment = connection.QueryFirstOrDefault<CommentViewModel>("sp_SaveComment", parameters, commandType: CommandType.StoredProcedure);
             }
             return comment;
@@ -369,6 +371,53 @@ namespace DAL.Repository
                 connection.Execute("sp_FollowRequest", parameters, commandType: CommandType.StoredProcedure);
             }
            
+        }
+
+        public List<NotificationViewModel> GetNotificationByID(long userID)
+        {
+            List<NotificationViewModel> totalNotifications;
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("UserID", userID, DbType.Int64);
+                totalNotifications = connection.Query<NotificationViewModel>("sp_GetNotificationByID", parameters, commandType: CommandType.StoredProcedure).ToList();
+            }
+            return totalNotifications;
+        }
+
+        public void changeNotificationStatus(long id)
+        {
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("id", id, DbType.Int64);
+                connection.Execute("sp_ReadNotificationByID", parameters, commandType: CommandType.StoredProcedure);
+            }
+        }
+
+        public int GetNotificationCount(long userId)
+        {
+            int count = 0;
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("userId", userId, DbType.Int64);
+               var result = connection.QueryFirstOrDefault<int>("sp_notificationCount", parameters, commandType: CommandType.StoredProcedure);
+                count = (int)result; 
+            }
+            return count;
+        }
+
+        public void UpdateFollowRequest(long followerId, long followingID, byte action)
+        {
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("followerId", followerId, DbType.Int64);
+                parameters.Add("followingID", followingID, DbType.Int64);
+                parameters.Add("action", action, DbType.Byte);
+                connection.Execute("sp_UpdateFollowRequest", parameters, commandType: CommandType.StoredProcedure);
+            }
         }
     }
 }

@@ -23,17 +23,17 @@
         background-position: 0% 50%;
     }
 }*/
-
+html {
+   scroll-behavior: smooth;
+}
 .main-body {
     background: linear-gradient(-45deg, rgb(36, 60, 117), #07455b, rgb(15, 23, 42), #021f19);
     background-size: 400% 400%;
     animation: gradient 5s linear infinite;
     min-height: 100vh;
     color: #fff;
-    will-change: background-position;
-    -webkit-backface-visibility: hidden;
-    -moz-backface-visibility: hidden;
-    backface-visibility: hidden;
+    
+    scroll-behavior: smooth;
 }
 
 @keyframes gradient {
@@ -56,12 +56,10 @@
 }
 
 .main-container {
-    -webkit-transform: translate3d(0,0,0);
+  
     padding: 4rem 8rem !important;
 }
-.containers {
-    -webkit-transform: translate3d(0,0,0);
-}
+
 .hidee {
     padding: 0.5rem !important;
     display: none;
@@ -168,13 +166,21 @@ h4 {
 .addButton {
     background-color: rgb(14 165 233);
     border-color: transparent;
-    border-radius: 0.375rem;
+    border-radius: 0.475rem;
     color: #fff;
     font-weight: 600;
     padding: 0.2rem 0.75rem;
     box-shadow: 0 1px 3px 0 transparent, 0 1px 2px -1px #00001a;
 }
-
+.deletebutton {
+    background-color: rgb(233, 237, 255);
+    border-color: transparent;
+    border-radius: 0.475rem;
+    color: #00001a;
+    font-weight: 600;
+    padding: 0.2rem 0.75rem;
+    box-shadow: 0 1px 3px 0 transparent, 0 1px 2px -1px #00001a;
+}
 .modal-content {
     background-color: #1e293bcc;
     box-shadow: inset 0 1px 0 0 #ffffff0d;
@@ -560,6 +566,7 @@ h4 {
     padding: 2rem;
     margin: 1rem;
 }
+
 .CommentPartial{
     margin:1rem 0;
     padding:1rem;
@@ -607,3 +614,95 @@ h4 {
     border:1px solid rgb(56 189 248) !important;
 
 }
+
+.hidden{
+    display:none;
+}
+.notificationDot {
+    position: absolute;
+    background-color: rgb(244 114 182);
+    bottom: 15px;
+    border-radius: 50%;
+    left: 9px;
+    height: 16px;
+    width: 16px;
+    top: 0px;
+}
+
+    .notificationDot p {
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        padding-bottom: 1px;
+        font-weight: bold;
+    }
+
+.effect {
+   border: 2px solid rgb(56 189 248);
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    transition:2s ease-in;
+    
+}
+
+.effect  .focus-border:before,
+.effect  .focus-border:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #3399FF;
+    transition: 0.3s;
+     transition-delay:3s;
+}
+
+    .effect .focus-border:after {
+        top: auto;
+        bottom: 0;
+        left: auto;
+        right: 0;
+        width: 100%;
+        transition: 1.3s;
+        transition-delay:4s;
+    }
+
+    .effect .focus-border .i:before,
+    .effect .focus-border .i:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 2px;
+        height: 0;
+        background-color: #3399FF;
+        transition: 0.4s;
+        transition-delay: 3s;
+    }
+
+    .effect .focus-border .i:after {
+        left: auto !important;
+        right: 0 !important;
+        top: auto;
+        bottom: 0;
+        height: 100%;
+        transition: 1.3s;
+        transition-delay: 4s;
+    }
+
+    .effect:focus .focus-border:before,
+    .effect:focus .focus-border:after {
+        width: 100%;
+        transition: 2s ease-in;
+        transition-delay: 3s;
+        transition-delay: 4s;
+    }
+
+    .effect:focus .focus-border .i:before,
+    .effect:focus .focus-border .i:after {
+        height: 100%;
+        transition: 2s ease-in;
+        transition-delay: 3s;
+    }

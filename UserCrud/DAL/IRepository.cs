@@ -24,10 +24,14 @@ namespace DAL
         void SavePost(PostViewModel model,long userID);
         void DeletePost(long postID);
         List<PostViewModel> GetAllPosts(long userID);
-        PostViewModel LikePost(long postID, long userID);
+        PostViewModel LikePost(long postID, long userID, long postUserID);
         List<CommentViewModel> GetCommentsByPostId(long id);
-        CommentViewModel SaveComment(long userID, long postID, string commentText);
+        CommentViewModel SaveComment(long userID, long postID, string commentText,long postUserID);
         CommentViewModel DeleteComment(long commentID, long postId);
         void FollowRequest(long userID, long toUserId);
+        List<NotificationViewModel> GetNotificationByID(long userID);
+        void changeNotificationStatus(long id);
+        int GetNotificationCount(long userId);
+        void UpdateFollowRequest(long followerId, long followingID, byte action);
     }
 }

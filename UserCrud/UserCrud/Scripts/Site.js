@@ -103,7 +103,13 @@ $(document).ready(function () {
     setTimeout(function () {
         $("#successMessage").fadeOut("slow");
     }, 1500);
-    
+
+    const postID = window.location.hash.substring(1);
+    console.log(postID)
+
+    if (postID) {
+        $("#" + postID).addClass("effect").focus();
+    }
 
 });
 
@@ -326,12 +332,12 @@ function deletePost(postID) {
     });
 }
 
-function postLike(postID) {
+function postLike(postID, postUserID) {
 
     $.ajax({
         type: "Post",
         url: "/User/LikePost",
-        data: { postID: postID },
+        data: { postID: postID, postUserID: postUserID},
         success: function (response) {
 
             let likeicon = $("i." + postID)
@@ -355,7 +361,7 @@ function postLike(postID) {
 
 
 function showComment(postID) {
-    var commentSection = $(".CommentPartial");
+    var commentSection = $(".CommentPartial-" + postID);
     var isVisible = commentSection.is(":visible");
     
     if (isVisible) {
@@ -382,7 +388,7 @@ function callAjaxComment(postID) {
     });
 }
 
-function saveComment(postID) {
+function saveComment(postID, postUserID) {
     var commentText = jQuery.trim($("#commentText-" + postID).val());
     if (commentText.length < 1) {
         alert("Bolana Comment likho Phele !!!")
@@ -390,7 +396,7 @@ function saveComment(postID) {
         $.ajax({
             type: "Post",
             url: "/User/SaveComment",
-            data: { postID: postID, commentText: commentText },
+            data: { postID: postID, commentText: commentText, postUserID: postUserID },
             success: function (response) {
                 console.log("Comment submitted successfully!");
                 $("#comments-" + postID).empty().text(response);
@@ -454,3 +460,82 @@ function followRequest(toUserID) {
     });
 
 }
+
+function getNotification() {
+
+            window.location.href = 'Notification'
+}
+
+function notificationRead(id) {
+
+    $.ajax({
+        type: "GET",
+        url: "/User/ReadNotification",
+        data: { id: id },
+        success: function () {
+            $("#notificationread").prop("disabled", true);
+        }
+        ,
+        error: function (error) {
+            console.log(error)
+        }
+    })
+
+
+};
+
+
+setInterval(function () {
+    $.ajax({
+        url: '/User/GetNotificationCount',
+        method: 'GET',
+        success: function (response) {
+            
+            if (response > 0) {
+                $(".notificationDot").show();
+                $(".notificationDot p").empty();
+                $(".notificationDot p").text(response)
+            }
+
+        },
+        error: function (xhr, status, error) {
+            console.log(error)
+        }
+    });
+}, 10000);
+
+
+function requestUpdate(followerId, action) {
+    console.log(action);
+    $.ajax({
+        type: "Post",
+        url: "/User/UpdateFollowRequest",
+        data: { followerId: followerId,action:action },
+        success: function () {
+            console.log("follow request updated ");
+            if (action = 1) {
+                $("#confirm-" + followerId).text("Accepted");
+                $("#delete-" + followerId).remove();
+            }
+            else {
+                $("#delete-" + followerId).text("Declined");
+                $("#confirm-" + followerId).remove();
+            }
+        }
+        ,
+        error: function (error) {
+            console.log(error)
+        }
+    })
+
+}
+
+function focusPost(postID) {
+    
+    window.location.href = 'Landing/#post-' + postID;
+
+   
+   
+}
+
+

@@ -273,6 +273,7 @@
     <Content Include="Views\User\_UserPosts.cshtml" />
     <Content Include="Views\User\Landing.cshtml" />
     <Content Include="Views\User\Comment.cshtml" />
+    <Content Include="Views\User\Notification.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\PostImage\" />

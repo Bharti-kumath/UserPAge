@@ -192,10 +192,10 @@ namespace UserCrud.Controllers
         }
 
         [HttpPost]
-        public ActionResult LikePost(long postID)
+        public ActionResult LikePost(long postID, long postUserID)
         {
             var userID = Convert.ToInt64(Session["id"].ToString());
-            var post = _repository.LikePost(postID, userID);
+            var post = _repository.LikePost(postID, userID , postUserID);
             if (post != null)
             {
                 return Json(post.TotalLikes);
@@ -214,10 +214,10 @@ namespace UserCrud.Controllers
             return PartialView("Comment", comments);
         }
         [HttpPost]
-        public ActionResult SaveComment(long postID, string commentText)
+        public ActionResult SaveComment(long postID, string commentText,long postUserID)
         {
             var userID = Convert.ToInt64(Session["id"].ToString());
-            var comment = _repository.SaveComment(userID, postID, commentText);
+            var comment = _repository.SaveComment(userID, postID, commentText, postUserID);
             if (comment != null)
             {
                 return Json(comment.TotalComments);
@@ -250,6 +250,35 @@ namespace UserCrud.Controllers
 
             return Json("requested");
 
+        }
+
+        public ActionResult Notification()
+        {
+            var userID = Convert.ToInt64(Session["id"].ToString());
+            List<NotificationViewModel> notificationList = _repository.GetNotificationByID(userID);
+            return View(notificationList);
+        }
+
+        public ActionResult ReadNotification(long id)
+        {
+            _repository.changeNotificationStatus(id);
+            return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetNotificationCount()
+        {
+            var userID = Convert.ToInt64(Session["id"].ToString());
+            int count = _repository.GetNotificationCount(userID);
+
+            return Json(count , JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult UpdateFollowRequest(long followerId, byte action)
+        {
+            var followingID = Convert.ToInt64(Session["id"].ToString());
+            _repository.UpdateFollowRequest(followerId, followingID,action);
+            return Json(new { success = true });
         }
         #endregion
 

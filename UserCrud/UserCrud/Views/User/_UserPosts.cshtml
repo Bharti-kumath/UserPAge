@@ -7,20 +7,23 @@
     @foreach (var post in Model.Posts)
     {
     
-        <div class="col-sm-12 col-md-6 col-lg-4" >
+<div class="col-sm-12 col-md-6 col-lg-4 mb-4">
 
-            <div class="view overlay hm-black-light m-b-2 position-relative">
-                <img src="~/Content/PostImages/@post.Path" class="img-fluid post-img" alt="" />
-                <div class="Content">
-                    <p class="mb-1 fs-4">@post.Body</p>
-                    <div class="Like">
-                        <i class="bi bi-heart me-1"></i> @post.TotalLikes
-                        <i class="bi bi-chat-left-quote ms-2 me-1"></i> @post.TotalComments
-                    </div>
-                </div>
-                <button onclick="deletePost(@post.ID)" class="trash" id="deletepost"></button>
+    <div class="view overlay hm-black-light m-b-2 position-relative" id="post-@post.ID">
+        <img src="~/Content/PostImages/@post.Path" class="img-fluid post-img" alt="" />
+        <div class="Content">
+            <p class="mb-1 fs-4">@post.Body</p>
+            <div class="Like">
+                <i class="bi bi-heart me-1"></i> @post.TotalLikes
+                <i class="bi bi-chat-left-quote ms-2 me-1"></i> @post.TotalComments
             </div>
         </div>
+        <button onclick="deletePost(@post.ID)" class="trash" id="deletepost"></button>
+        <span class="focus-border"><i class="i"></i></span>
+    </div>
+    
+</div>
+        
     }
 
       

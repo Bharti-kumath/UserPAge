@@ -14,7 +14,7 @@
         <div class="col-6">
 
 
-            <div class="view overlay hm-black-light posts">
+            <div class="view overlay hm-black-light posts" id="post-@post.ID">
                 <div class="postHeader row mb-2">
 
                     <div class="col-md-1 col-3 ">
@@ -71,7 +71,7 @@
                         }
                         else
                         {
-                            <i class="bi bi-heart me-1 @post.ID" onclick="postLike(@post.ID)"></i>
+                            <i class="bi bi-heart me-1 @post.ID" onclick="postLike(@post.ID,@post.UserID)"></i>
                         }
                         <span class="like-@post.ID">@post.TotalLikes</span>
                         <i class="bi bi-chat-left-quote ms-2 me-1" onclick="showComment(@post.ID)"></i> 
@@ -81,7 +81,7 @@
                 <div class="commentBox mt-2 ">
                     <input placeholder="Write your comment" class="comment-box" id="commentText-@post.ID" oninput="showPostButton(@post.ID)"/>
                     
-                    <button class="submit-button btn commentbtn" id="postComment-@post.ID" onclick="saveComment(@post.ID)"  disabled>Post</button>
+                    <button class="submit-button btn commentbtn" id="postComment-@post.ID" onclick="saveComment(@post.ID,@post.UserID)"  disabled>Post</button>
                 </div>
                 <div class="row comment-@post.ID">
 
