@@ -476,13 +476,15 @@ h4 {
 
 #cross {
     position: absolute;
-    right: 1rem;
+    right: 0.6rem;
+    top:0.4rem;
     border-radius: 60%;
     padding: 0.4rem 0.6rem;
     margin-top: 0.3rem;
     background-color: #1e293bcc;
     box-shadow: inset 0 1px 0 0 #ffffff0d;
     cursor: pointer;
+    z-index:2;
 }
 
 #camera {
@@ -496,7 +498,7 @@ h4 {
     cursor: pointer;
 }
 
-#fileinput {
+#fileInput {
     display: none;
 }
 
@@ -706,3 +708,30 @@ h4 {
         transition: 2s ease-in;
         transition-delay: 3s;
     }
+
+.posts .slide .carousel-indicators [data-target] {
+    text-indent: 0 !important;
+    color: #00001a;
+    font-weight: 600;
+    height: auto;
+    box-sizing: content-box;
+    flex: 0 1 auto;
+    width: 30px;
+    padding: 0;
+    margin-right: 3px;
+    margin-left: 3px;
+    cursor: pointer;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    opacity: .5;
+    transition: opacity .6s ease;
+}
+
+
+
+.posts .slide .carousel-indicators .active {
+    opacity: 1;
+}

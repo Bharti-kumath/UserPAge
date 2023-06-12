@@ -236,30 +236,14 @@ function exportToCSV() {
 
 
 
-function remove() {
-    $("#preview").hide();
-    $('#imageUrl').attr('src', "");
-}
-function ClickInput() {
-    $("#fileinput").click();
-};
-
-function preview(uploader) {
-    if (uploader.files && uploader.files[0]) {
-        $("#preview").show();
-        $('#imageUrl').attr('src', window.URL.createObjectURL(uploader.files[0]));
-       
-    }
-}
-
-function previewImage(something) {
-    preview(something);
-};
 
 function createPost() {
     var postForm= new FormData();
     postForm.append('Body', $('#textarea').val());
-    postForm.append('ImagePath', $("#fileinput")[0].files[0]);
+   /* postForm.append('ImagePath', $("#fileinput")[0].files[0]);*/
+    $.each($("#fileInput")[0].files, function (i, file) {
+        postForm.append('ImagePath', file);
+    });
     
     console.log(postForm);
 
@@ -273,7 +257,7 @@ function createPost() {
         success: function (message) {
             $('#post').modal("hide");
             $("#postForm")[0].reset();
-            remove();
+         
             location.reload(true)
         },
         error: function (error) {
@@ -539,3 +523,90 @@ function focusPost(postID) {
 }
 
 
+$("#fileInput").on("change", function (e) {
+    const files = e.target.files;
+    $("#preview").show();
+    const carouselInner = document.querySelector(".carousel-inner");
+    const carouselIndicators = document.querySelector(
+        ".carousel-indicators"
+    );
+    carouselInner.innerHTML = "";
+    carouselIndicators.innerHTML = "";
+
+    let activeIndex = 0;
+
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+
+        // Check if the file is not empty and is an image
+        if (file.size > 0 && file.type.includes("image")) {
+            const reader = new FileReader();
+
+            reader.onload = function (event) {
+                const imageSrc = event.target.result;
+                const active = i === activeIndex ? "active" : i;
+
+                const carouselItem = document.createElement("div");
+                carouselItem.classList.add("carousel-item", active);
+                carouselItem.innerHTML = `
+          <img src="${imageSrc}" class="d-block w-100" alt="Preview" id="imageUrl">
+           <i class="bi bi-x-lg" id="cross"onclick="removePreview(this)"></i>
+        `;
+
+                carouselInner.appendChild(carouselItem);
+            };
+
+            reader.readAsDataURL(file);
+        }
+    }
+
+    // Initialize the carousel after adding the items
+    $(".carousel").carousel();
+});
+
+function removePreview(button) {
+    const carouselItem = button.closest(".carousel-item");
+    const carousel = carouselItem.parentElement;
+    const carouselItems = Array.from(
+        carousel.querySelectorAll(".carousel-item")
+    );
+
+   
+    const activeIndex = carouselItems.findIndex(
+        (item) => item === carouselItem
+    );
+
+ 
+    carousel.removeChild(carouselItem);
+
+    
+    let newActiveIndex = activeIndex - 1;
+
+   
+    if (newActiveIndex < 0) {
+        newActiveIndex = carouselItems.length - 1;
+    }
+
+  
+    carouselItems[newActiveIndex].classList.add("active");
+    
+
+    const inputFile = document.getElementById("fileInput");
+    const selectedFiles = Array.from(inputFile.files);
+    selectedFiles.splice(activeIndex, 1);
+
+    inputFile.value = "";
+
+    // Assign the new FileList object to the input element
+    var dt = new DataTransfer();
+    for (let i = 0; i < selectedFiles.length && i < 20; i++) {
+        dt.items.add(selectedFiles[i]);
+    }
+    inputFile.files = dt.files;
+    // Update carousel
+    $(".carousel").carousel(newActiveIndex);
+}
+
+function ClickInput() {
+    $("#fileInput").click();
+};

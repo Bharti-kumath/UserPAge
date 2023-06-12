@@ -10,7 +10,11 @@
 <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
 
     <div class="view overlay hm-black-light m-b-2 position-relative" id="post-@post.ID">
-        <img src="~/Content/PostImages/@post.Path" class="img-fluid post-img" alt="" />
+        @foreach (var path in post.MediaPaths.Take(1))
+        {
+            <img src="~/Content/PostImages/@path" class="img-fluid post-img" alt="" />
+        }
+
         <div class="Content">
             <p class="mb-1 fs-4">@post.Body</p>
             <div class="Like">

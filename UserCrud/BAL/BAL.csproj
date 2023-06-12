@@ -74,6 +74,7 @@
     <Compile Include="Models\ExportViewModel.cs" />
     <Compile Include="Models\FilterOptions.cs" />
     <Compile Include="Models\LandingViewModel.cs" />
+    <Compile Include="Models\Media.cs" />
     <Compile Include="Models\MutualFriendViewModel.cs" />
     <Compile Include="Models\NotificationViewModel.cs" />
     <Compile Include="Models\PostViewModel.cs" />

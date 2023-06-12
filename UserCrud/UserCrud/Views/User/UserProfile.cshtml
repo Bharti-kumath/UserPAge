@@ -112,20 +112,44 @@
 
                             @Html.TextAreaFor(model => model.Post.Body, new { @id = "textarea", @placeholder = "Write Your Content...." })
                             @Html.ValidationMessageFor(model => model.Post.Body, "", new { @class = "text-danger" })
-                            @*<textarea placeholder="Write Your Content...." id="textarea"></textarea>*@
+                            
                         </div>
                         <div class="row">
                             <div id="preview">
-                                <img src="" class="img-fluid" id="imageUrl">
-                                <i class="bi bi-x-lg" id="cross" onclick="remove()"></i>
+                                
+
+                                <div id="carouselExample" class="carousel slide"  data-bs-interval="false" data-bs-pause="false">
+                                    <div class="carousel-inner"></div>
+                                    <button class="carousel-control-prev"
+                                            type="button"
+                                            data-target="#carouselExample"
+                                            data-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    </button>
+                                    <button class="carousel-control-next"
+                                            type="button"
+                                            data-target="#carouselExample"
+                                            data-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    </button>
+
+                                    <div class="carousel-indicators"></div>
+                                </div>
                             </div>
 
                         </div>
                         <div class="row mt-2">
                             <div class="col">
                                 <i class="bi bi-camera" onclick="ClickInput()" id="camera"></i>
-                                @*<input type="file" id="fileinput" onchange="previewImage(this)" />*@
-                                @Html.TextBoxFor(model => model.Post.ImagePath, new { @class = "path", @type = "file", @onchange = "previewImage(this)", @id = "fileinput" })
+
+                                @*<div class="input-group mb-3">
+            <input type="file" id="fileInput" multiple />
+            <label class="input-group-text" for="fileInput">Choose files</label>
+        </div>*@
+
+
+                                @Html.TextBoxFor(model => model.Post.ImagePath, new { @class = "path", @type = "file", multiple = "multiple", @id = "fileInput" })
+
                                 <span class="img-text">Upload a image</span>
                             </div>
                         </div>

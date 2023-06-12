@@ -21,13 +21,13 @@ namespace DAL.Repository
         private static string connectionString = ConfigurationManager.ConnectionStrings["defaultConnection"].ConnectionString;
         public void deleteUserDetails(long userID)
         {
-           
+
             using (IDbConnection connection = new SqlConnection(connectionString))
             {
                 var parameters = new DynamicParameters();
                 parameters.Add("ID", userID, DbType.Int64);
 
-                 connection.Execute("sp_UserDeleteOpertaion", parameters, commandType: CommandType.StoredProcedure);
+                connection.Execute("sp_UserDeleteOpertaion", parameters, commandType: CommandType.StoredProcedure);
             }
 
         }
@@ -35,10 +35,10 @@ namespace DAL.Repository
         public List<UserViewModel> GetUSerDetails()
         {
 
-           
+
             List<BAL.Models.UserViewModel> UserList = new List<BAL.Models.UserViewModel>();
 
-            using(IDbConnection connection = new SqlConnection(connectionString))
+            using (IDbConnection connection = new SqlConnection(connectionString))
             {
                 var parameters = new DynamicParameters();
                 parameters.Add("id", DBNull.Value, DbType.String);
@@ -52,10 +52,10 @@ namespace DAL.Repository
                 //parameters.Add("dob", DBNull.Value, DbType.String);
                 //parameters.Add("address", DBNull.Value, DbType.String);
                 //parameters.Add("queryType", "Select", DbType.String);
-                
+
                 UserList = connection.Query<UserViewModel>("sp_UserGetOpertaion", parameters, commandType: CommandType.StoredProcedure).ToList();
             }
-          
+
 
             return UserList;
         }
@@ -65,15 +65,15 @@ namespace DAL.Repository
             MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
             byte[] encrypt;
             UTF8Encoding encode = new UTF8Encoding();
-            
+
             encrypt = md5.ComputeHash(encode.GetBytes(password));
             StringBuilder encryptdata = new StringBuilder();
-           
+
             for (int i = 0; i < encrypt.Length; i++)
             {
                 encryptdata.Append(encrypt[i].ToString());
             }
-           
+
             return encryptdata.ToString();
         }
         public void SaveUserDetails(UserViewModel model)
@@ -86,16 +86,16 @@ namespace DAL.Repository
                 var parameters = new DynamicParameters();
                 parameters.Add("ID", model.ID, DbType.Int64);
                 parameters.Add("first_name", model.FirstName, DbType.String);
-                parameters.Add("last_name",model.LastName , DbType.String);
+                parameters.Add("last_name", model.LastName, DbType.String);
                 parameters.Add("email", model.Email, DbType.String);
-                parameters.Add("phone_number",model.PhoneNUmber , DbType.String);
+                parameters.Add("phone_number", model.PhoneNUmber, DbType.String);
                 parameters.Add("country", model.Country, DbType.String);
-                parameters.Add("city",model.City , DbType.String);
+                parameters.Add("city", model.City, DbType.String);
                 parameters.Add("pincode", model.PinCode, DbType.Int32);
                 parameters.Add("dob", model.DAteOfBirth, DbType.String);
-                parameters.Add("address",model.Address , DbType.String);
+                parameters.Add("address", model.Address, DbType.String);
                 parameters.Add("password", passwordHashed, DbType.String);
-               
+
 
                 connection.Execute("sp_UserInsertUpdate", parameters, commandType: CommandType.StoredProcedure);
             }
@@ -104,7 +104,7 @@ namespace DAL.Repository
 
         public List<UserViewModel> GetUserDetails(FilterOptions filterOptions)
         {
-           
+
             List<UserViewModel> userList = new List<UserViewModel>();
 
             using (IDbConnection connection = new SqlConnection(connectionString))
@@ -126,14 +126,14 @@ namespace DAL.Repository
                 userList = connection.Query<UserViewModel>("sp_UserFiltering", parameters, commandType: CommandType.StoredProcedure).ToList();
             }
 
-           
-            
+
+
             return userList;
         }
 
         public UserViewModel GetUserById(long id)
         {
-            
+
             UserViewModel userByID = new UserViewModel();
 
             using (IDbConnection connection = new SqlConnection(connectionString))
@@ -143,7 +143,7 @@ namespace DAL.Repository
                 userByID = connection.QueryFirstOrDefault<UserViewModel>("GetUserById", parameters, commandType: CommandType.StoredProcedure);
 
             }
-            
+
             return userByID;
         }
 
@@ -216,10 +216,10 @@ namespace DAL.Repository
                 parameters.Add("@password", modelPassword, DbType.String);
                 userExist = connection.QueryFirstOrDefault<UserViewModel>("sp_checkUser", parameters, commandType: CommandType.StoredProcedure);
             }
-              return userExist;
-            
-           
-           
+            return userExist;
+
+
+
         }
 
         public ProfileViewModel GetProfileById(long id)
@@ -235,8 +235,15 @@ namespace DAL.Repository
                 profileByID.Suggestions = reader.Read<Suggestion>().ToList();
                 profileByID.Friends = reader.Read<MutualFriendViewModel>().ToList();
                 profileByID.Posts = reader.Read<PostViewModel>().ToList();
-            }
 
+                List<Media> mediaPaths = connection.Query<Media>("SELECT postid, mediapath FROM media WHERE postid IN @PostIDs", new { PostIDs = profileByID.Posts.Select(post => post.ID) }, commandType: CommandType.Text).ToList();
+
+                foreach (var post in profileByID.Posts)
+                {
+                    List<Media> mediaList = mediaPaths.Where(media => media.PostID == post.ID).ToList();
+                    post.MediaPaths = mediaList.Select(media => media.MediaPath).ToList();
+                }
+            }
             return profileByID;
         }
 
@@ -257,25 +264,42 @@ namespace DAL.Repository
             return profileByID;
         }
 
-        public void SavePost(PostViewModel model , long userID)
+        public void SavePost(PostViewModel model, long userID)
         {
-        
-            string path = HttpContext.Current.Server.MapPath("~/Content/");
-            var filename = Guid.NewGuid().ToString()+model.ImagePath.FileName ;
-            var filePath = Path.Combine(path, "PostImages", filename);
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                model.ImagePath.InputStream.CopyTo(stream);
-            }
+
+            string path = HttpContext.Current.Server.MapPath("~/Content/PostImages");
+
+
+
             using (IDbConnection connection = new SqlConnection(connectionString))
             {
+              
+                DataTable imagesTable = new DataTable();
+                imagesTable.Columns.Add("ImagePath", typeof(string));
+
+                foreach (HttpPostedFileBase file in model.ImagePath)
+                {
+                  
+                    var filename = Guid.NewGuid().ToString() + file.FileName;
+                    var filePath = Path.Combine(path, filename);
+                    file.SaveAs(filePath);
+                    imagesTable.Rows.Add(filename);
+                }
+
+               
                 var parameters = new DynamicParameters();
                 parameters.Add("UserID", userID, DbType.Int32);
                 parameters.Add("Body", model.Body, DbType.String);
-                parameters.Add("Path", filename, DbType.String);
+                parameters.Add("Images", imagesTable.AsTableValuedParameter("dbo.ImageTableType")); 
+
                 connection.Execute("sp_InsertPost", parameters, commandType: CommandType.StoredProcedure);
+
+                
             }
+
+
         }
+
 
         public void DeletePost(long postID)
         {
@@ -284,7 +308,6 @@ namespace DAL.Repository
             {
                 var parameters = new DynamicParameters();
                 parameters.Add("ID", postID, DbType.Int64);
-
                 connection.Execute("sp_PostDeleteOpertaion", parameters, commandType: CommandType.StoredProcedure);
             }
 
@@ -293,20 +316,28 @@ namespace DAL.Repository
         public List<PostViewModel> GetAllPosts(long userID)
         {
 
-            List<PostViewModel> posts;
-
             using (IDbConnection connection = new SqlConnection(connectionString))
             {
                 var parameters = new DynamicParameters();
-                parameters.Add("userID", userID, DbType.Int64);
-                posts = connection.Query<PostViewModel>("sp_GetAllPosts", parameters, commandType: CommandType.StoredProcedure).ToList();
+                parameters.Add("@userID", userID, DbType.Int64);
 
+
+                List<PostViewModel> posts = connection.Query<PostViewModel>("sp_GetAllPosts", parameters, commandType: CommandType.StoredProcedure).ToList();
+
+                List<Media> mediaPaths = connection.Query<Media>("SELECT postid, mediapath FROM media", commandType: CommandType.Text).ToList();
+
+                foreach (var post in posts)
+                {
+                    List<Media> mediaList = mediaPaths.Where(media => media.PostID == post.ID).ToList();
+                    post.MediaPaths = mediaList.Select(media => media.MediaPath).ToList();
+                }
+
+                return posts;
             }
 
-            return posts;
         }
 
-        public PostViewModel LikePost(long postID, long userID,long postUserID)
+        public PostViewModel LikePost(long postID, long userID, long postUserID)
         {
             PostViewModel totallikes;
             using (IDbConnection connection = new SqlConnection(connectionString))
@@ -318,7 +349,7 @@ namespace DAL.Repository
                 totallikes = connection.QueryFirstOrDefault<PostViewModel>("sp_LikeUnlikePost", parameters, commandType: CommandType.StoredProcedure);
             }
             return totallikes;
-         }
+        }
 
         public List<CommentViewModel> GetCommentsByPostId(long id)
         {
@@ -332,7 +363,7 @@ namespace DAL.Repository
             return totalComments;
         }
 
-        public CommentViewModel SaveComment(long userID, long postID, string commentText,long postUserID)
+        public CommentViewModel SaveComment(long userID, long postID, string commentText, long postUserID)
         {
             CommentViewModel comment;
             using (IDbConnection connection = new SqlConnection(connectionString))
@@ -347,7 +378,7 @@ namespace DAL.Repository
             return comment;
         }
 
-        public CommentViewModel DeleteComment(long commentID , long postID)
+        public CommentViewModel DeleteComment(long commentID, long postID)
         {
             CommentViewModel comment;
             using (IDbConnection connection = new SqlConnection(connectionString))
@@ -362,7 +393,7 @@ namespace DAL.Repository
 
         public void FollowRequest(long userID, long toUserId)
         {
-           
+
             using (IDbConnection connection = new SqlConnection(connectionString))
             {
                 var parameters = new DynamicParameters();
@@ -370,7 +401,7 @@ namespace DAL.Repository
                 parameters.Add("FollowingID", toUserId, DbType.Int64);
                 connection.Execute("sp_FollowRequest", parameters, commandType: CommandType.StoredProcedure);
             }
-           
+
         }
 
         public List<NotificationViewModel> GetNotificationByID(long userID)
@@ -402,8 +433,8 @@ namespace DAL.Repository
             {
                 var parameters = new DynamicParameters();
                 parameters.Add("userId", userId, DbType.Int64);
-               var result = connection.QueryFirstOrDefault<int>("sp_notificationCount", parameters, commandType: CommandType.StoredProcedure);
-                count = (int)result; 
+                var result = connection.QueryFirstOrDefault<int>("sp_notificationCount", parameters, commandType: CommandType.StoredProcedure);
+                count = (int)result;
             }
             return count;
         }

@@ -12,8 +12,9 @@ namespace BAL.Models
         public string UserName { get; set; }
         public string Body { get; set; }
         public int TotalViews { get; set; }
+        public List<string> MediaPaths { get; set; }
         public string Path { get; set; }
-        public HttpPostedFileBase ImagePath { get; set; }
+        public List<HttpPostedFileBase> ImagePath { get; set; }
 
         public int TotalPost { get; set; }
         public int TotalLikes { get; set; }
