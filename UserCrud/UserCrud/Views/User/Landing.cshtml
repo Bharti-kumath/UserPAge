@@ -4,7 +4,7 @@
 }
 
 
-    @model List<BAL.Models.PostViewModel>
+@model List<BAL.Models.PostViewModel>
 <div class="row  m-0 p-3 justify-content-center">
 
     @foreach (var post in Model)
@@ -22,7 +22,7 @@
                         <img src="https://mdbootstrap.com/images/avatars/img%20(4).jpg" alt="" class="img-circle img-fluid post-Userimg">
                     </div>
                     <div class="col-md-11 col-9">
-                        <h5 class="mb-0">@post.UserName</h5>
+                        <h5 class="mb-0" onclick="openUser(@post.UserID)">@post.UserName</h5>
 
 
                         @{
@@ -91,17 +91,25 @@
 
                 <div class="postFooter">
                     <p class="mb-1 fs-4">@post.Body</p>
-                    <div class="Like">
+                    <div class="Like" >
                         @if (post.Liked == post.ID)
                         {
-                            <i class="bi bi-heart-fill text-danger me-1 @post.ID" onclick="postLike(@post.ID)"></i>
+                            <i class="bi bi-heart-fill text-danger fs-5 me-1 @post.ID" onclick="postLike(@post.ID,@post.UserID)"></i>
+                            <span class="like-@post.ID" onclick="showLikeUsers(@post.ID)"> by You
+                                @if (@post.TotalLikes > 1)
+                                {
+                                    var likes = @post.TotalLikes - 1;
+                                    <text>and </text> @likes <text>Others</text>
+                                }
+                            </span>
                         }
                         else
                         {
-                            <i class="bi bi-heart me-1 @post.ID" onclick="postLike(@post.ID,@post.UserID)"></i>
+                            <i class="bi bi-heart me-1 fs-5 @post.ID" onclick="postLike(@post.ID,@post.UserID)"></i> 
+                            <span class="like-@post.ID" onclick="showLikeUsers(@post.ID)">Liked by @post.TotalLikes</span>
                         }
-                        <span class="like-@post.ID">@post.TotalLikes</span>
-                        <i class="bi bi-chat-left-quote ms-2 me-1" onclick="showComment(@post.ID)"></i>
+
+                        <i class="bi bi-chat-left-quote ms-2 me-1 fs-5" onclick="showComment(@post.ID)"></i>
                         <span id="comments-@post.ID">@post.TotalComments</span>
                     </div>
                 </div>
@@ -110,9 +118,10 @@
 
                     <button class="submit-button btn commentbtn" id="postComment-@post.ID" onclick="saveComment(@post.ID,@post.UserID)" disabled>Post</button>
                 </div>
-                <div class="row comment-@post.ID">
+                <div class="row comment-@post.ID mt-3">
 
                 </div>
+               
             </div>
         </div>
         <div class="col-3"></div>

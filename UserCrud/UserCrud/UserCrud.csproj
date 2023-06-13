@@ -274,6 +274,7 @@
     <Content Include="Views\User\Landing.cshtml" />
     <Content Include="Views\User\Comment.cshtml" />
     <Content Include="Views\User\Notification.cshtml" />
+    <Content Include="Views\User\Reply.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\PostImage\" />

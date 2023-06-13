@@ -259,9 +259,18 @@ namespace DAL.Repository
                 var reader = connection.QueryMultiple("sp_getFriendProfile", parameters, commandType: CommandType.StoredProcedure);
                 profileByID.UserDetail = reader.ReadFirst<UserViewModel>();
                 profileByID.MutualFriends = reader.Read<MutualFriendViewModel>().ToList();
+                profileByID.Posts = reader.Read<PostViewModel>().ToList();
+
+                List<Media> mediaPaths = connection.Query<Media>("SELECT postid, mediapath FROM media WHERE postid IN @PostIDs", new { PostIDs = profileByID.Posts.Select(post => post.ID) }, commandType: CommandType.Text).ToList();
+
+                foreach (var post in profileByID.Posts)
+                {
+                    List<Media> mediaList = mediaPaths.Where(media => media.PostID == post.ID).ToList();
+                    post.MediaPaths = mediaList.Select(media => media.MediaPath).ToList();
+                }
             }
 
-            return profileByID;
+                return profileByID;
         }
 
         public void SavePost(PostViewModel model, long userID)
@@ -351,6 +360,18 @@ namespace DAL.Repository
             return totallikes;
         }
 
+        public List<Suggestion> GetLikeUserList(long postId)
+        {
+            List<Suggestion> likeUserList;
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("PostID", postId, DbType.Int64);
+                likeUserList = connection.Query<Suggestion>("sp_GetLikeUserList", parameters, commandType: CommandType.StoredProcedure).ToList();
+            }
+            return likeUserList;
+        }
+
         public List<CommentViewModel> GetCommentsByPostId(long id)
         {
             List<CommentViewModel> totalComments;
@@ -376,6 +397,32 @@ namespace DAL.Repository
                 comment = connection.QueryFirstOrDefault<CommentViewModel>("sp_SaveComment", parameters, commandType: CommandType.StoredProcedure);
             }
             return comment;
+        }
+
+        public CommentViewModel SaveCommentReply(long commentId, long UserID,string replyText)
+        {
+            CommentViewModel comment;
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("commentId", commentId, DbType.Int64);
+                parameters.Add("UserID", UserID, DbType.Int64);
+                parameters.Add("replyText", replyText, DbType.String);
+                comment = connection.QueryFirstOrDefault<CommentViewModel>("sp_SaveCommentReply", parameters, commandType: CommandType.StoredProcedure);
+            }
+            return comment;
+        }
+
+        public List<ReplyViewModel> GetReplyByCommentID(long commenId)
+        {
+            List<ReplyViewModel> totalReplies;
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("commentId", commenId, DbType.Int64);
+                totalReplies = connection.Query<ReplyViewModel>("sp_GetReplyByCommentID", parameters, commandType: CommandType.StoredProcedure).ToList();
+            }
+            return totalReplies;
         }
 
         public CommentViewModel DeleteComment(long commentID, long postID)

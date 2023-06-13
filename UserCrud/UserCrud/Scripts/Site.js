@@ -16,7 +16,8 @@ function sendSms(toNumber) {
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
-            } },
+            }
+        },
         error: function (error) { alert(error); console.log(error) }
     });
 }
@@ -24,7 +25,7 @@ function sendSms(toNumber) {
 
 function editDetails(userID) {
     console.log(userID);
-  
+
     $.ajax({
         type: "GET",
         url: '/User/GetUserById',
@@ -53,16 +54,16 @@ function deleteDetails(userID) {
     <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
     <div class="modal-header">
-    <h5 class="modal-title">Confirm Delete</h5>
-    <button type="button" class="closed btn" data-bs-dismiss="modal" aria-label="Close">
+    <h5 class="modal-title text-light" >Confirm Delete</h5>
+    <button type="button" class="closed btn" data-dismiss="modal" aria-label="Close">
    <span aria-hidden="true" class="fs-3">&times;</span>
     </button>
     </div>
     <div class="modal-body">
-    <p>Are you sure you want to delete this User?</p>
+    <p style="color:#fff">Are you sure you want to delete this User?</p>
     </div>
     <div class="modal-footer d-flex justify-content-center">
-    <button type="button" class="cancelbtn me-2 btn bg-light" data-bs-dismiss="modal" >Cancel</button>
+    <button type="button" class="cancelbtn me-2 btn bg-light" data-dismiss="modal" >Cancel</button>
     <button type="button" class="m-0 confirmDelete btn bg-danger" id="apply-button">Delete</button>
     </div>
     </div></div></div>`;
@@ -105,7 +106,6 @@ $(document).ready(function () {
     }, 1500);
 
     const postID = window.location.hash.substring(1);
-    console.log(postID)
 
     if (postID) {
         $("#" + postID).addClass("effect").focus();
@@ -125,7 +125,7 @@ function closeModel() {
 function closeModel2() {
     $("#postForm")[0].reset();
     remove();
-    
+
 }
 
 function numberOnly(event) {
@@ -137,8 +137,8 @@ function numberOnly(event) {
 }
 
 function getDataTable() {
-   
-     dataTable = $('#userTable').DataTable({
+
+    dataTable = $('#userTable').DataTable({
         "processing": true,
         "ordering": true,
         "order": [[9, 'desc']],
@@ -159,15 +159,15 @@ function getDataTable() {
                 d.City = $('#cityFilter').val();
                 d.FromDate = $('#DateFilter').val().slice(0, 10);
                 d.ToDate = $('#DateFilter').val().slice(13, 23);
-               
+
             },
             "dataSrc": function (response) {
-                
-                    return response.data;
-                
+
+                return response.data;
+
             },
             "error": function (error) {
-              console.log(error)
+                console.log(error)
             }
         },
         "columns": [
@@ -238,26 +238,26 @@ function exportToCSV() {
 
 
 function createPost() {
-    var postForm= new FormData();
+    var postForm = new FormData();
     postForm.append('Body', $('#textarea').val());
-   /* postForm.append('ImagePath', $("#fileinput")[0].files[0]);*/
+    /* postForm.append('ImagePath', $("#fileinput")[0].files[0]);*/
     $.each($("#fileInput")[0].files, function (i, file) {
         postForm.append('ImagePath', file);
     });
-    
+
     console.log(postForm);
 
     $.ajax({
         type: 'POST',
         url: "/User/SavePost",
-        data:postForm
-    ,
+        data: postForm
+        ,
         processData: false,
         contentType: false,
         success: function (message) {
             $('#post').modal("hide");
             $("#postForm")[0].reset();
-         
+
             location.reload(true)
         },
         error: function (error) {
@@ -275,16 +275,16 @@ function deletePost(postID) {
     <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
     <div class="modal-header">
-    <h5 class="modal-title">Confirm Delete</h5>
-    <button type="button" class="closed btn" data-bs-dismiss="modal" aria-label="Close">
+    <h5 class="modal-title text-light">Confirm Delete</h5>
+    <button type="button" class="closed btn text-light" data-dismiss="modal" aria-label="Close">
    <span aria-hidden="true" class="fs-3">&times;</span>
     </button>
     </div>
     <div class="modal-body">
-    <p>Are you sure you want to delete this User?</p>
+    <p class="text-light">Are you sure you want to delete this User?</p>
     </div>
     <div class="modal-footer d-flex justify-content-center">
-    <button type="button" class="cancelbtn me-2 btn bg-light" data-bs-dismiss="modal" >Cancel</button>
+    <button type="button" class="cancelbtn me-2 btn bg-light" data-dismiss="modal" >Cancel</button>
     <button type="button" class="m-0 confirmDelete btn bg-danger" id="apply-button">Delete</button>
     </div>
     </div></div></div>`;
@@ -321,19 +321,37 @@ function postLike(postID, postUserID) {
     $.ajax({
         type: "Post",
         url: "/User/LikePost",
-        data: { postID: postID, postUserID: postUserID},
+        data: { postID: postID, postUserID: postUserID },
         success: function (response) {
+            var totallikes = Number(response)
 
+            let message = '';
             let likeicon = $("i." + postID)
             if (likeicon.hasClass("bi-heart")) {
                 likeicon.removeClass("bi-heart")
                 likeicon.addClass("bi-heart-fill").addClass("text-danger");
+                if (totallikes > 1) {
+                    var likes = totallikes - 1
+                    message = " by you and " + likes + " others";
+                }
+                else {
+                    message = " by you";
+                }
+
             }
             else {
                 likeicon.removeClass("bi-heart-fill").removeClass("text-danger")
                 likeicon.addClass("bi-heart");
+                if (totallikes > 1) {
+
+                    message = " by " + totallikes + " others";
+                }
+                else {
+                    message = totallikes;
+                }
+
             }
-            $(".like-" + postID).empty().text(response);
+            $(".like-" + postID).empty().text(message);
         },
         error: function (error) {
             console.log(error);
@@ -347,12 +365,11 @@ function postLike(postID, postUserID) {
 function showComment(postID) {
     var commentSection = $(".CommentPartial-" + postID);
     var isVisible = commentSection.is(":visible");
-    
+
     if (isVisible) {
-        commentSection.toggle();
+        $(".comment-" + postID).empty();
     }
-    else
-    {
+    else {
         callAjaxComment(postID);
     }
 }
@@ -363,8 +380,8 @@ function callAjaxComment(postID) {
         url: "/User/GetCommentsByPostId",
         data: { id: postID },
         success: function (response) {
-
-            $(".comment-" + postID).empty().html(response);
+            var newResponse = `<h5>Comments</h5>` + response;
+            $(".comment-" + postID).empty().html(newResponse);
         },
         error: function (error) {
             console.log(error);
@@ -392,25 +409,25 @@ function saveComment(postID, postUserID) {
             }
         });
     }
-    
+
 }
 
-function deleteComment(commentID , postID){
-    
-        $.ajax({
-            type: "Post",
-            url: "/User/DeleteComment",
-            data: { commentID: commentID, postId: postID},
-            success: function (response) {
-                console.log("Comment deleted successfully!");
-                $("#comments-" + postID).empty().text(response);
-                callAjaxComment(postID);
-            },
-            error: function (error) {
-                console.log("Error submitting comment:", error);
-            }
-        });
-    
+function deleteComment(commentID, postID) {
+
+    $.ajax({
+        type: "Post",
+        url: "/User/DeleteComment",
+        data: { commentID: commentID, postId: postID },
+        success: function (response) {
+            console.log("Comment deleted successfully!");
+            $("#comments-" + postID).empty().text(response);
+            callAjaxComment(postID);
+        },
+        error: function (error) {
+            console.log("Error submitting comment:", error);
+        }
+    });
+
 
 }
 
@@ -447,7 +464,10 @@ function followRequest(toUserID) {
 
 function getNotification() {
 
-            window.location.href = 'Notification'
+    window.location.href = 'Notification'
+}
+function openUser(userid) {
+    window.location.href = '/User/FriendProfile?friendId=' + userid;
 }
 
 function notificationRead(id) {
@@ -474,7 +494,7 @@ setInterval(function () {
         url: '/User/GetNotificationCount',
         method: 'GET',
         success: function (response) {
-            
+
             if (response > 0) {
                 $(".notificationDot").show();
                 $(".notificationDot p").empty();
@@ -494,7 +514,7 @@ function requestUpdate(followerId, action) {
     $.ajax({
         type: "Post",
         url: "/User/UpdateFollowRequest",
-        data: { followerId: followerId,action:action },
+        data: { followerId: followerId, action: action },
         success: function () {
             console.log("follow request updated ");
             if (action = 1) {
@@ -515,11 +535,11 @@ function requestUpdate(followerId, action) {
 }
 
 function focusPost(postID) {
-    
+
     window.location.href = 'Landing/#post-' + postID;
 
-   
-   
+
+
 }
 
 
@@ -571,25 +591,25 @@ function removePreview(button) {
         carousel.querySelectorAll(".carousel-item")
     );
 
-   
+
     const activeIndex = carouselItems.findIndex(
         (item) => item === carouselItem
     );
 
- 
+
     carousel.removeChild(carouselItem);
 
-    
+
     let newActiveIndex = activeIndex - 1;
 
-   
+
     if (newActiveIndex < 0) {
         newActiveIndex = carouselItems.length - 1;
     }
 
-  
+
     carouselItems[newActiveIndex].classList.add("active");
-    
+
 
     const inputFile = document.getElementById("fileInput");
     const selectedFiles = Array.from(inputFile.files);
@@ -610,3 +630,104 @@ function removePreview(button) {
 function ClickInput() {
     $("#fileInput").click();
 };
+
+function showReplyInput(userName, id) {
+    var trimedusername = userName.replace(" ", "");
+
+    $(".ReplyBox-" + id).show();
+    $("#commentReply-" + id).val("@" + trimedusername + " ");
+}
+function showReReplyInput(userName, id) {
+    var trimedusername = userName.replace(" ", "");
+    console.log(trimedusername,id)
+    $(".ReReplyBox-" + id).show();
+    $("#commentReReply-" + id).val("@" + trimedusername + " ");
+}
+
+function saveCommentReply(commentId, postID) {
+    var replyTextWithUsername = $("#commentReply-" + commentId).val();
+    var replyText = replyTextWithUsername.replace(/@\w+\b/g, "");
+
+    $.ajax({
+        type: "Post",
+        url: "/User/SaveCommentReply",
+        data: { commentId: commentId, replyText: replyText },
+        success: function (response) {
+            console.log("Comment submitted successfully!");
+            $("#commentReply-" + commentId).val("");
+            $(".ReplyBox-" + commentId).hide();
+            callAjaxComment(postID);
+        },
+        error: function (error) {
+            console.log("Error submitting comment:", error);
+        }
+    });
+}
+
+var text = '';
+function ShowReply(commentID, view) {
+    var replySection = $(".ReplyPartial-" + commentID);
+    var isVisible = replySection.is(":visible");
+    
+    if (isVisible) {
+        $("#viewreply-" + commentID).text(text);
+        
+        replySection.toggle();
+    }
+    else {
+        text = $("#viewreply-" + commentID).text();
+        console.log(text);
+        $("#viewreply-" + commentID).text("--- Hide Replies");
+        callAjaxReply(commentID);
+    }
+}
+
+function callAjaxReply(commentID) {
+    $.ajax({
+        type: "Post",
+        url: "/User/GetReplyByCommentID",
+        data: { commentId: commentID },
+        success: function (response) {
+
+            $(".Reply-" + commentID).empty().html(response);
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+}
+
+function showLikeUsers(postId) {
+
+    var replySection = $(".showlike");
+    var isVisible = replySection.is(":visible");
+
+    if (isVisible) {
+        $(".comment-" + postId).empty();
+
+    } else {
+        $.ajax({
+            type: "Post",
+            url: "/User/GetLikeUserList",
+            data: { postId: postId },
+            success: function (response) {
+                console.log(response)
+                var users = '<h5>Liked By </h5>';
+                for (i = 0; i < response.length; i++) {
+                    var item = response[i];
+                    users += `<div class="d-flex flex-row  align-items-center my-3 showlike ">
+<img src="https://mdbootstrap.com/images/avatars/img%20(4).jpg" alt="" class="img-circle mx-2 img-fluid post-Userimg">
+<span onclick="openUser(${item.Id})" class="mx-2">${item.SuggestedName}</span>
+<i class="bi bi-heart-fill text-danger fs-5 mx-2" ></i>
+</div>`
+                }
+                $(".comment-" + postId).empty().html(users);
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+
+   
+}

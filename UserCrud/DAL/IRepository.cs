@@ -33,5 +33,8 @@ namespace DAL
         void changeNotificationStatus(long id);
         int GetNotificationCount(long userId);
         void UpdateFollowRequest(long followerId, long followingID, byte action);
+        CommentViewModel SaveCommentReply(long commentId, long userID, string replyText);
+        List<ReplyViewModel> GetReplyByCommentID(long commenId);
+        List<Suggestion> GetLikeUserList(long postId);
     }
 }

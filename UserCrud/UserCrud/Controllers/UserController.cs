@@ -43,6 +43,7 @@ namespace UserCrud.Controllers
             if (userExist != null)
             {
                 Session["id"] = userExist.ID;
+                Session["userName"] = userExist.FirstName + " " + userExist.LastName;
                 var claims = new[]
             {
                 new Claim("Email", Email)
@@ -80,13 +81,19 @@ namespace UserCrud.Controllers
             }
 
         }
+        public ActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            HttpContext.Session.Abandon();
+            return RedirectToAction("Login", "User");
+        }
 
         #endregion
 
         #region UserDetail
 
         [HttpGet]
-
+        [Authorization]
         public ActionResult UserDetail()
         {
 
@@ -206,10 +213,18 @@ namespace UserCrud.Controllers
             }
 
         }
+
+        [HttpPost]
+        public ActionResult GetLikeUserList(long postId)
+        {
+            List<Suggestion> userList = _repository.GetLikeUserList(postId);
+            return Json(userList);
+        }
         public ActionResult GetCommentsByPostId(long id)
         {
             var userID = Convert.ToInt64(Session["id"].ToString());
             ViewBag.userID = userID;
+            ViewBag.userName = Session["userName"].ToString();
             List<CommentViewModel> comments = _repository.GetCommentsByPostId(id);
             return PartialView("Comment", comments);
         }
@@ -228,7 +243,26 @@ namespace UserCrud.Controllers
             }
 
         }
+        [HttpPost]
+        public ActionResult SaveCommentReply(long commentId,string replyText)
+        {
+            var userID = Convert.ToInt64(Session["id"].ToString());
+            var reply = _repository.SaveCommentReply(commentId, userID, replyText);
+            if (reply != null)
+            {
+                return Json(reply);
+            }
+            else
+            {
+                return Json("0");
+            }
+        }
 
+        public ActionResult GetReplyByCommentID(long commentId)
+        {
+            List<ReplyViewModel> Replies = _repository.GetReplyByCommentID(commentId);
+            return PartialView("Reply", Replies);
+        }
         public ActionResult DeleteComment(long commentID, long postId)
         {
             CommentViewModel comment = _repository.DeleteComment(commentID, postId);
@@ -252,6 +286,7 @@ namespace UserCrud.Controllers
 
         }
 
+        [Authorization]
         public ActionResult Notification()
         {
             var userID = Convert.ToInt64(Session["id"].ToString());
@@ -265,6 +300,7 @@ namespace UserCrud.Controllers
             return Json(new { success = true }, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorization]
         public ActionResult GetNotificationCount()
         {
             var userID = Convert.ToInt64(Session["id"].ToString());

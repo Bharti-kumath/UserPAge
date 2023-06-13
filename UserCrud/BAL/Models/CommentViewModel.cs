@@ -14,6 +14,7 @@ namespace BAL.Models
         public int TotalComments  { get; set; }
         public int User_id { get; set; }
         public int Post_id { get; set; }
+        public int totalreply { get; set; }
 
 
     }

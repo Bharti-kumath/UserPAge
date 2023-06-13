@@ -18,23 +18,22 @@
 </head>
 <body>
     <div class="main-body">
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container m-0 p-0">
-
-            <div class="navbar">
-                <ul class="nav navbar-nav d-flex flex-row">
-                    <li >@Html.ActionLink("UserDetail", "UserDetail", "User")</li>
-                    <li class="mx-2">@Html.ActionLink("UserProfile", "UserProfile", "User")</liclass="mx-2">
-                    <li>@Html.ActionLink("Landing", "Landing", "User")</li>
-                </ul>
-                <div class="position-relative"><i class="bi bi-bell fs-4" onclick="getNotification()"></i>
-                              <div class="notificationDot hidden">
-                                  <p class="p-0 m-0"></p>
-                              </div>
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <p class="ms-4">@Html.ActionLink("UserDetail", "UserDetail", "User")</p>
+            <div class="icon-bar">
+                <a class="" href="/User/Landing"><i class="bi bi-house"></i></a>
+                <a href="/User/UserProfile"><i class="bi bi-person-fill"></i></a>
+                <div class="bell">
+                    <i class="bi bi-bell fs-4" onclick="getNotification()"></i>
+                    <div class="notificationDot hidden">
+                        <p class="p-0 m-0"></p>
+                    </div>
                 </div>
+                <a href="/User/Logout"><i class="bi bi-box-arrow-right"></i></a>
+
             </div>
+           
         </div>
-    </div>
     <div class="containers">
         @RenderBody()
         
