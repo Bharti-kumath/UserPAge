@@ -1,4 +1,35 @@
-﻿var DataTable = "";
+function displayUserSuggestions(userSuggestions) {
+    var dropdown = $('#suggestionsDropdown');
+    dropdown.empty();
+
+    userSuggestions.forEach(function(user) {
+        var option = $('<option>').text(user);
+        dropdown.append(option);
+    });
+
+    // Show the dropdown
+    dropdown.show();
+}
+
+
+
+
+$('#commentBox').on('input', function() {
+    var commentText = $(this).val();
+    var atSymbolIndex = commentText.lastIndexOf('@');
+
+    if (atSymbolIndex !== -1) {
+        var followingText = commentText.substring(atSymbolIndex + 1);
+        var username = followingText.split(' ')[0]; // Extract the username after "@"
+        
+        if (username.trim() !== '') {
+            fetchUserSuggestions(username);
+        }
+    }
+});
+
+
+var DataTable = "";
 
 function sendSms(toNumber) {
     $.ajax({
