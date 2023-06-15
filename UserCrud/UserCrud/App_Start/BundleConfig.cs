@@ -23,7 +23,9 @@ namespace UserCrud
                       "~/Scripts/bootstrap.js"));
             bundles.Add(new ScriptBundle("~/bundles/Site").Include(
                       "~/Scripts/Site.js"));
-            
+
+            bundles.Add(new ScriptBundle("~/bundles/Player").Include(
+                      "~/Scripts/Player.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                      

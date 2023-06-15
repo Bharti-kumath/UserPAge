@@ -191,6 +191,11 @@ namespace UserCrud.Controllers
             return Json(new { success = true });
         }
 
+        public  ActionResult EditPost (long postId)
+        {
+            var postbyId = _repository.EditPost(postId);
+            return Json(postbyId, JsonRequestBehavior.AllowGet);
+        }
         public ActionResult deletePost(long postID)
         {
             _repository.DeletePost(postID);
@@ -229,10 +234,10 @@ namespace UserCrud.Controllers
             return PartialView("Comment", comments);
         }
         [HttpPost]
-        public ActionResult SaveComment(long postID, string commentText,long postUserID)
+        public ActionResult SaveComment(long postID, string commentText,long postUserID,long? toUserID = null)
         {
             var userID = Convert.ToInt64(Session["id"].ToString());
-            var comment = _repository.SaveComment(userID, postID, commentText, postUserID);
+            var comment = _repository.SaveComment(userID, postID, commentText, postUserID, toUserID);
             if (comment != null)
             {
                 return Json(comment.TotalComments);
@@ -244,10 +249,10 @@ namespace UserCrud.Controllers
 
         }
         [HttpPost]
-        public ActionResult SaveCommentReply(long commentId,string replyText)
+        public ActionResult SaveCommentReply(long commentId,string replyText,long toUserId )
         {
             var userID = Convert.ToInt64(Session["id"].ToString());
-            var reply = _repository.SaveCommentReply(commentId, userID, replyText);
+            var reply = _repository.SaveCommentReply(commentId, userID, replyText, toUserId);
             if (reply != null)
             {
                 return Json(reply);
@@ -318,5 +323,12 @@ namespace UserCrud.Controllers
         }
         #endregion
 
+
+        public ActionResult SearchUser(string userName)
+        {
+            var userID = Convert.ToInt64(Session["id"].ToString());
+            List<Suggestion> userList = _repository.SearchUser(userName , userID);
+            return Json(userList, JsonRequestBehavior.AllowGet);
+        }
     }
 }

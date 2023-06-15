@@ -298,6 +298,7 @@ namespace DAL.Repository
                
                 var parameters = new DynamicParameters();
                 parameters.Add("UserID", userID, DbType.Int32);
+                parameters.Add("ID", model.ID, DbType.Int32);
                 parameters.Add("Body", model.Body, DbType.String);
                 parameters.Add("Images", imagesTable.AsTableValuedParameter("dbo.ImageTableType")); 
 
@@ -309,7 +310,23 @@ namespace DAL.Repository
 
         }
 
+        public PostViewModel EditPost(long postId)
+        {
+            PostViewModel postByID = new PostViewModel();
 
+                using (IDbConnection connection = new SqlConnection(connectionString))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@ID", postId, DbType.Int64);
+                postByID = connection.QueryFirstOrDefault<PostViewModel>("SELECT * FROM posts WHERE id = @PostID", new { PostID = postId }, commandType: CommandType.Text);
+
+                postByID.MediaPaths = connection.Query<string>("SELECT mediapath FROM media WHERE postid = @PostID", new { PostID = postId }, commandType: CommandType.Text).ToList();
+
+                    
+                }
+                return postByID;
+            
+        }
         public void DeletePost(long postID)
         {
 
@@ -384,7 +401,7 @@ namespace DAL.Repository
             return totalComments;
         }
 
-        public CommentViewModel SaveComment(long userID, long postID, string commentText, long postUserID)
+        public CommentViewModel SaveComment(long userID, long postID, string commentText, long postUserID , long? toUserID)
         {
             CommentViewModel comment;
             using (IDbConnection connection = new SqlConnection(connectionString))
@@ -394,12 +411,13 @@ namespace DAL.Repository
                 parameters.Add("UserID", userID, DbType.Int64);
                 parameters.Add("comment", commentText, DbType.String);
                 parameters.Add("postUserID", postUserID, DbType.Int64);
+                parameters.Add("toUserID", toUserID, DbType.Int64);
                 comment = connection.QueryFirstOrDefault<CommentViewModel>("sp_SaveComment", parameters, commandType: CommandType.StoredProcedure);
             }
             return comment;
         }
 
-        public CommentViewModel SaveCommentReply(long commentId, long UserID,string replyText)
+        public CommentViewModel SaveCommentReply(long commentId, long UserID,string replyText,long toUserId)
         {
             CommentViewModel comment;
             using (IDbConnection connection = new SqlConnection(connectionString))
@@ -407,6 +425,7 @@ namespace DAL.Repository
                 var parameters = new DynamicParameters();
                 parameters.Add("commentId", commentId, DbType.Int64);
                 parameters.Add("UserID", UserID, DbType.Int64);
+                parameters.Add("toUserId", toUserId, DbType.Int64);
                 parameters.Add("replyText", replyText, DbType.String);
                 comment = connection.QueryFirstOrDefault<CommentViewModel>("sp_SaveCommentReply", parameters, commandType: CommandType.StoredProcedure);
             }
@@ -495,6 +514,21 @@ namespace DAL.Repository
                 parameters.Add("followingID", followingID, DbType.Int64);
                 parameters.Add("action", action, DbType.Byte);
                 connection.Execute("sp_UpdateFollowRequest", parameters, commandType: CommandType.StoredProcedure);
+            }
+        }
+
+        public List<Suggestion> SearchUser(string userName, long userID)
+        {
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@userID", userID, DbType.Int64);
+                parameters.Add("@userName", userName, DbType.String);
+
+
+                List<Suggestion> UserList = connection.Query<Suggestion>("sp_SearchFollowedUser", parameters, commandType: CommandType.StoredProcedure).ToList();
+
+                return UserList;
             }
         }
     }

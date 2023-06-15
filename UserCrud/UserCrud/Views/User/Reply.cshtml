@@ -48,7 +48,7 @@
                         <span class="mb-0">@weeks w ago</span>
                     }
                 </div>
-                <p class="m-0"> @@@reply.ToUserName @reply.ReplyText</p>
+                <p class="m-0"> <a href="/User/FriendProfile?friendId=@reply.ToUserId">@@@reply.ToUserName</a> @reply.ReplyText</p>
                 <span class=" replybtn" onclick="showReReplyInput('@reply.UserName',@reply.Id)">Reply <i class="bi bi-arrow-return-left mt-1"></i></span>
 
             </div>
@@ -62,7 +62,7 @@
             <input placeholder="Reply to " class="comment-box" id="commentReReply-@reply.Id" style="border-color: #6c757d !important" />
 
             <button class="submit-button btn replybtn" id="postCommentReply-@reply.CommentId"
-                    onclick="saveCommentReply(@reply.CommentId)">
+                    onclick="saveCommentReReply(@reply.CommentId,@reply.UserId,@reply.Id)">
                 Post
             </button>
         </div>

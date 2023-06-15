@@ -13,6 +13,9 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     @Styles.Render("~/Content/css")
 
 </head>
@@ -20,6 +23,11 @@
     <div class="main-body">
         <div class="navbar navbar-inverse navbar-fixed-top">
             <p class="ms-4">@Html.ActionLink("UserDetail", "UserDetail", "User")</p>
+            @*<audio id="musicPlayer" controls>
+            </audio> <button onclick="previousSong()">Previous</button>
+            <button onclick="playMusic()">Play</button>
+            <button onclick="pauseMusic()">Pause</button>
+            <button onclick="nextSong()">Next</button>*@
             <div class="icon-bar">
                 <a class="" href="/User/Landing"><i class="bi bi-house"></i></a>
                 <a href="/User/UserProfile"><i class="bi bi-person-fill"></i></a>
@@ -32,20 +40,22 @@
                 <a href="/User/Logout"><i class="bi bi-box-arrow-right"></i></a>
 
             </div>
-           
-        </div>
-    <div class="containers">
-        @RenderBody()
-        
-    </div>
-</div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
-    @Scripts.Render("~/bundles/jquery")
+        </div>
+        <div class="containers">
+            @RenderBody()
+
+        </div>
+    </div>
+
+
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>*@
+    @*@Scripts.Render("~/bundles/jquery")*@
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
     @Scripts.Render("~/bundles/Site")
-   
+    @Scripts.Render("~/bundles/Player")
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
     @RenderSection("scripts", required: false)
 </body>

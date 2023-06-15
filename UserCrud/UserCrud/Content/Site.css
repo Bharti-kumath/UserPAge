@@ -587,7 +587,8 @@ h4 {
 }
 
 #deletepost {
-    top: 13% !important;
+    top:auto !important;
+    bottom: 7% !important;
     right: 2% !important;
     left: auto !important;
     background: transparent !important;
@@ -635,14 +636,28 @@ h4 {
         padding: 0.5rem;
         background-color: transparent !important;
     }
-
-    .commentBox button {
-        position: absolute;
-        top: 0.2rem;
-        right: 0.2rem;
-        border: none !important;
-        color: #fff;
-    }
+.ui-menu, .ui-widget-content {
+    border: 1px solid rgb(56 189 248) !important;
+    border-radius: 15px;
+    outline: none;
+    color: #fff;
+    background: rgb(14 165 233) !important;
+}
+.ui-menu-item {
+    
+    border-radius: 15px;
+    outline: none;
+    padding: 0.5rem !important;
+    margin: 0rem !important;
+    background-color: rgb(14 165 233) !important;
+}
+.commentBox button {
+    position: absolute;
+    top: 0.2rem;
+    right: 0.2rem;
+    border: none !important;
+    color: #fff;
+}
 
 .commentbtn {
     display: none;
@@ -671,10 +686,11 @@ h4 {
     background-color: rgb(244 114 182);
     bottom: 15px;
     border-radius: 50%;
-    left: 9px;
+    left: 15px;
     height: 16px;
     width: 16px;
     top: 0px;
+    padding: 0.56rem !important;
 }
 
     .notificationDot p {
@@ -685,6 +701,7 @@ h4 {
         font-size: 0.7rem;
         padding-bottom: 1px;
         font-weight: bold;
+        transform:translateY(-7px)
     }
 
 .effect {
@@ -783,4 +800,15 @@ h4 {
 
 .replybtn {
     color: #939090;
+}
+
+#editPost {
+    position: absolute;
+    bottom: 8.1%;
+    right: 8%;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 1.3rem;
+}
 }

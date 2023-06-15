@@ -1,35 +1,79 @@
 ﻿@model BAL.Models.ProfileViewModel
 
-<div class="row p-4 post">
-    <h2 class="userHeading fs-5 p-2">
-        Posts
-    </h2>
-    @foreach (var post in Model.Posts)
-    {
-    
-<div class="col-sm-12 col-md-6 col-lg-4 mb-4">
-
-    <div class="view overlay hm-black-light m-b-2 position-relative" id="post-@post.ID">
-        @foreach (var path in post.MediaPaths.Take(1))
-        {
-            <img src="~/Content/PostImages/@path" class="img-fluid post-img" alt="" />
-        }
-
-        <div class="Content">
-            <p class="mb-1 fs-4">@post.Body</p>
-            <div class="Like">
-                <i class="bi bi-heart me-1"></i> @post.TotalLikes
-                <i class="bi bi-chat-left-quote ms-2 me-1"></i> @post.TotalComments
+<div class="modal fade" id="postmodel" tabindex="-1" role="dialog"
+     aria-labelledby="postmodelTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="userHeading fs-4" id="createPostHeading"><i class="bi bi-pencil"></i> Create a Post</h2>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModel2()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-        </div>
-        <button onclick="deletePost(@post.ID)" class="trash" id="deletepost"></button>
-        <span class="focus-border"><i class="i"></i></span>
-    </div>
-    
-</div>
-        
-    }
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-2 ">
+                        <img src="https://mdbootstrap.com/images/avatars/img%20(4).jpg" alt="" class="img-circle img-fluid post-Userimg">
+                    </div>
+                    <div class="col-md-9 ">
+                        <h5 class="mb-0">janedoe </h5>
+                        <p>Post To Everyone</p>
+                    </div>
+                </div>
+                <div class="row postform">
+                    <form enctype="multipart/form-data" id="postForm">
+                        <div class="row">
 
-      
-    
+
+                            @Html.TextAreaFor(model => model.Post.Body, new { @id = "textarea", @placeholder = "Write Your Content...." })
+                           
+
+                        </div>
+                        <div class="row">
+                            <div id="preview">
+
+
+                                <div id="carouselExample" class="carousel slide" data-bs-interval="false" data-bs-pause="false">
+                                    <div class="carousel-inner"></div>
+                                    <button class="carousel-control-prev"
+                                            type="button"
+                                            data-target="#carouselExample"
+                                            data-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    </button>
+                                    <button class="carousel-control-next"
+                                            type="button"
+                                            data-target="#carouselExample"
+                                            data-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    </button>
+
+                                    <div class="carousel-indicators"></div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col">
+                                <i class="bi bi-camera" onclick="ClickInput()" id="camera"></i>
+
+                                <input type="hidden" id="postId"/>
+
+                                @Html.TextBoxFor(model => model.Post.ImagePath, new { @class = "path", @type = "file", multiple = "multiple", @id = "fileInput" })
+
+                                <span class="img-text">Upload a image</span>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModel2()">Close</button>
+                            <button type="button" class="addButton" onclick="createPost()" id="postButton">Post</button>
+                        </div>
+                    </form>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
 </div>

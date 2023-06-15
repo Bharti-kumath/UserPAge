@@ -36,6 +36,10 @@
                         {
                             <span>liked Your Post</span> <button class="addButton mx-2" onclick="focusPost(@notification.PostID)">Go To Post</button>
                         }
+                        else if (notification.NotificationType == 4)
+                        {
+                            <span>mentioned you in a comment</span> <button class="addButton mx-2" onclick="focusPost(@notification.PostID)">Go To Post</button>
+                        }
                         else
                         {
                             <span>commented on your Post</span> <button class="addButton mx-2" onclick="focusPost(@notification.PostID)">Go To Post</button>
