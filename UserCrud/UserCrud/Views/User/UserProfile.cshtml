@@ -50,7 +50,7 @@
 
                             <img src="https://mdbootstrap.com/images/avatars/img%20(9).jpg" alt="" class="img-circle img-fluid">
                             <h2 class="fs-5">@Html.ActionLink(@friend.SuggestedName, "FriendProfile", new { friendId = friend.Id }, new { @class = "link" })</h2>
-                            <button type="button" class="btn btn-info-outline waves-effect addButton" onclick="followRequest(@friend.Id)" id="follow-@friend.Id">Follow</button>
+                            <button type="button" class="btn btn-info-outline waves-effect addButton" onclick="followRequest(@friend.Id,1)" id="follow-@friend.Id">Follow</button>
                             <input type="hidden" id="suggestedID" value="@friend.Id" />
                         </div>
                     }
@@ -65,13 +65,13 @@
                 <div class="row  suggest">
                     @foreach (var friend in Model.Friends)
                     {
-                        <div class="col-2 users">
+                    <div class="col-2 users">
 
-                            <img src="https://mdbootstrap.com/images/avatars/img%20(9).jpg" alt="" class="img-circle img-fluid">
-                            <h2 class="fs-5">@Html.ActionLink(@friend.MutualFriendName, "FriendProfile", new { friendId = friend.Id }, new { @class = "link" })</h2>
-
-                            <input type="hidden" id="suggestedID" value="@friend.Id" />
-                        </div>
+                        <img src="https://mdbootstrap.com/images/avatars/img%20(9).jpg" alt="" class="img-circle img-fluid">
+                        <h2 class="fs-5">@Html.ActionLink(@friend.MutualFriendName, "FriendProfile", new { friendId = friend.Id }, new { @class = "link" })</h2>
+                        <button type="button" class="btn btn-info-outline waves-effect addButton" onclick="followRequest(@friend.Id,2)" id="follow-@friend.Id">Unfollow</button>
+                        <input type="hidden" id="suggestedID" value="@friend.Id" />
+                    </div>
                     }
 
                 </div>

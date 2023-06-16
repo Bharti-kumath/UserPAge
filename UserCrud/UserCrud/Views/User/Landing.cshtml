@@ -27,7 +27,7 @@
 
                         @{
                             var targetDate = @post.Created_At;
-                            TimeSpan timeDifference = DateTime.Now - targetDate;
+                            TimeSpan? timeDifference = DateTime.Now - targetDate;
                             var date = TimeSpan.FromMinutes(1);
                         }
                         @if (timeDifference < date)
@@ -36,23 +36,23 @@
                         }
                         else if (timeDifference < TimeSpan.FromHours(1))
                         {
-                            int minutes = (int)timeDifference.TotalMinutes;
+                            int minutes = (int)timeDifference?.TotalMinutes;
 
                             <p>@minutes m ago</p>
                         }
                         else if (timeDifference < TimeSpan.FromDays(1))
                         {
-                            int hours = (int)timeDifference.TotalHours;
+                            int hours = (int)timeDifference?.TotalHours;
                             <p>@hours hr ago</p>
                         }
                         else if (timeDifference < TimeSpan.FromDays(7))
                         {
-                            int days = (int)timeDifference.TotalDays;
+                            int days = (int)timeDifference?.TotalDays;
                             <p>@days d ago</p>
                         }
                         else
                         {
-                            int weeks = (int)(timeDifference.TotalDays / 7);
+                            int weeks = (int)(timeDifference?.TotalDays / 7);
                             <p>@weeks w ago</p>
                         }
 
@@ -99,11 +99,12 @@
                 }
                 <div class="postFooter">
                     <p class="mb-1 fs-4">@post.Body</p>
-                    <div class="Like" >
+                    <div class="d-flex align-items-center">
                         @if (post.Liked == post.ID)
                         {
-                            <i class="bi bi-heart-fill text-danger fs-5 me-1 @post.ID" onclick="postLike(@post.ID,@post.UserID)"></i>
-                            <span class="like-@post.ID" onclick="showLikeUsers(@post.ID)"> by You
+                            <i class="bi bi-heart-fill text-danger fs-5 me-2 @post.ID" onclick="postLike(@post.ID,@post.UserID)"></i>
+                            <span class="likeheart-@post.ID" onclick="showLikeUsers(@post.ID)">
+                                 You
                                 @if (@post.TotalLikes > 1)
                                 {
                                     var likes = @post.TotalLikes - 1;
@@ -113,12 +114,13 @@
                         }
                         else
                         {
-                            <i class="bi bi-heart me-1 fs-5 @post.ID" onclick="postLike(@post.ID,@post.UserID)"></i> 
-                            <span class="like-@post.ID" onclick="showLikeUsers(@post.ID)">Liked by @post.TotalLikes</span>
+                            <i class="bi bi-heart me-2 fs-5 @post.ID" onclick="postLike(@post.ID,@post.UserID)"></i>
+                            <span class="likeheart-@post.ID" onclick="showLikeUsers(@post.ID)">Liked by @post.TotalLikes</span>
                         }
 
-                        <i class="bi bi-chat-left-quote ms-2 me-1 fs-5" onclick="showComment(@post.ID)"></i>
+                        <i class="bi bi-chat-left-quote ms-3 me-2 fs-5" onclick="showComment(@post.ID)"></i>
                         <span id="comments-@post.ID">@post.TotalComments</span>
+                        <i class="bi bi-share-fill ms-3 me-1 fs-5" onclick="showUsers(@post.ID)"></i>
                     </div>
                 </div>
                 <div class="commentBox mt-2 ui-widget ">
@@ -137,7 +139,7 @@
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="staticBackdropLabel">Liked By</h5>
+                                    <h5 class="modal-title likemodal" id="staticBackdropLabel">Liked By</h5>
                                     <button type="button" class="btn-close addButton" data-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body" id="likemodal-@post.ID">

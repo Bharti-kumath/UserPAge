@@ -277,6 +277,7 @@ namespace DAL.Repository
         {
 
             string path = HttpContext.Current.Server.MapPath("~/Content/PostImages");
+            int status = (model.Created_At.HasValue && model.Created_At > DateTime.Now) ? 0 : 1;
 
 
 
@@ -300,6 +301,8 @@ namespace DAL.Repository
                 parameters.Add("UserID", userID, DbType.Int32);
                 parameters.Add("ID", model.ID, DbType.Int32);
                 parameters.Add("Body", model.Body, DbType.String);
+                parameters.Add("status", status, DbType.Boolean);
+                parameters.Add("CreatedAt", model.Created_At, DbType.DateTime);
                 parameters.Add("Images", imagesTable.AsTableValuedParameter("dbo.ImageTableType")); 
 
                 connection.Execute("sp_InsertPost", parameters, commandType: CommandType.StoredProcedure);
@@ -339,6 +342,18 @@ namespace DAL.Repository
 
         }
 
+        public void SharePost(long postId, long toUserId, long fromUserID)
+        {
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+
+                string insertQuery = @"
+            INSERT INTO notification (fromUserId, toUserId, notificationType, postID)
+            VALUES (@fromUserId, @toUserId, 5, @postId)";
+
+                connection.Execute(insertQuery, new { fromUserID, toUserId, postId });
+            }
+        }
         public List<PostViewModel> GetAllPosts(long userID)
         {
 
@@ -530,6 +545,29 @@ namespace DAL.Repository
 
                 return UserList;
             }
+        }
+
+        public List<PostViewModel> GetScheduledPost(DateTime currentTime)
+        {
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+
+                string query = "SELECT id,user_id as userId FROM posts WHERE created_at <= @currentTime and status = 0";
+                List<PostViewModel> postIds = connection.Query<PostViewModel>(query, new { currentTime }).ToList();
+                return postIds;
+               
+            }
+        }
+        public void PublishPost(long postId)
+        {
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+
+                string query = "UPDATE posts SET [status] = 1 WHERE ID = @postId ";
+                connection.Execute(query, new { postId });
+
+            }
+           
         }
     }
 }

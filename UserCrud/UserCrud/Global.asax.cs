@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using DAL;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.Owin.Security.Jwt;
 using System;
 using System.Collections.Generic;
@@ -24,9 +25,13 @@ namespace UserCrud
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             Bootstrapper.Initialise();
+            //IRepository repository = DependencyResolver.Current.GetService<IRepository>();
+            //HttpContextBase httpContext = new HttpContextWrapper(HttpContext.Current);
+
+            //SchedulePost postPublish = new SchedulePost();
+            //postPublish.Start(repository, httpContext);
 
 
-          
 
         }
            

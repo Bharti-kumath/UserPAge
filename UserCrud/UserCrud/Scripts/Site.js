@@ -255,6 +255,7 @@ function exportToCSV() {
 function createPost() {
     var postForm = new FormData();
     postForm.append("ID", $("#postId").val())
+    postForm.append("Created_at", $("#CreatedAt").val())
     postForm.append('Body', $('#textarea').val());
    
     $.each($("#fileInput")[0].files, function (i, file) {
@@ -430,10 +431,10 @@ function postLike(postID, postUserID) {
                 likeicon.addClass("bi-heart-fill").addClass("text-danger");
                 if (totallikes > 1) {
                     var likes = totallikes - 1
-                    message = " by you and " + likes + " others";
+                    message = " you and " + likes + " others";
                 }
                 else {
-                    message = " by you";
+                    message = "you";
                 }
 
             }
@@ -449,7 +450,7 @@ function postLike(postID, postUserID) {
                 }
 
             }
-            $(".like-" + postID).empty().text(message);
+            $(".likeheart-" + postID).empty().text(message);
         },
         error: function (error) {
             console.log(error);
@@ -635,15 +636,21 @@ $('.userListOptions li').click(function () {
     commentInput.val(precedingText + '@' + selectedOption);
 })
 
-function followRequest(toUserID) {
+function followRequest(toUserID,action) {
 
     $.ajax({
         type: "Post",
         url: "/User/FollowRequest",
         data: { toUserID: toUserID },
         success: function (response) {
+            console.log(action)
+            if (action == 1) {
+                $("#follow-" + toUserID).text("Requested").addClass("requested").removeAttr("onclick");
+            }
+            else {
+                $("#follow-" + toUserID).text("Follow").removeAttr("onclick");
+            }
             
-            $("#follow-" + toUserID).text("Requested").addClass("requested");
         },
         error: function (error) {
             console.log("Error requesting:", error);
@@ -680,6 +687,8 @@ function notificationRead(id) {
 
 
 setInterval(function () {
+    var currentTime = new Date(); 
+
     $.ajax({
         url: '/User/GetNotificationCount',
         method: 'GET',
@@ -698,21 +707,72 @@ setInterval(function () {
     });
 }, 10000);
 
+setInterval(function () {
+    var currentTime = new Date().toISOString();
+    $.ajax({
+        url: '/User/GetScheduledPost',
+        method: 'GET',
+        data: { currentTime: currentTime },
+        success: function (data) {
+            var response = data.Response;
+            var userID = data.UserID;
+            if (response.length > 0) {
+                $.each(response, function (index, item) {
+                   
+                    if (item.UserID == userID)
+                    {
+                        toastr.success(`Your Scheduled Post is Published <button class="addButton mx-2" onclick="focusPost(${item.ID})">Go To Post</button>`, '', {
+                            closeButton: true,
+                            progressBar: true,
+                            positionClass: 'toast-top-right',
+                            showDuration: '3000',
+                            hideDuration: '5000',
+                            timeOut: '8000',
+                            extendedTimeOut: '1000',
+                            showEasing: 'swing',
+                            hideEasing: 'linear',
+                            showMethod: 'fadeIn',
+                            hideMethod: 'fadeOut',
+                            enableHtml: true
+                        });
 
-function requestUpdate(followerId, action) {
+                    }
+
+                    $.ajax({
+                        url: '/User/PublishPost',
+                        method: 'Post',
+                        data: { postID: item.ID },
+                        success: function (response) {
+                           
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(error);
+                        }
+                    });
+                });
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log(error);
+        }
+    });
+}, 10000);
+
+
+function requestUpdate(followerId, action,id) {
     
     $.ajax({
         type: "Post",
         url: "/User/UpdateFollowRequest",
         data: { followerId: followerId, action: action },
         success: function () {
-           
+            notificationRead(id);
             if (action = 1) {
-                $("#confirm-" + followerId).text("Accepted");
+                $("#confirm-" + followerId).text("Accepted").removeAttr("onclick");
                 $("#delete-" + followerId).remove();
             }
             else {
-                $("#delete-" + followerId).text("Declined");
+                $("#delete-" + followerId).text("Declined").removeAttr("onclick");
                 $("#confirm-" + followerId).remove();
             }
         }
@@ -926,15 +986,15 @@ function showLikeUsers(postId) {
                 var users = '';
                 for (i = 0; i < response.length; i++) {
                     var item = response[i];
-                    users += `<div class="d-flex flex-row  align-items-center my-3 showlike ">
-<img src="https://mdbootstrap.com/images/avatars/img%20(4).jpg" alt="" class="img-circle mx-2 img-fluid post-Userimg">
-<span onclick="openUser(${item.Id})" class="mx-2">${item.SuggestedName}</span>
-<i class="bi bi-heart-fill text-danger fs-5 mx-2" ></i>
+                    users += `<div class="d-flex flex-row  align-items-center my-3 showlike justify-content-between ">
+<div><img src="https://mdbootstrap.com/images/avatars/img%20(4).jpg" alt="" class="img-circle mx-2 img-fluid post-Userimg">
+<span onclick="openUser(${item.Id})" class="mx-2">${item.SuggestedName}</span></div>
+<div><i class="bi bi-heart-fill text-danger fs-5 mx-2" ></i></div>
 </div>`
                 }
                 $("#likemodal-" + postId).empty().html(users);
                 $('#like-' + postId).modal("show");
-
+                $(".likemodal").text("Liked By")
             },
             error: function (error) {
                 console.log(error);
@@ -943,4 +1003,52 @@ function showLikeUsers(postId) {
     }
 
    
+}
+
+function showUsers(postId) {
+
+        $.ajax({
+            type: "Post",
+            url: "/User/GetFollowedUserList",
+            
+            success: function (response) {
+
+                var users = '';
+                for (i = 0; i < response.length; i++) {
+                    var item = response[i];
+                    users += `<div class="d-flex flex-row  align-items-center my-3 showlike justify-content-between ">
+<div><img src="https://mdbootstrap.com/images/avatars/img%20(4).jpg" alt="" class="img-circle mx-2 img-fluid post-Userimg">
+<span class="mx-2">${item.SuggestedName}</span></div>
+<div><i class="bi bi-send-fill  text-danger fs-4 mx-2" onclick="SharePost(${postId} ,${item.Id})" id="sendPost" ></i></div>
+</div>`
+                }
+                $("#likemodal-" + postId).empty().html(users);
+                $('#like-' + postId).modal("show");
+                $(".likemodal").text("Share Post")
+
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    
+
+
+}
+
+function SharePost(postId, toUserId) {
+  
+
+    $.ajax({
+        type: "POST",
+        url: "/User/SharePost",
+        data: { postId: postId, toUserId: toUserId},
+        success: function (response) {
+
+            $("#sendPost").removeClass("bi-send-fill").addClass("bi-send-check").removeAttr("onclick")
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
 }

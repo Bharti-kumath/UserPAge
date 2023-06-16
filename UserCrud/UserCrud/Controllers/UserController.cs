@@ -330,5 +330,43 @@ namespace UserCrud.Controllers
             List<Suggestion> userList = _repository.SearchUser(userName , userID);
             return Json(userList, JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult GetFollowedUserList()
+        {
+            var userID = Convert.ToInt64(Session["id"].ToString());
+            List<Suggestion> userList = _repository.SearchUser("", userID);
+            return Json(userList, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult SharePost(long postId, long toUserId)
+        {
+            var fromUserID = Convert.ToInt64(Session["id"].ToString());
+            _repository.SharePost(postId, toUserId, fromUserID);
+            return Json(new { success = true });
+        }
+
+
+        [Authorization]
+        public ActionResult GetScheduledPost(DateTime currentTime)
+        {
+            var UserID = Convert.ToInt64(Session["id"].ToString());
+            var response = _repository.GetScheduledPost(currentTime);
+
+            var data = new
+            {
+                Response = response,
+                UserID = UserID
+            };
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult PublishPost(long postID)
+        {
+            _repository.PublishPost(postID);
+            return Json(new { success = true });
+        }
     }
 }

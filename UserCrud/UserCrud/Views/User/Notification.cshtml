@@ -28,9 +28,9 @@
                         <a class="mb-0" href="/User/FriendProfile?friendId=@notification.FromUserID"><strong>@notification.UserName</strong></a>
                         @if (notification.NotificationType == 1)
                         {
-                            <span>requested to follow you</span> <button class=" mx-2 addButton" id="confirm-@notification.FromUserID" onclick="requestUpdate(@notification.FromUserID ,1)">Confirm</button>
+                            <span>requested to follow you</span> <button class=" mx-2 addButton" id="confirm-@notification.FromUserID" onclick="requestUpdate(@notification.FromUserID ,1,@notification.id)">Confirm</button>
 
-                            <button class=" mx-2 deletebutton" id="delete-@notification.FromUserID" onclick="requestUpdate(@notification.FromUserID ,0)">Delete</button>
+                            <button class=" mx-2 deletebutton" id="delete-@notification.FromUserID" onclick="requestUpdate(@notification.FromUserID , 0,@notification.id)">Delete</button>
                         }
                         else if (notification.NotificationType == 2)
                         {
@@ -39,6 +39,10 @@
                         else if (notification.NotificationType == 4)
                         {
                             <span>mentioned you in a comment</span> <button class="addButton mx-2" onclick="focusPost(@notification.PostID)">Go To Post</button>
+                        }
+                        else if (notification.NotificationType == 5)
+                        {
+                            <span>shared you a post</span> <button class="addButton mx-2" onclick="focusPost(@notification.PostID)">Go To Post</button>
                         }
                         else
                         {

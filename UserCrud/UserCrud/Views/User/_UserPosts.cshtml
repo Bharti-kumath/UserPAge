@@ -16,7 +16,7 @@
                         <img src="https://mdbootstrap.com/images/avatars/img%20(4).jpg" alt="" class="img-circle img-fluid post-Userimg">
                     </div>
                     <div class="col-md-9 ">
-                        <h5 class="mb-0">janedoe </h5>
+                        <h5 class="mb-0"></h5>
                         <p>Post To Everyone</p>
                     </div>
                 </div>
@@ -62,6 +62,29 @@
                                 @Html.TextBoxFor(model => model.Post.ImagePath, new { @class = "path", @type = "file", multiple = "multiple", @id = "fileInput" })
 
                                 <span class="img-text">Upload a image</span>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="form__linput mt-2">
+
+                                @Html.EditorFor(model => model.Post.Created_At, new { htmlAttributes = new { @class = "form__input", @id = "CreatedAt" } })
+                                @Html.ValidationMessageFor(model => model.Post.Created_At, "", new { @class = "text-danger" })
+                                <span id="dob-validation-message" class="text-danger"></span>
+                                @Html.LabelFor(model => model.Post.Created_At, "Schedule Post", htmlAttributes: new { @class = "form__label" })
+                                <script>
+
+                                    flatpickr("#CreatedAt", {
+                                        dateFormat: "d-m-Y H:i", // Format for both date and time
+                                        enableTime: true, // Enable time selection
+                                        placeholder: false,
+                                        minDate: "today"
+                                        
+                                    });
+
+
+                                </script>
+
+
                             </div>
                         </div>
                         <div class="modal-footer">
