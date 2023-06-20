@@ -2,8 +2,11 @@
   "ExpandedNodes": [
     "",
     "\\BAL",
+    "\\DAL",
+    "\\DAL\\Repository",
     "\\UserCrud",
     "\\UserCrud\\Controllers",
+    "\\UserCrud\\Scripts",
     "\\UserCrud\\Views",
     "\\UserCrud\\Views\\User"
   ],

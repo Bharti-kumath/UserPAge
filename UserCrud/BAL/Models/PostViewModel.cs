@@ -20,6 +20,8 @@ namespace BAL.Models
         public int TotalLikes { get; set; }
         public int TotalComments { get; set; }
         public int Liked { get; set; }
+        public int Visibility { get; set; }
+        public int following_id { get; set; }
         public DateTime? Created_At { get; set; } = DateTime.Now;
       
     }

@@ -14,8 +14,37 @@ function displayUserSuggestions(userSuggestions,postId) {
     dataList.show();
 }
 
+//var timeoutID;
 
+//function setup() {
+//    this.addEventListener("mousemove", resetTimer, false);
+//    this.addEventListener("mousedown", resetTimer, false);
+//    this.addEventListener("keypress", resetTimer, false);
+//    this.addEventListener("DOMMouseScroll", resetTimer, false);
+//    this.addEventListener("mousewheel", resetTimer, false);
+//    this.addEventListener("touchmove", resetTimer, false);
+//    this.addEventListener("MSPointerMove", resetTimer, false);
 
+//    startTimer();
+//}
+//setup();
+
+//function startTimer() {
+//   console.log("start")
+//    timeoutID = window.setTimeout(goInactive, 60000);
+//}
+
+//function resetTimer(e) {
+//    console.log("reset")
+//    window.clearTimeout(timeoutID);
+//    startTimer()
+   
+//}
+
+//function goInactive() {
+//    console.log("end")
+//      window.location.href='/Login/Logout'
+//}
 
 
 
@@ -255,8 +284,9 @@ function exportToCSV() {
 function createPost() {
     var postForm = new FormData();
     postForm.append("ID", $("#postId").val())
-    postForm.append("Created_at", $("#CreatedAt").val())
+    postForm.append("Created_At", $("#CreatedAt").val())
     postForm.append('Body', $('#textarea').val());
+    postForm.append('Visibility', $('#visibility').val())
    
     $.each($("#fileInput")[0].files, function (i, file) {
         postForm.append('ImagePath', file);
@@ -300,9 +330,10 @@ function createPost() {
    
 }
 function populateForm(data) {
-    // Set the post body
+    console.log(data)
     $('#textarea').val(data.Body);
     $("#postId").val(data.ID);
+    $("#visibility").val(data.Visibility);
     $("#preview").show();
     $("#createPostHeading").text("Edit Post");
     $("#postButton").text("Edit");
@@ -686,77 +717,6 @@ function notificationRead(id) {
 };
 
 
-setInterval(function () {
-    var currentTime = new Date(); 
-
-    $.ajax({
-        url: '/User/GetNotificationCount',
-        method: 'GET',
-        success: function (response) {
-
-            if (response > 0) {
-                $(".notificationDot").show();
-                $(".notificationDot p").empty();
-                $(".notificationDot p").text(response)
-            }
-
-        },
-        error: function (xhr, status, error) {
-            console.log(error)
-        }
-    });
-}, 10000);
-
-setInterval(function () {
-    var currentTime = new Date().toISOString();
-    $.ajax({
-        url: '/User/GetScheduledPost',
-        method: 'GET',
-        data: { currentTime: currentTime },
-        success: function (data) {
-            var response = data.Response;
-            var userID = data.UserID;
-            if (response.length > 0) {
-                $.each(response, function (index, item) {
-                   
-                    if (item.UserID == userID)
-                    {
-                        toastr.success(`Your Scheduled Post is Published <button class="addButton mx-2" onclick="focusPost(${item.ID})">Go To Post</button>`, '', {
-                            closeButton: true,
-                            progressBar: true,
-                            positionClass: 'toast-top-right',
-                            showDuration: '3000',
-                            hideDuration: '5000',
-                            timeOut: '8000',
-                            extendedTimeOut: '1000',
-                            showEasing: 'swing',
-                            hideEasing: 'linear',
-                            showMethod: 'fadeIn',
-                            hideMethod: 'fadeOut',
-                            enableHtml: true
-                        });
-
-                    }
-
-                    $.ajax({
-                        url: '/User/PublishPost',
-                        method: 'Post',
-                        data: { postID: item.ID },
-                        success: function (response) {
-                           
-                        },
-                        error: function (xhr, status, error) {
-                            console.log(error);
-                        }
-                    });
-                });
-            }
-        },
-        error: function (xhr, status, error) {
-            console.log(error);
-        }
-    });
-}, 10000);
 
 
 function requestUpdate(followerId, action,id) {

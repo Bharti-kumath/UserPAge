@@ -277,6 +277,10 @@ namespace DAL.Repository
         {
 
             string path = HttpContext.Current.Server.MapPath("~/Content/PostImages");
+            if(model.Created_At is null)
+            {
+                model.Created_At = DateTime.Now;
+            }
             int status = (model.Created_At.HasValue && model.Created_At > DateTime.Now) ? 0 : 1;
 
 
@@ -302,6 +306,7 @@ namespace DAL.Repository
                 parameters.Add("ID", model.ID, DbType.Int32);
                 parameters.Add("Body", model.Body, DbType.String);
                 parameters.Add("status", status, DbType.Boolean);
+                parameters.Add("visibility", model.Visibility, DbType.Boolean);
                 parameters.Add("CreatedAt", model.Created_At, DbType.DateTime);
                 parameters.Add("Images", imagesTable.AsTableValuedParameter("dbo.ImageTableType")); 
 

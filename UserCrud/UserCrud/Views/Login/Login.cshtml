@@ -1,0 +1,35 @@
+﻿@{
+    Page.Title = "Title goes here";
+    //Layout = "Your Layout Page goes here";
+}
+
+<div>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">Login</div>
+            <form method="post">
+                <div class="form-group">
+                    <label for="email">Email address</label>
+                    <input type="email" class="form-control" id="email" placeholder="Enter email" name="Email" />
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Password" name="Password" />
+                </div>
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-error" id="successMessage">
+                        <i class="bi bi-x-circle fs-4"></i>  @TempData["ErrorMessage"]
+                    </div>
+
+                }
+                <button type="submit" class="btn btn-primary mt-3 btn-block btn-login">
+                    Submit
+                </button>
+            </form>
+            <div class="text-center">
+                <a href="#">Forgot password?</a>
+            </div>
+        </div>
+    </div>
+</div>
