@@ -1,0 +1,173 @@
+<html>
+  <head>
+    <title>Multiple File Upload</title>
+    <!-- Bootstrap CSS -->
+
+    <!-- Bootstrap JavaScript dependencies (jQuery and Popper.js) -->
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <!-- jQuery -->
+  </head>
+  <body>
+    <div class="container">
+      <h1>Multiple File Upload</h1>
+
+      <div class="input-group mb-3">
+        <input type="file" id="fileInput" multiple />
+        <label class="input-group-text" for="fileInput">Choose files</label>
+      </div>
+
+      <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner"></div>
+        <button
+          class="carousel-control-prev"
+          type="button"
+          data-target="#carouselExample"
+          data-slide="prev"
+        >
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        </button>
+        <button
+          class="carousel-control-next"
+          type="button"
+          data-target="#carouselExample"
+          data-slide="next"
+        >
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        </button>
+
+        <div class="carousel-indicators"></div>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <!-- Bootstrap JavaScript -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"></script>
+    <script>
+      document
+        .getElementById("fileInput")
+        .addEventListener("change", handleFileSelect);
+
+      function handleFileSelect(e) {
+        const files = e.target.files;
+        const carouselInner = document.querySelector(".carousel-inner");
+        const carouselIndicators = document.querySelector(
+          ".carousel-indicators"
+        );
+        carouselInner.innerHTML = "";
+        carouselIndicators.innerHTML = "";
+
+        let activeIndex = 0;
+
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+
+          // Check if the file is not empty and is an image
+          if (file.size > 0 && file.type.includes("image")) {
+            const reader = new FileReader();
+
+            reader.onload = function (event) {
+              const imageSrc = event.target.result;
+              const active = i === activeIndex ? "active" : i;
+
+              const carouselItem = document.createElement("div");
+              carouselItem.classList.add("carousel-item", active);
+              carouselItem.innerHTML = `
+          <img src="${imageSrc}" class="d-block w-100" alt="Preview">
+          <div class="carousel-caption">
+            <button type="button" class="btn btn-danger btn-sm" onclick="removePreview(this)">Remove</button>
+          </div>
+        `;
+
+<<<<<<< HEAD
+        
+        carouselInner.appendChild(carouselItem);
+       
+      };
+
+      reader.readAsDataURL(file);
+    }
+  }
+
+  
+  $('.carousel').carousel();
+}
+
+
+function removePreview(button) {
+  const carouselItem = button.closest('.carousel-item');
+  const carousel = carouselItem.parentElement;
+  const carouselItems = Array.from(carousel.querySelectorAll('.carousel-item'));
+
+  // Get the index of the item to be removed
+  const activeIndex = carouselItems.findIndex(item => item === carouselItem);
+
+  // Remove the item
+  carousel.removeChild(carouselItem);
+
+  // Adjust active index after removal
+  let newActiveIndex = activeIndex - 1;
+=======
+              carouselInner.appendChild(carouselItem);
+            };
+>>>>>>> e6d95fafefc9ec314cad343db91ee1d84476acec
+
+            reader.readAsDataURL(file);
+          }
+        }
+
+        
+        $(".carousel").carousel();
+      }
+
+      function removePreview(button) {
+        const carouselItem = button.closest(".carousel-item");
+        const carousel = carouselItem.parentElement;
+        const carouselItems = Array.from(
+          carousel.querySelectorAll(".carousel-item")
+        );
+
+        // Get the index of the item to be removed
+        const activeIndex = carouselItems.findIndex(
+          (item) => item === carouselItem
+        );
+
+        // Remove the item
+        carousel.removeChild(carouselItem);
+
+        // Adjust active index after removal
+        let newActiveIndex = activeIndex - 1;
+
+        // If the first item is removed, set the last item as active
+        if (newActiveIndex < 0) {
+          newActiveIndex = carouselItems.length - 1;
+        }
+
+        // Set the previous item as active
+        carouselItems[newActiveIndex].classList.add("active");
+        // Remove the corresponding file from input.files
+
+        const inputFile = document.getElementById("fileInput");
+        const selectedFiles = Array.from(inputFile.files);
+        selectedFiles.splice(activeIndex, 1);
+
+        inputFile.value = "";
+
+        // Assign the new FileList object to the input element
+        var dt = new DataTransfer();
+        for (let i = 0; i < selectedFiles.length && i < 20; i++) {
+          dt.items.add(selectedFiles[i]);
+        }
+        inputFile.files = dt.files;
+        // Update carousel
+        $(".carousel").carousel(newActiveIndex);
+      }
+    </script>
+  </body>
+</html>
