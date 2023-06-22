@@ -1,54 +1,16 @@
 ﻿
 
-/*body {
-    background: linear-gradient(-45deg, rgb(36, 60, 117), #07455b,rgb(15,23,42 ), #021f19);
-    background-size: 400% 400%;
-    animation: gradient 15s ease infinite;
-    height: 100%;
-    color: #fff;
-    will-change: background-position;
-}
-
-
-@keyframes gradient {
-    0% {
-        background-position: 0% 50%;
-    }
-
-    50% {
-        background-position: 100% 50%;
-    }
-
-    100% {
-        background-position: 0% 50%;
-    }
-}*/
 html {
-   scroll-behavior: smooth;
-}
-.main-body {
-    background: linear-gradient(-45deg, rgb(36, 60, 117), #07455b, rgb(15, 23, 42), #021f19);
-    background-size: 400% 400%;
-    animation: gradient 5s linear infinite;
-    min-height: 100vh;
-    color: #fff;
-    
     scroll-behavior: smooth;
 }
 
-@keyframes gradient {
-    0% {
-        background-position: 0% 50%;
-    }
-
-    50% {
-        background-position: 100% 50%;
-    }
-
-    100% {
-        background-position: 0% 50%;
-    }
+.main-body {
+    background: linear-gradient(-45deg, rgb(36, 60, 117), #07455b, rgb(15, 23, 42), #021f19);
+    min-height:100vh;
+    color: #fff;
+    scroll-behavior: smooth;
 }
+
 
 .hide {
     visibility: hidden !important;
@@ -56,21 +18,51 @@ html {
 }
 
 .main-container {
-  
     padding: 4rem 8rem !important;
 }
 
+.icon-bar {
+    width: 25%;
+    overflow: auto;
+}
+
+    .icon-bar i {
+        color: rgb(14 165 233);
+        font-weight: 700;
+        font-size: 1.5rem;
+    }
+
+    .icon-bar a, .icon-bar div {
+        padding: 7px;
+        float: left;
+        width: 10%;
+        margin: 4px 10px;
+        border-radius: 50%;
+        text-align: center;
+        box-sizing: border-box;
+        transition: all .3s;
+    }
+ .icon-bar a:hover {
+  background-color: rgb(233, 237, 255) !important;
+ }
+ .bell{
+     position:relative;
+ }
+    .bell:hover {
+        background-color: rgb(233, 237, 255) !important;
+    }
 .hidee {
     padding: 0.5rem !important;
     display: none;
 }
+
 #show-old {
     position: absolute;
     right: 0.1em;
     top: 1.5rem;
     transform: translateY(-50%);
     padding-inline: 0.5em;
-    cursor:pointer;
+    cursor: pointer;
 }
 
 .hideeye {
@@ -107,8 +99,8 @@ h4 {
     top: 50%;
     left: 65%;
     transform: translate(-50%, -50%);
-    outline:none;
-    text-decoration:none;
+    outline: none;
+    text-decoration: none;
 }
 
     .trash:before {
@@ -172,6 +164,7 @@ h4 {
     padding: 0.2rem 0.75rem;
     box-shadow: 0 1px 3px 0 transparent, 0 1px 2px -1px #00001a;
 }
+
 .deletebutton {
     background-color: rgb(233, 237, 255);
     border-color: transparent;
@@ -181,6 +174,7 @@ h4 {
     padding: 0.2rem 0.75rem;
     box-shadow: 0 1px 3px 0 transparent, 0 1px 2px -1px #00001a;
 }
+
 .modal-content {
     background-color: #1e293bcc;
     box-shadow: inset 0 1px 0 0 #ffffff0d;
@@ -194,8 +188,8 @@ h4 {
     opacity: 0.85 !important;
 }
 
-.modal-footer{
-    border:none !important;
+.modal-footer {
+    border: none !important;
 }
 
 
@@ -250,9 +244,9 @@ h4 {
     .form__input:focus {
         border: 0px solid hsl(171, 76%, 45%) !important;
         border-bottom: 2px solid rgb(56 189 248) !important;
-    
         outline: none;
     }
+
         .valid + .form__label,
         .form__input:valid + .form__label,
         .form__input:focus + .form__label {
@@ -305,6 +299,7 @@ h4 {
     outline: none;
     color: #94a3b8 !important;
 }
+
 .text-danger {
     font-size: 0.85rem;
     color: rgb(244 114 182) !important;
@@ -322,22 +317,25 @@ h4 {
     .form-row input::placeholder {
         color: rgb(56, 189, 248);
     }
+
 .dataTables_length label select option {
     color: rgb(56, 189, 248);
 }
+
 .dataTables_length label select {
     color: rgb(233, 237, 255);
 }
 
 .alert-success {
     color: rgb(233, 237, 255);
-    border-color:transparent;
+    border-color: transparent;
     background-color: rgb(244 114 182) !important;
     padding: 0.5rem !important;
-    vertical-align:middle;
+    vertical-align: middle;
 }
+
 .alert-error {
-    margin-top:1rem;
+    margin-top: 1rem;
     color: rgb(233, 237, 255);
     border-color: transparent;
     background-color: rgb(244 114 182) !important;
@@ -364,7 +362,7 @@ h4 {
     font-weight: bold;
     font-size: 2rem;
     text-align: center;
-    color:rgb(56, 189, 248);
+    color: rgb(56, 189, 248);
 }
 
 .form-group label {
@@ -397,17 +395,18 @@ h4 {
     margin-top: 20px;
     font-size: 1.2rem;
 }
-.navbar-nav{
-    padding:0.6rem 3rem;
 
+.navbar-nav {
+    padding: 0.6rem 3rem;
 }
+
     .navbar-nav li a {
         text-decoration: none;
         color: #fff;
     }
 
-    @media screen and (max-width: 576px) {
-        .card {
+@media screen and (max-width: 576px) {
+    .card {
         margin: 10px;
         padding: 30px;
     }
@@ -438,7 +437,7 @@ h4 {
     height: 4.6rem;
 }
 
-.users  {
+.users {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -450,18 +449,18 @@ h4 {
     border-radius: 1.5rem;
     opacity: 1;
     z-index: 100;
-    margin-left:1rem;
+    margin-left: 1rem;
 }
 
     .users h2 {
         color: rgb(56, 189, 248);
-        
     }
 
 .profile {
     color: #fff;
     align-items: center;
 }
+
 .link {
     -webkit-text-decoration: none;
     text-decoration: none;
@@ -477,14 +476,14 @@ h4 {
 #cross {
     position: absolute;
     right: 0.6rem;
-    top:0.4rem;
+    top: 0.4rem;
     border-radius: 60%;
     padding: 0.4rem 0.6rem;
     margin-top: 0.3rem;
     background-color: #1e293bcc;
     box-shadow: inset 0 1px 0 0 #ffffff0d;
     cursor: pointer;
-    z-index:2;
+    z-index: 2;
 }
 
 #camera {
@@ -527,31 +526,37 @@ h4 {
 .img-text {
     vertical-align: middle;
 }
-#imageUrl{
-    max-height:20rem;
-    width:100%;
-    background-position:center;
-    background-size:cover;
+
+#imageUrl {
+    max-height: 20rem;
+    width: 100%;
+    background-position: center;
+    background-size: cover;
 }
+
 .post-img {
     max-height: 18rem;
     width: 100%;
     background-size: cover;
 }
+
 .Content {
     position: absolute;
-    width:100%;
+    width: 100%;
     bottom: 0rem;
     padding: 1rem;
-    background:linear-gradient(rgba(26,96,111,0) 0%, rgba(26,96,111,0) 1%, rgba(24,87,104,0.91) 31%, rgba(21,65,89,0.91) 100%);
+    background: linear-gradient(rgba(26,96,111,0) 0%, rgba(26,96,111,0) 1%, rgba(24,87,104,0.91) 31%, rgba(21,65,89,0.91) 100%);
 }
+
 #deletepost {
-    top: 13% !important;
+    top:auto !important;
+    bottom: 7% !important;
     right: 2% !important;
     left: auto !important;
     background: transparent !important;
     border-color: #fff !important;
 }
+
     #deletepost:before, #deletepost:after {
         border-color: #fff !important;
         background-color: #fff;
@@ -569,18 +574,18 @@ h4 {
     margin: 1rem;
 }
 
-.CommentPartial{
-    margin:1rem 0;
-    padding:1rem;
-  
-    
+.CommentPartial {
+    margin: 1rem 0;
+    padding: 1rem;
 }
-.commentBox{
-    position:relative;
-    padding:1.5rem;
-    width:100%;
-    color:rgb(233, 237, 255);
+
+.commentBox {
+    position: relative;
+    padding: 1.5rem;
+    width: 100%;
+    color: rgb(233, 237, 255);
 }
+
     .commentBox input {
         position: absolute;
         top: 0.2rem;
@@ -588,47 +593,66 @@ h4 {
         border: 1px solid rgb(56 189 248) !important;
         border-radius: 15px;
         outline: none;
-        width:100%;
+        width: 100%;
         color: #fff;
-        padding:0.5rem;
-        background-color:transparent !important;
+        padding: 0.5rem;
+        background-color: transparent !important;
     }
+.ui-menu, .ui-widget-content {
+    border: 1px solid rgb(56 189 248) !important;
+    border-radius: 15px;
+    outline: none;
+    color: #fff;
+    background: rgb(14 165 233) !important;
+}
+.ui-menu-item {
+    
+    border-radius: 15px;
+    outline: none;
+    padding: 0.5rem !important;
+    margin: 0rem !important;
+    background-color: rgb(14 165 233) !important;
+}
+.commentBox button {
+    position: absolute;
+    top: 0.2rem;
+    right: 0.2rem;
+    border: none !important;
+    color: #fff;
+}
 
-    .commentBox button {
-        position: absolute;
-        top: 0.2rem;
-        right: 0.2rem;
-        border: none !important;
-        color: #fff;
-    }
 .commentbtn {
     display: none;
 }
+
     .commentbtn:hover {
         color: #fff !important;
     }
-.deleteComment{
-    left:auto !important;
-    right:0;
-}
-.requested{
-    background-color:transparent !important;
-    border:1px solid rgb(56 189 248) !important;
 
+.deleteComment {
+    left: auto !important;
+    right: 0;
 }
 
-.hidden{
-    display:none;
+.requested {
+    background-color: transparent !important;
+    border: 1px solid rgb(56 189 248) !important;
 }
+
+.hidden {
+    display: none;
+}
+
 .notificationDot {
     position: absolute;
     background-color: rgb(244 114 182);
     bottom: 15px;
     border-radius: 50%;
-    left: 9px;
+    left: 15px;
     height: 16px;
     width: 16px;
     top: 0px;
+    padding: 0.56rem !important;
 }
 
     .notificationDot p {
@@ -639,27 +663,27 @@ h4 {
         font-size: 0.7rem;
         padding-bottom: 1px;
         font-weight: bold;
+        transform:translateY(-7px)
     }
 
 .effect {
-   border: 2px solid rgb(56 189 248);
+    border: 2px solid rgb(56 189 248);
     box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
-    transition:2s ease-in;
-    
+    transition: 2s ease-in;
 }
 
-.effect  .focus-border:before,
-.effect  .focus-border:after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background-color: #3399FF;
-    transition: 0.3s;
-     transition-delay:3s;
-}
+    .effect .focus-border:before,
+    .effect .focus-border:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: #3399FF;
+        transition: 0.3s;
+        transition-delay: 3s;
+    }
 
     .effect .focus-border:after {
         top: auto;
@@ -668,7 +692,7 @@ h4 {
         right: 0;
         width: 100%;
         transition: 1.3s;
-        transition-delay:4s;
+        transition-delay: 4s;
     }
 
     .effect .focus-border .i:before,
@@ -734,4 +758,19 @@ h4 {
 
 .posts .slide .carousel-indicators .active {
     opacity: 1;
+}
+
+.replybtn {
+    color: #939090;
+}
+
+#editPost {
+    position: absolute;
+    bottom: 8.1%;
+    right: 8%;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 1.3rem;
+}
 }

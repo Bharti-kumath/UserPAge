@@ -13,7 +13,10 @@ namespace BAL.Models
         public DateTime Created_At { get; set; }
         public int TotalComments  { get; set; }
         public int User_id { get; set; }
+        public int ToUserID { get; set; }
+        public string TagName { get; set; }
         public int Post_id { get; set; }
+        public int totalreply { get; set; }
 
 
     }

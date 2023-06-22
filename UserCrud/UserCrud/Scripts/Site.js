@@ -1,5 +1,55 @@
-﻿var DataTable = "";
 
+
+
+
+
+function displayUserSuggestions(userSuggestions,postId) {
+    var dataList = $('#userListOptions-'+postId);
+    dataList.empty();
+
+    userSuggestions.forEach(function (user) {
+        var option = $('<li>').text(user);
+        dataList.append(option);
+    });
+    dataList.show();
+}
+
+//var timeoutID;
+
+//function setup() {
+//    this.addEventListener("mousemove", resetTimer, false);
+//    this.addEventListener("mousedown", resetTimer, false);
+//    this.addEventListener("keypress", resetTimer, false);
+//    this.addEventListener("DOMMouseScroll", resetTimer, false);
+//    this.addEventListener("mousewheel", resetTimer, false);
+//    this.addEventListener("touchmove", resetTimer, false);
+//    this.addEventListener("MSPointerMove", resetTimer, false);
+
+//    startTimer();
+//}
+//setup();
+
+//function startTimer() {
+//   console.log("start")
+//    timeoutID = window.setTimeout(goInactive, 60000);
+//}
+
+//function resetTimer(e) {
+//    console.log("reset")
+//    window.clearTimeout(timeoutID);
+//    startTimer()
+   
+//}
+
+//function goInactive() {
+//    console.log("end")
+//      window.location.href='/Login/Logout'
+//}
+
+
+
+var DataTable = "";
+var toUserID = null;
 function sendSms(toNumber) {
     $.ajax({
 
@@ -16,15 +66,16 @@ function sendSms(toNumber) {
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
-            } },
+            }
+        },
         error: function (error) { alert(error); console.log(error) }
     });
 }
 
 
 function editDetails(userID) {
-    console.log(userID);
-  
+    
+
     $.ajax({
         type: "GET",
         url: '/User/GetUserById',
@@ -53,16 +104,16 @@ function deleteDetails(userID) {
     <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
     <div class="modal-header">
-    <h5 class="modal-title">Confirm Delete</h5>
-    <button type="button" class="closed btn" data-bs-dismiss="modal" aria-label="Close">
+    <h5 class="modal-title text-light" >Confirm Delete</h5>
+    <button type="button" class="closed btn" data-dismiss="modal" aria-label="Close">
    <span aria-hidden="true" class="fs-3">&times;</span>
     </button>
     </div>
     <div class="modal-body">
-    <p>Are you sure you want to delete this User?</p>
+    <p style="color:#fff">Are you sure you want to delete this User?</p>
     </div>
     <div class="modal-footer d-flex justify-content-center">
-    <button type="button" class="cancelbtn me-2 btn bg-light" data-bs-dismiss="modal" >Cancel</button>
+    <button type="button" class="cancelbtn me-2 btn bg-light" data-dismiss="modal" >Cancel</button>
     <button type="button" class="m-0 confirmDelete btn bg-danger" id="apply-button">Delete</button>
     </div>
     </div></div></div>`;
@@ -72,7 +123,6 @@ function deleteDetails(userID) {
     $("#deleteUser").modal("show");
 
     $(".confirmDelete").on("click", function () {
-
 
         $("#userId");
         $.ajax({
@@ -105,7 +155,6 @@ $(document).ready(function () {
     }, 1500);
 
     const postID = window.location.hash.substring(1);
-    console.log(postID)
 
     if (postID) {
         $("#" + postID).addClass("effect").focus();
@@ -118,15 +167,12 @@ function closeModel() {
     $(".modal-backdrop").remove();
     $("#myForm")[0].reset();
     $("#postForm")[0].reset();
+   $(".carousel-inner").empty();
     $('#exampleModalCenter').modal('hide');
     $("#password").removeClass("hide");
     $("#Cpassword").removeClass("hide");
 }
-function closeModel2() {
-    $("#postForm")[0].reset();
-    remove();
-    
-}
+
 
 function numberOnly(event) {
     const charCode = event.which ? event.which : event.keyCode;
@@ -137,8 +183,8 @@ function numberOnly(event) {
 }
 
 function getDataTable() {
-   
-     dataTable = $('#userTable').DataTable({
+
+    dataTable = $('#userTable').DataTable({
         "processing": true,
         "ordering": true,
         "order": [[9, 'desc']],
@@ -159,15 +205,15 @@ function getDataTable() {
                 d.City = $('#cityFilter').val();
                 d.FromDate = $('#DateFilter').val().slice(0, 10);
                 d.ToDate = $('#DateFilter').val().slice(13, 23);
-               
+
             },
             "dataSrc": function (response) {
-                
-                    return response.data;
-                
+
+                return response.data;
+
             },
             "error": function (error) {
-              console.log(error)
+                console.log(error)
             }
         },
         "columns": [
@@ -235,37 +281,121 @@ function exportToCSV() {
 }
 
 
-
-
 function createPost() {
-    var postForm= new FormData();
+    var postForm = new FormData();
+    postForm.append("ID", $("#postId").val())
+    postForm.append("Created_At", $("#CreatedAt").val())
     postForm.append('Body', $('#textarea').val());
-   /* postForm.append('ImagePath', $("#fileinput")[0].files[0]);*/
+    postForm.append('Visibility', $('#visibility').val())
+   
     $.each($("#fileInput")[0].files, function (i, file) {
         postForm.append('ImagePath', file);
     });
-    
-    console.log(postForm);
+    console.log(postForm.has('ImagePath'))
+    console.log(postForm.get('Body'))
+    if (postForm.has('ImagePath') && postForm.get('Body') != "") {
+        $.ajax({
+            type: 'POST',
+            url: "/User/SavePost",
+            data: postForm
+            ,
+            processData: false,
+            contentType: false,
+            success: function (message) {
+                $('#post').modal("hide");
+                $("#postForm")[0].reset();
+                $("#createPostHeading").text("Create Post");
+                $("#postButton").text("Post");
+                $("#preview").hide();
+                $(".carousel-inner").empty();
+                location.reload(true)
+            },
+            error: function (error) {
+                console.log(error);
 
+            }
+
+
+        });
+    }
+    else {
+        var errormessage = `<div class="alert alert-error" id="successMessage">
+                        <i class="bi bi-x-circle fs-4"></i> Caption and Image is Required.
+                    </div>`;
+        $("#postForm").append(errormessage)
+        setTimeout(function () {
+            $("#successMessage").fadeOut("slow");
+        }, 2500);
+    }
+   
+}
+function populateForm(data) {
+    console.log(data)
+    $('#textarea').val(data.Body);
+    $("#postId").val(data.ID);
+    $("#visibility").val(data.Visibility);
+    $("#preview").show();
+    $("#createPostHeading").text("Edit Post");
+    $("#postButton").text("Edit");
+    var carouselInner = $('#carouselExample .carousel-inner');
+
+    // Clear previous images
+    carouselInner.empty();
+
+    // Add images
+    data.MediaPaths.forEach(function (path, index) {
+        var isActive = index === 0 ? 'active' : '';
+        carouselInner.append('<div class="carousel-item ' + isActive + '"><img src="/Content/PostImages/' + path + '" class="d-block w-100" alt="Preview" id="imageUrl"><i class="bi bi-x-lg" id="cross" onclick="removePreview(this)"></i></div>');
+    });
+
+    var selectedFiles = [];
+    var fetchPromises = data.MediaPaths.map(function (media) {
+        return fetch('/Content/PostImages/' + media)
+            .then(response => response.blob())
+            .then(blob => {
+                const file = new File([blob], media, { type: blob.type });
+                selectedFiles.push(file);
+            })
+            .catch(error => console.error(error));
+    });
+
+    Promise.all(fetchPromises)
+        .then(() => {
+            var dt = new DataTransfer();
+            selectedFiles.forEach(file => dt.items.add(file));
+
+            // Assign the files to the file input element
+            var fileInput = document.getElementById('fileInput');
+            fileInput.files = dt.files;
+        })
+        .catch(error => console.error(error));
+}
+
+
+// Function to close the modal
+function closeModel2() {
+    $('#postmodel').modal('hide');
+    $(".carousel-inner").empty();
+    $("#preview").hide();
+    $("#postForm")[0].reset();
+    $("#createPostHeading").text("Create Post");
+    $("#postButton").text("Post");
+}
+
+function editPost(postId) {
     $.ajax({
-        type: 'POST',
-        url: "/User/SavePost",
-        data:postForm
-    ,
-        processData: false,
-        contentType: false,
-        success: function (message) {
-            $('#post').modal("hide");
-            $("#postForm")[0].reset();
-         
-            location.reload(true)
+        url: '/User/EditPost',
+        type: 'GET',
+        data: { postId: postId },
+        success: function (data) {
+            
+            populateForm(data);
+            $('#postmodel').modal('show');
+
         },
-        error: function (error) {
-            console.log(error);
-            console.log("error in adding story");
+        error: function () {
+            // Handle error
         }
-
-
     });
 }
 
@@ -275,16 +405,16 @@ function deletePost(postID) {
     <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
     <div class="modal-header">
-    <h5 class="modal-title">Confirm Delete</h5>
-    <button type="button" class="closed btn" data-bs-dismiss="modal" aria-label="Close">
+    <h5 class="modal-title text-light">Confirm Delete</h5>
+    <button type="button" class="closed btn text-light" data-dismiss="modal" aria-label="Close">
    <span aria-hidden="true" class="fs-3">&times;</span>
     </button>
     </div>
     <div class="modal-body">
-    <p>Are you sure you want to delete this User?</p>
+    <p class="text-light">Are you sure you want to delete this User?</p>
     </div>
     <div class="modal-footer d-flex justify-content-center">
-    <button type="button" class="cancelbtn me-2 btn bg-light" data-bs-dismiss="modal" >Cancel</button>
+    <button type="button" class="cancelbtn me-2 btn bg-light" data-dismiss="modal" >Cancel</button>
     <button type="button" class="m-0 confirmDelete btn bg-danger" id="apply-button">Delete</button>
     </div>
     </div></div></div>`;
@@ -321,19 +451,37 @@ function postLike(postID, postUserID) {
     $.ajax({
         type: "Post",
         url: "/User/LikePost",
-        data: { postID: postID, postUserID: postUserID},
+        data: { postID: postID, postUserID: postUserID },
         success: function (response) {
+            var totallikes = Number(response)
 
+            let message = '';
             let likeicon = $("i." + postID)
             if (likeicon.hasClass("bi-heart")) {
                 likeicon.removeClass("bi-heart")
                 likeicon.addClass("bi-heart-fill").addClass("text-danger");
+                if (totallikes > 1) {
+                    var likes = totallikes - 1
+                    message = " you and " + likes + " others";
+                }
+                else {
+                    message = "you";
+                }
+
             }
             else {
                 likeicon.removeClass("bi-heart-fill").removeClass("text-danger")
                 likeicon.addClass("bi-heart");
+                if (totallikes > 1) {
+
+                    message = " by " + totallikes + " others";
+                }
+                else {
+                    message = totallikes;
+                }
+
             }
-            $(".like-" + postID).empty().text(response);
+            $(".likeheart-" + postID).empty().text(message);
         },
         error: function (error) {
             console.log(error);
@@ -343,16 +491,14 @@ function postLike(postID, postUserID) {
 }
 
 
-
 function showComment(postID) {
     var commentSection = $(".CommentPartial-" + postID);
     var isVisible = commentSection.is(":visible");
-    
+
     if (isVisible) {
-        commentSection.toggle();
+        $(".comment-" + postID).empty();
     }
-    else
-    {
+    else {
         callAjaxComment(postID);
     }
 }
@@ -363,8 +509,8 @@ function callAjaxComment(postID) {
         url: "/User/GetCommentsByPostId",
         data: { id: postID },
         success: function (response) {
-
-            $(".comment-" + postID).empty().html(response);
+            var newResponse = `<h5>Comments</h5>` + response;
+            $(".comment-" + postID).empty().html(newResponse);
         },
         error: function (error) {
             console.log(error);
@@ -373,18 +519,21 @@ function callAjaxComment(postID) {
 }
 
 function saveComment(postID, postUserID) {
+    
     var commentText = jQuery.trim($("#commentText-" + postID).val());
+    var CommentTextwithoutusername = $("#commentText-" + postID).val().replace(/@\w+\b/g, "");
     if (commentText.length < 1) {
         alert("Bolana Comment likho Phele !!!")
     } else {
         $.ajax({
             type: "Post",
             url: "/User/SaveComment",
-            data: { postID: postID, commentText: commentText, postUserID: postUserID },
+            data: { postID: postID, commentText: CommentTextwithoutusername, postUserID: postUserID, toUserID: toUserID},
             success: function (response) {
-                console.log("Comment submitted successfully!");
                 $("#comments-" + postID).empty().text(response);
                 $("#commentText-" + postID).val("");
+                $("#toUserIdInComment-" + postID).val(0);
+                toUserID = null;
                 callAjaxComment(postID);
             },
             error: function (error) {
@@ -392,33 +541,112 @@ function saveComment(postID, postUserID) {
             }
         });
     }
-    
-}
-
-function deleteComment(commentID , postID){
-    
-        $.ajax({
-            type: "Post",
-            url: "/User/DeleteComment",
-            data: { commentID: commentID, postId: postID},
-            success: function (response) {
-                console.log("Comment deleted successfully!");
-                $("#comments-" + postID).empty().text(response);
-                callAjaxComment(postID);
-            },
-            error: function (error) {
-                console.log("Error submitting comment:", error);
-            }
-        });
-    
 
 }
+
+function deleteComment(commentID, postID) {
+
+    $.ajax({
+        type: "Post",
+        url: "/User/DeleteComment",
+        data: { commentID: commentID, postId: postID },
+        success: function (response) {
+           
+            $("#comments-" + postID).empty().text(response);
+            callAjaxComment(postID);
+        },
+        error: function (error) {
+            console.log("Error submitting comment:", error);
+        }
+    });
+
+
+}
+
 
 function showPostButton(postID) {
+    var availableUsers=[]
     var inputlength = jQuery.trim($("#commentText-" + postID).val());
     if (inputlength.length > 0) {
+
         $("#postComment-" + postID).show();
         $("#postComment-" + postID).prop("disabled", false);
+
+        var commentText = $("#commentText-" + postID).val();
+        var atSymbolIndex = commentText.lastIndexOf('@');
+
+        if (atSymbolIndex !== -1) {
+            var followingText = commentText.substring(atSymbolIndex + 1);
+            var username = followingText.split(' ')[0]; // Extract the username after "@"
+
+            if (username.trim() !== '') {
+                $.ajax({
+                    type: "GET",
+                    url: '/User/SearchUser',
+                    data: { userName: username },
+                    success: function (response) {
+
+                         availableUsers = response;
+
+                        console.log(response)
+                            
+                        
+                    },
+
+                    error: function (error) { alert(error); console.log(error) }
+                });
+            }
+            else {
+                var dataList = $('#userListOptions-' + postID);
+
+                dataList.hide();
+            }
+           
+
+            $("#commentText-" + postID).autocomplete({
+                    source: function (request, response) {
+                        var term = request.term;
+
+                        var atSymbolIndex = term.lastIndexOf('@');
+                        if (atSymbolIndex !== -1) {
+                            var searchTerm = term.substring(atSymbolIndex + 1).toLowerCase();
+
+                            var filteredUsers = availableUsers.filter(function (user) {
+                                var username = user.SuggestedName.toLowerCase();
+                                return username.startsWith(searchTerm);
+                            });
+
+                            var suggestions = filteredUsers.map(function (user) {
+                                return user.SuggestedName;
+                            });
+
+                            response(suggestions);
+                        } else {
+                            response([]);
+                        }
+                    },
+                minLength: 1,
+                select : function(event, ui) {
+                    var commentText = $("#commentText-" + postID).val();
+                    var atSymbolIndex = commentText.lastIndexOf('@');
+                    var precedingText = commentText.substring(0, atSymbolIndex);
+                    var selectedOption = ui.item.value;
+
+                    var selectedUser = availableUsers.find(function (user) {
+                        return user.SuggestedName === selectedOption;
+                    });
+
+                    toUserID = selectedUser.Id;
+                    
+
+                    $(this).val(precedingText + '@' + selectedOption);
+                    return false; 
+                },
+            });
+
+        }
+        
+
 
     }
     else {
@@ -428,15 +656,32 @@ function showPostButton(postID) {
 
 }
 
-function followRequest(toUserID) {
+
+$('.userListOptions li').click(function () {
+    console.log("li")
+    var selectedOption = $(this).val();
+    var commentInput = $("#commentText-" + postID);
+    var commentText = commentInput.val();
+    var atSymbolIndex = commentText.lastIndexOf('@');
+    var precedingText = commentText.substring(0, atSymbolIndex);
+    commentInput.val(precedingText + '@' + selectedOption);
+})
+
+function followRequest(toUserID,action) {
 
     $.ajax({
         type: "Post",
         url: "/User/FollowRequest",
         data: { toUserID: toUserID },
         success: function (response) {
-            console.log("folllowed");
-            $("#follow-" + toUserID).text("Requested").addClass("requested");
+            console.log(action)
+            if (action == 1) {
+                $("#follow-" + toUserID).text("Requested").addClass("requested").removeAttr("onclick");
+            }
+            else {
+                $("#follow-" + toUserID).text("Follow").removeAttr("onclick");
+            }
+            
         },
         error: function (error) {
             console.log("Error requesting:", error);
@@ -447,7 +692,10 @@ function followRequest(toUserID) {
 
 function getNotification() {
 
-            window.location.href = 'Notification'
+    window.location.href = 'Notification'
+}
+function openUser(userid) {
+    window.location.href = '/User/FriendProfile?friendId=' + userid;
 }
 
 function notificationRead(id) {
@@ -469,40 +717,22 @@ function notificationRead(id) {
 };
 
 
-setInterval(function () {
-    $.ajax({
-        url: '/User/GetNotificationCount',
-        method: 'GET',
-        success: function (response) {
-            
-            if (response > 0) {
-                $(".notificationDot").show();
-                $(".notificationDot p").empty();
-                $(".notificationDot p").text(response)
-            }
-
-        },
-        error: function (xhr, status, error) {
-            console.log(error)
-        }
-    });
-}, 10000);
 
 
-function requestUpdate(followerId, action) {
-    console.log(action);
+function requestUpdate(followerId, action,id) {
+    
     $.ajax({
         type: "Post",
         url: "/User/UpdateFollowRequest",
-        data: { followerId: followerId,action:action },
+        data: { followerId: followerId, action: action },
         success: function () {
-            console.log("follow request updated ");
+            notificationRead(id);
             if (action = 1) {
-                $("#confirm-" + followerId).text("Accepted");
+                $("#confirm-" + followerId).text("Accepted").removeAttr("onclick");
                 $("#delete-" + followerId).remove();
             }
             else {
-                $("#delete-" + followerId).text("Declined");
+                $("#delete-" + followerId).text("Declined").removeAttr("onclick");
                 $("#confirm-" + followerId).remove();
             }
         }
@@ -515,11 +745,11 @@ function requestUpdate(followerId, action) {
 }
 
 function focusPost(postID) {
-    
+
     window.location.href = 'Landing/#post-' + postID;
 
-   
-   
+
+
 }
 
 
@@ -571,25 +801,25 @@ function removePreview(button) {
         carousel.querySelectorAll(".carousel-item")
     );
 
-   
+
     const activeIndex = carouselItems.findIndex(
         (item) => item === carouselItem
     );
 
- 
+
     carousel.removeChild(carouselItem);
 
-    
+
     let newActiveIndex = activeIndex - 1;
 
-   
+
     if (newActiveIndex < 0) {
         newActiveIndex = carouselItems.length - 1;
     }
 
-  
+
     carouselItems[newActiveIndex].classList.add("active");
-    
+
 
     const inputFile = document.getElementById("fileInput");
     const selectedFiles = Array.from(inputFile.files);
@@ -610,3 +840,175 @@ function removePreview(button) {
 function ClickInput() {
     $("#fileInput").click();
 };
+
+function showReplyInput(userName, id) {
+    var trimedusername = userName.replace(" ", "");
+
+    $(".ReplyBox-" + id).show();
+    $("#commentReply-" + id).val("@" + trimedusername + " ");
+}
+
+function showReReplyInput(userName, id) {
+    var trimedusername = userName.replace(" ", "");
+   
+    $(".ReReplyBox-" + id).show();
+    $("#commentReReply-" + id).val("@" + trimedusername + " ");
+}
+
+function saveCommentReply(commentId,toUserId) {
+    var replyTextWithUsername = $("#commentReply-" + commentId).val();
+    var replyText = replyTextWithUsername.replace(/@\w+\b/g, "");
+
+    $.ajax({
+        type: "Post",
+        url: "/User/SaveCommentReply",
+        data: { commentId: commentId, replyText: replyText, toUserId: toUserId },
+        success: function (response) {
+            
+            $("#commentReply-" + commentId).val("");
+            $("#commentReply-" + commentId).hide();
+            callAjaxReply(commentId)
+        },
+        error: function (error) {
+            console.log(error)
+        }
+    });
+}
+function saveCommentReReply(commentId, toUserId, id) {
+    var replyTextWithUsername = $("#commentReReply-" + id).val();
+    var replyText = replyTextWithUsername.replace(/@\w+\b/g, "");
+
+    $.ajax({
+        type: "Post",
+        url: "/User/SaveCommentReply",
+        data: { commentId: commentId, replyText: replyText, toUserId: toUserId },
+        success: function (response) {
+
+            $("#commentReReply-" + id).val("");
+            $(".ReplyBox-" + id).hide();
+            callAjaxReply(commentId)
+        },
+        error: function (error) {
+
+        }
+    });
+}
+
+
+var text = '';
+function ShowReply(commentID, view) {
+    var replySection = $(".ReplyPartial-" + commentID);
+    var isVisible = replySection.is(":visible");
+    
+    if (isVisible) {
+        $("#viewreply-" + commentID).text(text);
+        
+        replySection.toggle();
+    }
+    else {
+        text = $("#viewreply-" + commentID).text();
+        
+        $("#viewreply-" + commentID).text("--- Hide Replies");
+        callAjaxReply(commentID);
+    }
+}
+
+function callAjaxReply(commentID) {
+    $.ajax({
+        type: "Post",
+        url: "/User/GetReplyByCommentID",
+        data: { commentId: commentID },
+        success: function (response) {
+
+            $(".Reply-" + commentID).empty().html(response);
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+}
+
+function showLikeUsers(postId) {
+
+    var replySection = $(".showlike");
+    var isVisible = replySection.is(":visible");
+
+    if (isVisible) {
+        $(".comment-" + postId).empty();
+
+    } else {
+        $.ajax({
+            type: "Post",
+            url: "/User/GetLikeUserList",
+            data: { postId: postId },
+            success: function (response) {
+               
+                var users = '';
+                for (i = 0; i < response.length; i++) {
+                    var item = response[i];
+                    users += `<div class="d-flex flex-row  align-items-center my-3 showlike justify-content-between ">
+<div><img src="https://mdbootstrap.com/images/avatars/img%20(4).jpg" alt="" class="img-circle mx-2 img-fluid post-Userimg">
+<span onclick="openUser(${item.Id})" class="mx-2">${item.SuggestedName}</span></div>
+<div><i class="bi bi-heart-fill text-danger fs-5 mx-2" ></i></div>
+</div>`
+                }
+                $("#likemodal-" + postId).empty().html(users);
+                $('#like-' + postId).modal("show");
+                $(".likemodal").text("Liked By")
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+
+   
+}
+
+function showUsers(postId) {
+
+        $.ajax({
+            type: "Post",
+            url: "/User/GetFollowedUserList",
+            
+            success: function (response) {
+
+                var users = '';
+                for (i = 0; i < response.length; i++) {
+                    var item = response[i];
+                    users += `<div class="d-flex flex-row  align-items-center my-3 showlike justify-content-between ">
+<div><img src="https://mdbootstrap.com/images/avatars/img%20(4).jpg" alt="" class="img-circle mx-2 img-fluid post-Userimg">
+<span class="mx-2">${item.SuggestedName}</span></div>
+<div><i class="bi bi-send-fill  text-danger fs-4 mx-2" onclick="SharePost(${postId} ,${item.Id})" id="sendPost" ></i></div>
+</div>`
+                }
+                $("#likemodal-" + postId).empty().html(users);
+                $('#like-' + postId).modal("show");
+                $(".likemodal").text("Share Post")
+
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    
+
+
+}
+
+function SharePost(postId, toUserId) {
+  
+
+    $.ajax({
+        type: "POST",
+        url: "/User/SharePost",
+        data: { postId: postId, toUserId: toUserId},
+        success: function (response) {
+
+            $("#sendPost").removeClass("bi-send-fill").addClass("bi-send-check").removeAttr("onclick")
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+}

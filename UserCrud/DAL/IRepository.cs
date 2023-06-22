@@ -22,16 +22,24 @@ namespace DAL
         ProfileViewModel GetProfileById(long id);
         ProfileViewModel GetFriendProfileById(long userId, long friendId);
         void SavePost(PostViewModel model,long userID);
+        PostViewModel EditPost(long postId);
         void DeletePost(long postID);
         List<PostViewModel> GetAllPosts(long userID);
         PostViewModel LikePost(long postID, long userID, long postUserID);
+        List<PostViewModel> GetScheduledPost(DateTime currentTime);
         List<CommentViewModel> GetCommentsByPostId(long id);
-        CommentViewModel SaveComment(long userID, long postID, string commentText,long postUserID);
+        void PublishPost(long postId);
+        CommentViewModel SaveComment(long userID, long postID, string commentText,long postUserID, long? toUserID);
         CommentViewModel DeleteComment(long commentID, long postId);
         void FollowRequest(long userID, long toUserId);
         List<NotificationViewModel> GetNotificationByID(long userID);
         void changeNotificationStatus(long id);
         int GetNotificationCount(long userId);
         void UpdateFollowRequest(long followerId, long followingID, byte action);
+        CommentViewModel SaveCommentReply(long commentId, long userID, string replyText, long toUserId);
+        List<ReplyViewModel> GetReplyByCommentID(long commenId);
+        List<Suggestion> GetLikeUserList(long postId);
+        List<Suggestion> SearchUser(string userName, long userID);
+        void SharePost(long postId, long toUserId, long fromUserID);
     }
 }
