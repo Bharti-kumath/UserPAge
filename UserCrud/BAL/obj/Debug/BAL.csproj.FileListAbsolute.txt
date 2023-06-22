@@ -110,8 +110,8 @@ C:\Users\pci56\Desktop\UserPAge\UserCrud\BAL\bin\roslyn\VBCSCompiler.exe
 C:\Users\pci56\Desktop\UserPAge\UserCrud\BAL\bin\roslyn\VBCSCompiler.exe.config
 C:\Users\pci56\Desktop\UserPAge\UserCrud\BAL\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
 C:\Users\pci56\Desktop\UserPAge\UserCrud\BAL\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+C:\Users\pci56\Desktop\UserPAge\UserCrud\BAL\obj\Debug\BAL.csproj.AssemblyReference.cache
 C:\Users\pci56\Desktop\UserPAge\UserCrud\BAL\obj\Debug\BAL.csproj.CoreCompileInputs.cache
 C:\Users\pci56\Desktop\UserPAge\UserCrud\BAL\obj\Debug\BAL.csproj.CopyComplete
 C:\Users\pci56\Desktop\UserPAge\UserCrud\BAL\obj\Debug\BAL.dll
 C:\Users\pci56\Desktop\UserPAge\UserCrud\BAL\obj\Debug\BAL.pdb
-C:\Users\pci56\Desktop\UserPAge\UserCrud\BAL\obj\Debug\BAL.csproj.AssemblyReference.cache

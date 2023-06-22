@@ -259,15 +259,29 @@ namespace DAL.Repository
                 var reader = connection.QueryMultiple("sp_getFriendProfile", parameters, commandType: CommandType.StoredProcedure);
                 profileByID.UserDetail = reader.ReadFirst<UserViewModel>();
                 profileByID.MutualFriends = reader.Read<MutualFriendViewModel>().ToList();
+                profileByID.Posts = reader.Read<PostViewModel>().ToList();
+
+                List<Media> mediaPaths = connection.Query<Media>("SELECT postid, mediapath FROM media WHERE postid IN @PostIDs", new { PostIDs = profileByID.Posts.Select(post => post.ID) }, commandType: CommandType.Text).ToList();
+
+                foreach (var post in profileByID.Posts)
+                {
+                    List<Media> mediaList = mediaPaths.Where(media => media.PostID == post.ID).ToList();
+                    post.MediaPaths = mediaList.Select(media => media.MediaPath).ToList();
+                }
             }
 
-            return profileByID;
+                return profileByID;
         }
 
         public void SavePost(PostViewModel model, long userID)
         {
 
             string path = HttpContext.Current.Server.MapPath("~/Content/PostImages");
+            if(model.Created_At is null)
+            {
+                model.Created_At = DateTime.Now;
+            }
+            int status = (model.Created_At.HasValue && model.Created_At > DateTime.Now) ? 0 : 1;
 
 
 
@@ -289,7 +303,11 @@ namespace DAL.Repository
                
                 var parameters = new DynamicParameters();
                 parameters.Add("UserID", userID, DbType.Int32);
+                parameters.Add("ID", model.ID, DbType.Int32);
                 parameters.Add("Body", model.Body, DbType.String);
+                parameters.Add("status", status, DbType.Boolean);
+                parameters.Add("visibility", model.Visibility, DbType.Boolean);
+                parameters.Add("CreatedAt", model.Created_At, DbType.DateTime);
                 parameters.Add("Images", imagesTable.AsTableValuedParameter("dbo.ImageTableType")); 
 
                 connection.Execute("sp_InsertPost", parameters, commandType: CommandType.StoredProcedure);
@@ -300,7 +318,23 @@ namespace DAL.Repository
 
         }
 
+        public PostViewModel EditPost(long postId)
+        {
+            PostViewModel postByID = new PostViewModel();
 
+                using (IDbConnection connection = new SqlConnection(connectionString))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@ID", postId, DbType.Int64);
+                postByID = connection.QueryFirstOrDefault<PostViewModel>("SELECT * FROM posts WHERE id = @PostID", new { PostID = postId }, commandType: CommandType.Text);
+
+                postByID.MediaPaths = connection.Query<string>("SELECT mediapath FROM media WHERE postid = @PostID", new { PostID = postId }, commandType: CommandType.Text).ToList();
+
+                    
+                }
+                return postByID;
+            
+        }
         public void DeletePost(long postID)
         {
 
@@ -313,6 +347,18 @@ namespace DAL.Repository
 
         }
 
+        public void SharePost(long postId, long toUserId, long fromUserID)
+        {
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+
+                string insertQuery = @"
+            INSERT INTO notification (fromUserId, toUserId, notificationType, postID)
+            VALUES (@fromUserId, @toUserId, 5, @postId)";
+
+                connection.Execute(insertQuery, new { fromUserID, toUserId, postId });
+            }
+        }
         public List<PostViewModel> GetAllPosts(long userID)
         {
 
@@ -351,6 +397,18 @@ namespace DAL.Repository
             return totallikes;
         }
 
+        public List<Suggestion> GetLikeUserList(long postId)
+        {
+            List<Suggestion> likeUserList;
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("PostID", postId, DbType.Int64);
+                likeUserList = connection.Query<Suggestion>("sp_GetLikeUserList", parameters, commandType: CommandType.StoredProcedure).ToList();
+            }
+            return likeUserList;
+        }
+
         public List<CommentViewModel> GetCommentsByPostId(long id)
         {
             List<CommentViewModel> totalComments;
@@ -363,7 +421,7 @@ namespace DAL.Repository
             return totalComments;
         }
 
-        public CommentViewModel SaveComment(long userID, long postID, string commentText, long postUserID)
+        public CommentViewModel SaveComment(long userID, long postID, string commentText, long postUserID , long? toUserID)
         {
             CommentViewModel comment;
             using (IDbConnection connection = new SqlConnection(connectionString))
@@ -373,9 +431,37 @@ namespace DAL.Repository
                 parameters.Add("UserID", userID, DbType.Int64);
                 parameters.Add("comment", commentText, DbType.String);
                 parameters.Add("postUserID", postUserID, DbType.Int64);
+                parameters.Add("toUserID", toUserID, DbType.Int64);
                 comment = connection.QueryFirstOrDefault<CommentViewModel>("sp_SaveComment", parameters, commandType: CommandType.StoredProcedure);
             }
             return comment;
+        }
+
+        public CommentViewModel SaveCommentReply(long commentId, long UserID,string replyText,long toUserId)
+        {
+            CommentViewModel comment;
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("commentId", commentId, DbType.Int64);
+                parameters.Add("UserID", UserID, DbType.Int64);
+                parameters.Add("toUserId", toUserId, DbType.Int64);
+                parameters.Add("replyText", replyText, DbType.String);
+                comment = connection.QueryFirstOrDefault<CommentViewModel>("sp_SaveCommentReply", parameters, commandType: CommandType.StoredProcedure);
+            }
+            return comment;
+        }
+
+        public List<ReplyViewModel> GetReplyByCommentID(long commenId)
+        {
+            List<ReplyViewModel> totalReplies;
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("commentId", commenId, DbType.Int64);
+                totalReplies = connection.Query<ReplyViewModel>("sp_GetReplyByCommentID", parameters, commandType: CommandType.StoredProcedure).ToList();
+            }
+            return totalReplies;
         }
 
         public CommentViewModel DeleteComment(long commentID, long postID)
@@ -449,6 +535,44 @@ namespace DAL.Repository
                 parameters.Add("action", action, DbType.Byte);
                 connection.Execute("sp_UpdateFollowRequest", parameters, commandType: CommandType.StoredProcedure);
             }
+        }
+
+        public List<Suggestion> SearchUser(string userName, long userID)
+        {
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@userID", userID, DbType.Int64);
+                parameters.Add("@userName", userName, DbType.String);
+
+
+                List<Suggestion> UserList = connection.Query<Suggestion>("sp_SearchFollowedUser", parameters, commandType: CommandType.StoredProcedure).ToList();
+
+                return UserList;
+            }
+        }
+
+        public List<PostViewModel> GetScheduledPost(DateTime currentTime)
+        {
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+
+                string query = "SELECT id,user_id as userId FROM posts WHERE created_at <= @currentTime and status = 0";
+                List<PostViewModel> postIds = connection.Query<PostViewModel>(query, new { currentTime }).ToList();
+                return postIds;
+               
+            }
+        }
+        public void PublishPost(long postId)
+        {
+            using (IDbConnection connection = new SqlConnection(connectionString))
+            {
+
+                string query = "UPDATE posts SET [status] = 1 WHERE ID = @postId ";
+                connection.Execute(query, new { postId });
+
+            }
+           
         }
     }
 }

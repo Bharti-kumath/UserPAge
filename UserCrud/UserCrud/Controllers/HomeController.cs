@@ -9,27 +9,25 @@ namespace UserCrud.Controllers
     
     public class HomeController : Controller
     {
-        public ActionResult Index()
-        {
-            return View();
-        }
+       
         public ActionResult ExpiredToken()
         {
+            HttpContext.Session.Clear();
+            HttpContext.Session.Abandon();
             return View();
         }
 
+        public ActionResult Index()
+        {
+            throw new Exception("Something went wrong");
+        }
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
+            throw new NullReferenceException();
         }
-
         public ActionResult Contact()
         {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
+            throw new DivideByZeroException();
         }
     }
 }

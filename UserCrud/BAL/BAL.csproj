@@ -79,6 +79,7 @@
     <Compile Include="Models\NotificationViewModel.cs" />
     <Compile Include="Models\PostViewModel.cs" />
     <Compile Include="Models\ProfileViewModel.cs" />
+    <Compile Include="Models\ReplyViewModel.cs" />
     <Compile Include="Models\Suggestion.cs" />
     <Compile Include="Models\UserViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

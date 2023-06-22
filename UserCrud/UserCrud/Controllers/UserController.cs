@@ -17,7 +17,7 @@ using System.Web.Mvc;
 
 namespace UserCrud.Controllers
 {
-
+    [Authorization]
     public class UserController : Controller
 
     {
@@ -29,64 +29,10 @@ namespace UserCrud.Controllers
         }
 
 
-        #region Login
-        public ActionResult Login()
-        {
-
-            return View();
-        }
-
-        [HttpPost]
-        public ActionResult Login(string Email, string Password)
-        {
-            UserViewModel userExist = _repository.CheckUser(Email, Password);
-            if (userExist != null)
-            {
-                Session["id"] = userExist.ID;
-                var claims = new[]
-            {
-                new Claim("Email", Email)
-            };
-
-                var jwtKey = ConfigurationManager.AppSettings["JwtKey"];
-                var jwtIssuer = ConfigurationManager.AppSettings["JwtIssuer"];
-                var expiryMinutes = Convert.ToDouble(ConfigurationManager.AppSettings["JwtExpireMinutes"]);
-                var expirationTime = DateTime.UtcNow.AddMinutes(expiryMinutes);
-
-
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
-                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-                var token = new JwtSecurityToken(
-                    issuer: jwtIssuer,
-                    audience: null,
-                    claims: claims,
-                    expires: expirationTime,
-                    signingCredentials: creds
-                );
-
-                var encodedToken = new JwtSecurityTokenHandler().WriteToken(token);
-                string expirationTimeString = token.ValidTo.ToString("yyyy-MM-dd HH:mm:ss");
-
-                Session["Token"] = encodedToken;
-
-                return RedirectToAction("UserDetail", "User"); // Redirect to a protected page
-            }
-
-            else
-            {
-                TempData["ErrorMessage"] = "Invalid Email OR Password";
-                return View();
-            }
-
-        }
-
-        #endregion
-
         #region UserDetail
 
         [HttpGet]
-
+       
         public ActionResult UserDetail()
         {
 
@@ -153,9 +99,11 @@ namespace UserCrud.Controllers
         #endregion
 
 
-        [Authorization]
+      
         public ActionResult UserProfile()
         {
+            var userName = Session["userName"].ToString();
+            ViewBag.UserName = userName;
             var userId = Convert.ToInt64(Session["id"].ToString());
             ProfileViewModel profileData = _repository.GetProfileById(userId);
             return View(profileData);
@@ -168,7 +116,7 @@ namespace UserCrud.Controllers
         }
 
         #region Posts
-        [Authorization]
+        
         public ActionResult Landing()
         {
             var userID = Convert.ToInt64(Session["id"].ToString());
@@ -184,6 +132,11 @@ namespace UserCrud.Controllers
             return Json(new { success = true });
         }
 
+        public  ActionResult EditPost (long postId)
+        {
+            var postbyId = _repository.EditPost(postId);
+            return Json(postbyId, JsonRequestBehavior.AllowGet);
+        }
         public ActionResult deletePost(long postID)
         {
             _repository.DeletePost(postID);
@@ -206,18 +159,26 @@ namespace UserCrud.Controllers
             }
 
         }
+
+        [HttpPost]
+        public ActionResult GetLikeUserList(long postId)
+        {
+            List<Suggestion> userList = _repository.GetLikeUserList(postId);
+            return Json(userList);
+        }
         public ActionResult GetCommentsByPostId(long id)
         {
             var userID = Convert.ToInt64(Session["id"].ToString());
             ViewBag.userID = userID;
+            ViewBag.userName = Session["userName"].ToString();
             List<CommentViewModel> comments = _repository.GetCommentsByPostId(id);
             return PartialView("Comment", comments);
         }
         [HttpPost]
-        public ActionResult SaveComment(long postID, string commentText,long postUserID)
+        public ActionResult SaveComment(long postID, string commentText,long postUserID,long? toUserID = null)
         {
             var userID = Convert.ToInt64(Session["id"].ToString());
-            var comment = _repository.SaveComment(userID, postID, commentText, postUserID);
+            var comment = _repository.SaveComment(userID, postID, commentText, postUserID, toUserID);
             if (comment != null)
             {
                 return Json(comment.TotalComments);
@@ -228,7 +189,26 @@ namespace UserCrud.Controllers
             }
 
         }
+        [HttpPost]
+        public ActionResult SaveCommentReply(long commentId,string replyText,long toUserId )
+        {
+            var userID = Convert.ToInt64(Session["id"].ToString());
+            var reply = _repository.SaveCommentReply(commentId, userID, replyText, toUserId);
+            if (reply != null)
+            {
+                return Json(reply);
+            }
+            else
+            {
+                return Json("0");
+            }
+        }
 
+        public ActionResult GetReplyByCommentID(long commentId)
+        {
+            List<ReplyViewModel> Replies = _repository.GetReplyByCommentID(commentId);
+            return PartialView("Reply", Replies);
+        }
         public ActionResult DeleteComment(long commentID, long postId)
         {
             CommentViewModel comment = _repository.DeleteComment(commentID, postId);
@@ -252,6 +232,7 @@ namespace UserCrud.Controllers
 
         }
 
+        
         public ActionResult Notification()
         {
             var userID = Convert.ToInt64(Session["id"].ToString());
@@ -265,13 +246,13 @@ namespace UserCrud.Controllers
             return Json(new { success = true }, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult GetNotificationCount()
-        {
-            var userID = Convert.ToInt64(Session["id"].ToString());
-            int count = _repository.GetNotificationCount(userID);
+        //public ActionResult GetNotificationCount()
+        //{
+        //    var userID = Convert.ToInt64(Session["id"].ToString());
+        //    int count = _repository.GetNotificationCount(userID);
 
-            return Json(count , JsonRequestBehavior.AllowGet);
-        }
+        //    return Json(count, JsonRequestBehavior.AllowGet);
+        //}
 
         [HttpPost]
         public ActionResult UpdateFollowRequest(long followerId, byte action)
@@ -282,5 +263,51 @@ namespace UserCrud.Controllers
         }
         #endregion
 
+
+        public ActionResult SearchUser(string userName)
+        {
+            var userID = Convert.ToInt64(Session["id"].ToString());
+            List<Suggestion> userList = _repository.SearchUser(userName , userID);
+            return Json(userList, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetFollowedUserList()
+        {
+            var userID = Convert.ToInt64(Session["id"].ToString());
+            List<Suggestion> userList = _repository.SearchUser("", userID);
+            return Json(userList, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult SharePost(long postId, long toUserId)
+        {
+            var fromUserID = Convert.ToInt64(Session["id"].ToString());
+            _repository.SharePost(postId, toUserId, fromUserID);
+            return Json(new { success = true });
+        }
+
+
+        
+       
+        //public ActionResult GetScheduledPost(DateTime currentTime)
+        //{
+        //    var UserID = Convert.ToInt64(Session["id"].ToString());
+        //    var response = _repository.GetScheduledPost(currentTime);
+
+        //    var data = new
+        //    {
+        //        Response = response,
+        //        UserID = UserID
+        //    };
+
+        //    return Json(data, JsonRequestBehavior.AllowGet);
+        //}
+
+        [HttpPost]
+        public ActionResult PublishPost(long postID)
+        {
+            _repository.PublishPost(postID);
+            return Json(new { success = true });
+        }
     }
 }
