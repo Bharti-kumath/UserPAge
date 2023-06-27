@@ -32,33 +32,7 @@ namespace DAL.Repository
 
         }
 
-        public List<UserViewModel> GetUSerDetails()
-        {
-
-
-            List<BAL.Models.UserViewModel> UserList = new List<BAL.Models.UserViewModel>();
-
-            using (IDbConnection connection = new SqlConnection(connectionString))
-            {
-                var parameters = new DynamicParameters();
-                parameters.Add("id", DBNull.Value, DbType.String);
-                //parameters.Add("first_name", DBNull.Value, DbType.String);
-                //parameters.Add("last_name", DBNull.Value, DbType.String);
-                //parameters.Add("email", DBNull.Value, DbType.String);
-                //parameters.Add("phone_number", DBNull.Value, DbType.String);
-                //parameters.Add("country", DBNull.Value, DbType.String);
-                //parameters.Add("city", DBNull.Value, DbType.String);
-                //parameters.Add("pincode", DBNull.Value, DbType.Int32);
-                //parameters.Add("dob", DBNull.Value, DbType.String);
-                //parameters.Add("address", DBNull.Value, DbType.String);
-                //parameters.Add("queryType", "Select", DbType.String);
-
-                UserList = connection.Query<UserViewModel>("sp_UserGetOpertaion", parameters, commandType: CommandType.StoredProcedure).ToList();
-            }
-
-
-            return UserList;
-        }
+   
 
         private string Encryption(String password)
         {
