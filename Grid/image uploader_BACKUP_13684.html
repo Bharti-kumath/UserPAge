@@ -85,16 +85,46 @@
           </div>
         `;
 
+<<<<<<< HEAD
+        
+        carouselInner.appendChild(carouselItem);
+       
+      };
+
+      reader.readAsDataURL(file);
+    }
+  }
+
+  
+  $('.carousel').carousel();
+}
+
+
+function removePreview(button) {
+  const carouselItem = button.closest('.carousel-item');
+  const carousel = carouselItem.parentElement;
+  const carouselItems = Array.from(carousel.querySelectorAll('.carousel-item'));
+
+  // Get the index of the item to be removed
+  const activeIndex = carouselItems.findIndex(item => item === carouselItem);
+
+  // Remove the item
+  carousel.removeChild(carouselItem);
+
+  // Adjust active index after removal
+  let newActiveIndex = activeIndex - 1;
+=======
               carouselInner.appendChild(carouselItem);
             };
+>>>>>>> e6d95fafefc9ec314cad343db91ee1d84476acec
 
             reader.readAsDataURL(file);
           }
         }
 
-  
-  $('.carousel').carousel();
-}
+        
+        $(".carousel").carousel();
+      }
 
       function removePreview(button) {
         const carouselItem = button.closest(".carousel-item");
