@@ -1,270 +1,639 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
-      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-      crossorigin="anonymous"
-    />
-    <!-- Latest compiled and minified JavaScript -->
 
-    <link href="login.css" rel="stylesheet " />
-  </head>
-  <body id="green-bg">
-    <div class=" main-container m-0 p-0">
-      <div class="sidebar-container">
-        <div class="logo-container">
-          <img src="./Final Logo-04-02.svg" />
-        </div>
-        <ul class="sidebar-items">
-          <li class="sidebar-link">
-            <a href="#"><img src="./home (1).png" />Home</a>
-          </li>
-          <li class="sidebar-link">
-            <a href="#"><img src="./add-group.png" />Users</a>
-          </li>
-          <li class="sidebar-link">
-            <div class="dropdown">
-              <a
-                href="#"
-                class="dropdown-toggle"
-                type="button"
-                data-toggle="dropdown"
-                ><img src="./management.png" /> Manage
-              </a>
-              <ul class="dropdown-menu">
-                <li><a href="#">Profile</a></li>
-                <li><a href="#">Logout</a></li>
-              </ul>
-            </div>
-          </li>
-          <li class="sidebar-link">
-            <a href="#"><img src="./portfolio.png" />Job</a>
-          </li>
-          <li class="sidebar-link">
-            <a href="#"><img src="./changes.png" />STC</a>
-          </li>
-          <li class="sidebar-link">
-            <a href="#"><img src="./invoicepng.png" />Invoice</a>
-          </li>
-          <li class="sidebar-link">
-            <a href="#"><img src="./report.png" />Reports</a>
-          </li>
-          <li class="sidebar-link">
-            <a href="#"><img src="files.png" />SPV LOg</a>
-          </li>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+  <!-- Latest compiled and minified JavaScript -->
 
-          <li class="sidebar-link">
-            <a href="#"><img src="./invoice.png" />Billing</a>
-          </li>
-        </ul>
+  <link href="login.css" rel="stylesheet " />
+</head>
+
+<body id="green-bg">
+  <div class="main-container m-0 p-0">
+    <div class="sidebar-container">
+      <div class="logo-container">
+        <img src="./Final Logo-04-02.svg" class="black-logo" />
+        <img src="./white-logo1.png" class="d-none white-logo" />
       </div>
-
-      <nav class="navbar-container">
-        <div class="toggler">
-          <img src="./app.png">
-          <img src="./close.png" class="d-none">
-        </div>
-        <ul class="nav-items">
-          <li class="nav-link">
-            <a href="#"><img src="./bell.png" /></a>
-          </li>
-          <li class="nav-link">
-            <a href="#"><img src="./ask.png" /></a>
-          </li>
-          <li class="nav-link">
-            <a href="#" id="search"
-              ><input
-                type="Search"
-                class="search"
-                placeholder=""
-                value=""
-                title="Search for:"
-            /></a>
-          </li>
-          <li class="nav-link">
-            <a href="#"><img src="./changes.png" /></a>
-          </li>
-          <li class="nav-link">
-            <div class="dropdown">
-              <a
-                href="#"
-                class="dropdown-toggle"
-                type="button"
-                data-toggle="dropdown"
-                >Bharti Jain <span class="caret"></span
-              ></a>
-              <ul class="dropdown-menu">
-                <li><a href="#">Profile</a></li>
-                <li><a href="#">Logout</a></li>
-              </ul>
+      <ul class="sidebar-items">
+        <li class="sidebar-link">
+          <a href="#">
+            <div>
+              <img src="./home (1).png" /><span class="sidebar-text">Home</span>
             </div>
-          </li>
-        </ul>
-      </nav>
-<div class="main-content">
-  <div class="sca_dashboard">
-    
-    <div class="alert alert-success alert-dismissible" role="alert" id="successMsgRegion" style="display: none">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+          </a>
+        </li>
+        <li class="sidebar-link">
+          <a href="#" class="dropdown-toggler">
+            <div>
+              <img src="./add-user.png" /><span class="sidebar-text">Users</span>
+            </div>
+            <img src="./down-arrow.png" class="down-arrow" />
+          </a>
+          <ul class="sub-menu">
+            <li><a href="#">Create New User</a></li>
+            <li><a href="#">All Users</a></li>
+            <li><a href="#">Solar Companies</a></li>
+            <li><a href="#">Solar Electricians</a></li>
+            <li><a href="#">User Roles</a></li>
+            <li><a href="#">Requested Electricians</a></li>
+          </ul>
+        </li>
+        <li class="sidebar-link">
+          <a href="#" class="dropdown-toggler">
+            <div>
+              <img src="./user-profile.png" />
+              <span class="sidebar-text">Manage</span>
+            </div>
+            <img src="./down-arrow.png" class="down-arrow" />
+          </a>
+          <ul class="sub-menu">
+            <li><a href="#">Complaince Groups</a></li>
+            <li><a href="#">PV Module List</a></li>
+            <li><a href="#">Inverter List</a></li>
+            <li><a href="#">Installers List</a></li>
+            <li><a href="#">SWH List</a></li>
+            <li><a href="#">Email Templates</a></li>
+            <li><a href="#">Pricing Manager</a></li>
+            <li><a href="#">serial Number</a></li>
+            <li><a href="#">Battery Storage</a></li>
+            <li><a href="#">SSC Removal Request</a></li>
+            <li><a href="#">Electricity Provider</a></li>
+            <li><a href="#">Bulk Request</a></li>
+            <li><a href="#">SPV Manufacture</a></li>
+          </ul>
+        </li>
+        <li class="sidebar-link">
+          <a href="#" class="dropdown-toggler">
+            <div>
+              <img src="./portfolio.png" /><span class="sidebar-text">Jobs</span>
+            </div>
+            <img src="./down-arrow.png" class="down-arrow" />
+          </a>
+          <ul class="sub-menu">
+            <li><a href="#">Create New Job</a></li>
+            <li><a href="#">Solar Jobs</a></li>
+            <li><a href="#">General Setting</a></li>
+            <li><a href="#">Scheduling</a></li>
+            <li><a href="#">User Roles</a></li>
+            <li><a href="#">Requested Electricians</a></li>
+          </ul>
+        </li>
+        <li class="sidebar-link">
+          <a href="#" class="dropdown-toggler">
+            <div>
+              <img src="./compliant.png" /><span class="sidebar-text">STC</span>
+            </div>
+            <img src="./down-arrow.png" class="down-arrow" />
+          </a>
+          <ul class="sub-menu">
+            <li><a href="#">Create New Job</a></li>
+            <li><a href="#">Solar Jobs</a></li>
+            <li><a href="#">General Setting</a></li>
+            <li><a href="#">Scheduling</a></li>
+            <li><a href="#">User Roles</a></li>
+            <li><a href="#">Requested Electricians</a></li>
+          </ul>
+        </li>
+        <li class="sidebar-link">
+          <a href="#" class="dropdown-toggler">
+            <div>
+              <img src="./invoice.png" /><span class="sidebar-text">
+                Invoicing</span>
+            </div>
+            <img src="./down-arrow.png" class="down-arrow" />
+          </a>
+          <ul class="sub-menu">
+            <li><a href="#">Create New Job</a></li>
+            <li><a href="#">Solar Jobs</a></li>
+            <li><a href="#">General Setting</a></li>
+            <li><a href="#">Scheduling</a></li>
+            <li><a href="#">User Roles</a></li>
+            <li><a href="#">Requested Electricians</a></li>
+          </ul>
+        </li>
+        <li class="sidebar-link">
+          <a href="#" class="dropdown-toggler">
+            <div>
+              <img src="./report.png" /><span class="sidebar-text">Reports</span>
+            </div>
+            <img src="./down-arrow.png" class="down-arrow" />
+          </a>
+          <ul class="sub-menu">
+            <li><a href="#">Create New Job</a></li>
+            <li><a href="#">Solar Jobs</a></li>
+            <li><a href="#">General Setting</a></li>
+            <li><a href="#">Scheduling</a></li>
+            <li><a href="#">User Roles</a></li>
+            <li><a href="#">Requested Electricians</a></li>
+          </ul>
+        </li>
+        <li class="sidebar-link">
+          <a href="#">
+            <div>
+              <img src="files.png" /><span class="sidebar-text">SPV Log</span>
+            </div>
+          </a>
+        </li>
+
+        <li class="sidebar-link">
+          <a href="#" class="dropdown-toggler">
+            <div>
+              <img src="./billing.png" /><span class="sidebar-text">Billing</span>
+            </div>
+            <img src="./down-arrow.png" class="down-arrow" />
+          </a>
+          <ul class="sub-menu">
+            <li><a href="#">Create New Job</a></li>
+            <li><a href="#">Solar Jobs</a></li>
+            <li><a href="#">General Setting</a></li>
+            <li><a href="#">Scheduling</a></li>
+            <li><a href="#">User Roles</a></li>
+            <li><a href="#">Requested Electricians</a></li>
+          </ul>
+        </li>
+      </ul>
+      <div class="theme">
+        <input type="checkbox" class="checkbox" id="checkbox" />
+        <label for="checkbox" class="checkbox-label">
+          <img src="./night-mode.png" />
+          <img src="./brightness-and-contrast.png" />
+          <span class="ball"></span>
+        </label>
+      </div>
     </div>
-    <div class="row">
-        <div class="col-md-4 col-lg-3">
-            <div class="database">
+
+    <nav class="navbar-container">
+      <div class="toggler">
+
+        <img src="./menu.png" class="app" />
+        <!-- <img src="./close.png" class="cross" /> -->
+        <div class="navbar-logo ">
+          <img src="./Final Logo-04-02.svg" class="black-logo" />
+          <img src="./white-logo1.png" class="d-none white-logo" />
+        </div>
+      </div>
+      <ul class="nav-items">
+        <li class="nav-link">
+          <a href="#"><img src="./bell.png" /></a>
+        </li>
+        <li class="nav-link">
+          <a href="#"><img src="./question.png" /></a>
+        </li>
+        <li class="nav-link">
+          <!-- <a href="#"><img src="./search.png" /></a> -->
+          <div class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="search-toggle"><img src="./search.png" /></a>
+            <div class="dropdown-menu" id="search-menu">
+              <input type="Search" class="search" placeholder="" value="" title="Search for:" />
+            </div>
+          </div>
+
+        </li>
+        <li class="nav-link">
+          <a href="#"><img src="./exchange.png" data-toggle="modal" data-target="#changeUser" /></a>
+
+          <!-- Modal -->
+          <div class="modal fade" id="changeUser" data-backdrop="static" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+
+                <div class="modal-header">
+
+                  <h5 class="modal-title" id="exampleModalLabel"> Change User</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body" >
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1">User Role</label>
+                    <select class="form-control" id="exampleFormControlSelect1">
+                       <option value="1">Super Admin</option>
+                        <option value="3">Compliance Officer</option>
+                        <option value="2">Reseller</option>
+                        <option value="5">Account Manager</option>
+                        <option value="4">Solar Company</option>
+                        <option value="6">Solar-Sub Contractor</option>
+                        <option value="8">Company Staff</option>
+                        <option value="7">Solar Electricians</option>
+                        <option value="9">Contractor</option>
+                      
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1">User</label>
+                    <select class="form-control" id="exampleFormControlSelect1">
+                      <option>1</option>
+                      <option>2</option>
+                      <option>3</option>
+                      <option>4</option>
+                      <option>5</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1">Reseller</label>
+                    <select class="form-control" id="exampleFormControlSelect1">
+                      <option>1</option>
+                      <option>2</option>
+                      <option>3</option>
+                      <option>4</option>
+                      <option>5</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleFormControlSelect1">Solar Company</label>
+                    <select class="form-control" id="exampleFormControlSelect1">
+                      <option>1</option>
+                      <option>2</option>
+                      <option>3</option>
+                      <option>4</option>
+                      <option>5</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn saveUser">Save</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+
+
+        </li>
+        <li class="nav-link">
+          <div class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="user-text">Bharti Jain</span>
+              <img src="./user.png" class="user-img"></span></a>
+            <ul class="dropdown-menu">
+              <li>Profile</li>
+              <li>LogOut</li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </nav>
+    <div class="main-content">
+      <div class="sca_dashboard">
+        <div class="alert alert-success alert-dismissible" role="alert" id="successMsgRegion" style="display: none">
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+            &times;
+          </button>
+        </div>
+        <div class="row">
+          <div class="col-md-12 col-xl-3 col-12">
+            <div class="sideDashboard">
+              <div class="database">
                 <h3 class="sca-heding">Database</h3>
                 <div class="jobsearch_list">
-                    <div id="scrollId" style="max-height:400px; overflow-y:auto">
-                        <ul class="searchresult_listing" id="Database">
-                            <li class="findJobDraggable">
-                                <a href="/CERImport/PhotovoltaicModules" class="DBtitle">
-                                    <span class="DbLink">Accredited PV Module List</span>
-                                    <p class="last-update">Last Updated: 26/06/2022</p>
-                                </a>
-                            </li>
-                            <li class="findJobDraggable">
-                                <a href="/CERImport/ApprovedInverters" class="DBtitle" style="width:auto; line-height: 25px;">
-                                    <span class="DbLink">Accredited Inverter List</span>
-                                    <p class="last-update">Last Updated: 01/06/2023</p>
-                                </a>
-                            </li>
-                            <li class="findJobDraggable">
-                                <a href="/CERImport/AccreditedInstallers" class="DBtitle" style="width:auto; line-height: 25px;">
-                                    <span class="DbLink">Accredited Installer List</span>
-                                    <p class="last-update">Last Updated: 10/03/2023</p>
-                                </a>
-                            </li>
-                            <li class="findJobDraggable">
-                                <a href="/CERImport/HWBrandModel" class="DBtitle" style="width:auto; line-height: 25px;">
-                                    <span class="DbLink">Accredited SWH List</span>
-                                    <p class="last-update">Last Updated: 08/10/2021</p>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <br />
-            <!-- ===Reports Summary======================================= -->
-            <div class="reports-summary">
-                <h3 class="sca-heding">New Request & Sign Ups</h3>
-                <div class="submission-filters">
-                    <ul>
-                        <li><a href="/Dashboard/RedirectToSEPending?status=Pending" title="Pending Solar Electrician">Pending Solar Electrician<span>352</span></a></li>
-                        <li><a href="/SolarSubContractorRequest/Index" title="SSC Removal Request">SSC Removal Request<span>2</span></a></li>
+                  <div id="scrollId" style="max-height: 400px; overflow-y: auto">
+                    <ul class="searchresult_listing" id="Database">
+                      <li class="findJobDraggable">
+                        <a href="/CERImport/PhotovoltaicModules" class="DBtitle">
+                          <span class="DbLink">Accredited PV Module List</span>
+                          <span class="last-update"><img src="./refresh.png" class="refresh" />
+                            26/06/2022</span>
+                        </a>
+                      </li>
+                      <li class="findJobDraggable">
+                        <a href="/CERImport/ApprovedInverters" class="DBtitle" style="width: auto; line-height: 25px">
+                          <span class="DbLink">Accredited Inverter List</span>
+                          <span class="last-update"><img src="./refresh.png" class="refresh" />
+                            01/06/2023</span>
+                        </a>
+                      </li>
+                      <li class="findJobDraggable">
+                        <a href="/CERImport/AccreditedInstallers" class="DBtitle"
+                          style="width: auto; line-height: 25px">
+                          <span class="DbLink">Accredited Installer List</span>
+                          <span class="last-update"><img src="./refresh.png" class="refresh" />
+                            10/03/2023</span>
+                        </a>
+                      </li>
+                      <li class="findJobDraggable">
+                        <a href="/CERImport/HWBrandModel" class="DBtitle" style="width: auto; line-height: 25px">
+                          <span class="DbLink">Accredited SWH List</span>
+                          <span class="last-update"><img src="./refresh.png" class="refresh" />
+                            08/10/2021</span>
+                        </a>
+                      </li>
                     </ul>
+                  </div>
                 </div>
+              </div>
+              <div class="sideDashboard-right">
+                <div class="reports-summary">
+                  <h3 class="sca-heding">New Request & Sign Ups</h3>
+                  <div class="submission-filters">
+                    <ul>
+                      <li>
+                        <a href="/Dashboard/RedirectToSEPending?status=Pending" title="Pending Solar Electrician"><img
+                            src="./hourglass.png" />Pending Solar
+                          Electrician<span>352</span></a>
+                      </li>
+                      <li>
+                        <a href="/SolarSubContractorRequest/Index" title="SSC Removal Request"><img
+                            src="./trash.png" />SSC Removal Request<span>2</span></a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="quick-links">
+                  <h3 class="sca-heding">Quick Links</h3>
+                  <ul>
+                    <li id="dCreateUser">
+                      <a href="/User/create" title="Create New User"><span class="icon"><img src="./add-user.png"
+                            alt="" /></span>Create New User</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
+          </div>
 
-            <!-- ===quick-links======================== -->
+          <div class="col-md-12 col-xl-9 col-12">
+            <div class="news-feed">
+              <h3 class="sca-heding">
+                Reports
+                <p class="pull-right">Last 30 Days Data</p>
+              </h3>
+              <div class="history-filter-div">
+                <span style="font-weight: bold; padding: 5px" class="vertical-middle">Displaying Reseller</span>
+                <select class="form-control pull-right" id="FCO" name="FCO">
+                  <option value="">Select All</option>
+                  <option value="14149">A B</option>
+                  <option value="8089">Amir Bekir</option>
+                  <option value="1700">Anthony Le</option>
+                  <option value="13758">Ayden Thang</option>
+                  <option value="210">bansi fco</option>
+                  <option value="9476">Canadian Solar</option>
+                  <option value="434">Deep FCO</option>
+                  <option value="14201">Dhruvil Patel</option>
+                  <option value="469">fco fco</option>
+                  <option value="8093">Haydin Bekir</option>
+                  <option value="740">Hus Lam</option>
+                </select>
+              </div>
+              <hr />
+              <div class="row">
+                <div class="col-lg-6 col-12">
+                  <b class="graphTitle">STC General Report</b>
+                  <div id="dvSTCGeneralChart" style="height: 400px; width: 100%"></div>
+                </div>
+                <div class="col-lg-6 col-12">
+                  <b class="graphTitle">REC Failure Report</b>
+                  <div id="dvRECFailureChart" style="height: 400px; width: 100%"></div>
+                </div>
+              </div>
+            </div>
             <br />
-            <div class="quick-links">
-                <h3 class="sca-heding">Quick Links</h3>
-                <ul>
-                    <li id="dCreateUser"><a href="/User/create" title="Create New User"><span class="icon"><img src="/images/User-List.png" alt=""></span>Create New User</a></li>
-                </ul>
-            </div>
-
+          </div>
         </div>
-
-
-        <div class="col-md-8 col-lg-9">
+        <div class="row">
+          <div class="col-12">
             <div class="news-feed">
-                <h3 class="sca-heding">Reports<p class="pull-right">Last 30 Days Data</p></h3>
-                <div class="history-filter-div">
-                    <span style="font-weight: bold; padding: 5px;" class="vertical-middle">Displaying Reseller</span>
-                    <select class="report-search-box" id="report-reseller-filter" multiple="multiple" placeholder="All Reseller"></select>
-                </div>
-                <hr />
-                <div class="row">
-                    <div class="col-md-6">
-                        <b style="color:black;margin-left:40%;">STC General Report</b>
-                        <div id="dvSTCGeneralChart" style="height: 400px; width: 100%;"></div>
-                    </div>
-                    <div class="col-md-6">
-                        <b style="color:black;margin-left:40%;">REC Failure Report</b>
-                        <div id="dvRECFailureChart" style="height: 400px; width: 100%;"></div>
-                    </div>
-                </div>
-            </div>
-            <br/>
-            <div class="news-feed">
-                <h3 class="sca-heding">STC Job Statuses</h3>
+              <h3 class="sca-heding">STC Job Statuses</h3>
 
-                <div class="clearfix">
-                    <div class="form-inline">
-    <div class="form-group">
-        <div class="job-status-filter-div">
-            <span class="control-label vertical-middle">Displaying FCO</span>
-            
-<select class="form-control" id="FCO" name="FCO"><option value="">Select All</option>
-<option value="14149">A B</option>
-<option value="8089">Amir Bekir</option>
-<option value="1700">Anthony Le</option>
-<option value="13758">Ayden  Thang</option>
-<option value="210">bansi fco</option>
-<option value="9476">Canadian Solar</option>
-<option value="434">Deep FCO</option>
-<option value="14201">Dhruvil Patel</option>
-<option value="469">fco fco</option>
-<option value="8093">Haydin Bekir</option>
-<option value="740">Hus Lam</option>
-<option value="868">Jafar Lam</option>
-<option value="2054">Jason Vuong</option>
-<option value="4673">Jess Ivanoff</option>
-<option value="12379">lisa fco l fco</option>
-<option value="14173">Maaz Ullah</option>
-<option value="4674">Nancy Sanjoto</option>
-<option value="7991">Omar Niyazi</option>
-<option value="7660">Pat M</option>
-<option value="7419">Ray Saleh</option>
-<option value="14175">Real bot</option>
-<option value="344">Richard Ahmadi</option>
-<option value="11298">rid patel</option>
-<option value="11738">riddhi patel</option>
-<option value="11297">riddhi patel</option>
-<option value="3860">Rubal Sharma</option>
-<option value="14243">Setu Sureja</option>
-<option value="343">Toan Pham</option>
-<option value="7492">Tony Do</option>
-<option value="8915">Trina Panels</option>
-<option value="11852">Usama Maqbool</option>
-</select>        </div>
-    </div>
-                        <div class="form-group">
-                            <div class="job-status-filter-div" id="ResellerDiv">
-                                <span class="control-label vertical-middle">BY</span>
-    <select class="job-search-box form-control" id="job-reseller-filter" multiple="multiple" placeholder="All Reseller"></select>
-                               
-                            </div>
-                        </div>
+              <div class="clearfix">
+                <div class="form-inline">
+                  <div class="form-group">
+                    <div class="job-status-filter-div">
+                      <span style="font-weight: bold; padding: 5px" class="control-label vertical-middle">Displaying
+                        FCO</span>
                     </div>
-                
+                  </div>
+                  <div class="form-group">
+                    <select class="form-control" id="FCO" name="FCO">
+                      <option value="">Select All</option>
+                      <option value="14149">A B</option>
+                      <option value="8089">Amir Bekir</option>
+                      <option value="1700">Anthony Le</option>
+                      <option value="13758">Ayden Thang</option>
+                      <option value="210">bansi fco</option>
+                      <option value="9476">Canadian Solar</option>
+                      <option value="434">Deep FCO</option>
+                      <option value="14201">Dhruvil Patel</option>
+                      <option value="469">fco fco</option>
+                      <option value="8093">Haydin Bekir</option>
+                      <option value="740">Hus Lam</option>
+                      <option value="868">Jafar Lam</option>
+                      <option value="2054">Jason Vuong</option>
+                      <option value="4673">Jess Ivanoff</option>
+                      <option value="12379">lisa fco l fco</option>
+                      <option value="14173">Maaz Ullah</option>
+                      <option value="4674">Nancy Sanjoto</option>
+                      <option value="7991">Omar Niyazi</option>
+                      <option value="7660">Pat M</option>
+                      <option value="7419">Ray Saleh</option>
+                      <option value="14175">Real bot</option>
+                      <option value="344">Richard Ahmadi</option>
+                      <option value="11298">rid patel</option>
+                      <option value="11738">riddhi patel</option>
+                      <option value="11297">riddhi patel</option>
+                      <option value="3860">Rubal Sharma</option>
+                      <option value="14243">Setu Sureja</option>
+                      <option value="343">Toan Pham</option>
+                      <option value="7492">Tony Do</option>
+                      <option value="8915">Trina Panels</option>
+                      <option value="11852">Usama Maqbool</option>
+                    </select>
+                    <div class="job-status-filter-div" id="ResellerDiv">
+                      <span class="control-label vertical-middle ms-2">
+                        BY
+                      </span>
+                      <select class="form-control" id="FCO" name="FCO">
+                        <option value="">Select All</option>
+                        <option value="14149">A B</option>
+                        <option value="8089">Amir Bekir</option>
+                        <option value="1700">Anthony Le</option>
+                        <option value="13758">Ayden Thang</option>
+                        <option value="210">bansi fco</option>
+                        <option value="9476">Canadian Solar</option>
+                        <option value="434">Deep FCO</option>
+                        <option value="14201">Dhruvil Patel</option>
+                        <option value="469">fco fco</option>
+                        <option value="8093">Haydin Bekir</option>
+                        <option value="740">Hus Lam</option>
+                        <option value="868">Jafar Lam</option>
 
-                    
-                </div>
-                
-                
-                
-                <div class="row">
-                    <div class="col-sm-12 col-md-12 col-lg-12">
-                        <div class="form-group" id="STCJobStaus">
-                        </div>
+                        <option value="343">Toan Pham</option>
+                        <option value="7492">Tony Do</option>
+                        <option value="8915">Trina Panels</option>
+                        <option value="11852">Usama Maqbool</option>
+                      </select>
                     </div>
+                  </div>
                 </div>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                  <div class="form-group" id="STCJobStaus"></div>
+                  <table class="table table-bordered table-responsive" id="dashboard-tabel">
+                    <thead>
+                      <tr>
+                        <th scope="col">Reseller</th>
+                        <th scope="col">New Submission</th>
+                        <th scope="col">Re-Submission</th>
+                        <th scope="col">Under Review</th>
+                        <th scope="col">Ready To Create</th>
+                        <th scope="col">Compliance Issues</th>
+                        <th scope="col">Awaiting Authorization</th>
+                        <th scope="col">CER Failure</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="">
+                          ADVANCED SOLAR TECHNOLOGY - Alex Marcoux
+                        </td>
+                        <td class="text-center">22</td>
+                        <td class="text-center">1</td>
+                        <td class="text-center">0</td>
+                        <td class="text-center">4</td>
+                        <td class="text-center">1</td>
+                        <td class="text-center">42</td>
+                        <td class="text-center">52</td>
+                      </tr>
+                      <tr>
+                        <td class="">
+                          APEXGLOBALSOLUTIONS PTY. LTD. - Dheeraj Wadhwani
+                        </td>
+                        <td class="text-center">22</td>
+                        <td class="text-center">0</td>
+                        <td class="text-center">0</td>
+                        <td class="text-center">4</td>
+                        <td class="text-center">1</td>
+                        <td class="text-center">42</td>
+                        <td class="text-center">52</td>
+                      </tr>
+                      <tr>
+                        <td class="">
+                          AUSGREEN INTERNATIONAL PTY LTD - Mohammad Mostafa
+                        </td>
+                        <td class="text-center">8</td>
+                        <td class="text-center">5</td>
+                        <td class="text-center">0</td>
+                        <td class="text-center">4</td>
+                        <td class="text-center">1</td>
+                        <td class="text-center">42</td>
+                        <td class="text-center">52</td>
+                      </tr>
+                      <tr>
+                        <td class="">
+                          EMERGING ENERGY SOLUTIONS GROUP PTY. LTD. - Greenbot
+                          Pty Ltd
+                        </td>
+                        <td class="text-center">32</td>
+                        <td class="text-center">7</td>
+                        <td class="text-center">0</td>
+                        <td class="text-center">4</td>
+                        <td class="text-center">1</td>
+                        <td class="text-center">42</td>
+                        <td class="text-center">52</td>
+                      </tr>
+                      <tr>
+                        <td class="">
+                          APEXGLOBALSOLUTIONS PTY. LTD. - Dheeraj Wadhwani
+                        </td>
+                        <td class="text-center">0</td>
+                        <td class="text-center">0</td>
+                        <td class="text-center">10</td>
+                        <td class="text-center">4</td>
+                        <td class="text-center">1</td>
+                        <td class="text-center">24</td>
+                        <td class="text-center">52</td>
+                      </tr>
+                      <tr>
+                        <td class="">
+                          EMERGING ENERGY SOLUTIONS GROUP PTY. LTD. - Sakura
+                          Energy
+                        </td>
+                        <td class="text-center">12</td>
+                        <td class="text-center">2</td>
+                        <td class="text-center">0</td>
+                        <td class="text-center">4</td>
+                        <td class="text-center">1</td>
+                        <td class="text-center">42</td>
+                        <td class="text-center">52</td>
+                      </tr>
+                      <tr>
+                        <td class="">
+                          EVER POWER SOLAR PTY LTD - Adil Dalal
+                        </td>
+                        <td class="text-center">15</td>
+                        <td class="text-center">2</td>
+                        <td class="text-center">0</td>
+                        <td class="text-center">4</td>
+                        <td class="text-center">1</td>
+                        <td class="text-center">2</td>
+                        <td class="text-center">5</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
-</div>
-</div>
-      <!-- Sidebar  -->
+    <div id="footer">
+      <p>Copyright © 2023 Greenbot Pty. Ltd.</p>
     </div>
+  </div>
+  <div id="responsive-overlay"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <script src="./site.js"></script>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  </body>
+  <script>
+    const $toggle = $(".app,.cross");
+    const $sidebars = $(".main-container");
+    const $overlay = $("#responsive-overlay");
+    const submenu = $(".dropdown-toggler");
+    const sidebar = $(".sidebar-container");
+
+    sidebar.hover(function () {
+      if (($(window).width() <= 1444) && ($(window).width() >= 601)) {
+        sidebar.toggleClass("open-sidebar")
+        document.body.classList.toggle("mini-sidebar");
+      }
+    })
+
+    $toggle.click(function () {
+      if ($(window).width() >= 992) {
+        $sidebars.toggleClass("close-sidebar");
+        if (submenu.hasClass("rotate")) {
+          submenu.next().removeClass("active");
+          submenu.next().slideUp(200);
+          submenu.removeClass("rotate");
+        }
+      } else {
+        $overlay.toggleClass("visible-overlay");
+        $(".sidebar-container").toggleClass("show");
+      }
+    });
+    $overlay.click(function () {
+      $overlay.toggleClass("visible-overlay");
+      $(".sidebar-container").toggleClass("show");
+    });
+  </script>
+</body>
+
 </html>
